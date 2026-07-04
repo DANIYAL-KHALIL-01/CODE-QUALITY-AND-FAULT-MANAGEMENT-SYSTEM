@@ -2,6 +2,27 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Project Setup
+
+### Prerequisites
+
+- Node.js 18+ recommended
+- `pnpm` for package management
+
+### Install Dependencies
+
+```powershell
+pnpm install
+```
+
+### Run the Frontend
+
+```powershell
+pnpm dev
+```
+
+If you are setting up the full repository from a fresh download, install the backend dependencies from the root [README.md](../README.md) first.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
