@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use Cases, Use Case Diagram, and Design Description - Fault Prediction System</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .doc-info {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            page-break-after: avoid;
+        }
+
+        h4 {
+            font-size: 1.2em;
+            color: #34495e;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .box {
+            background: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+
+        .diagram-box {
+            background: #f8f9fa;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+
+        .diagram-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .diagram-description {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin: 12px 0 18px 0;
+            font-style: italic;
+        }
+
+        .diagram-image-container {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .mermaid {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .note-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .tech-stack {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+
+            h2 {
+                page-break-after: avoid;
+            }
+
+            table, .box, .diagram-box {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Use Cases, Use Case Diagram, and Design Description</h1>
+            <div class="doc-info">
+                Fault Prediction System<br>
+                Version 1.0 | February 5, 2026
+            </div>
+        </header>
+
+        <h2>1. Use Cases</h2>
+        <p>This section provides detailed use case specifications for core system operations.</p>
+
+        <h3>UC-01: User Registration</h3>
+        <div class="box">
+            <p><strong>Primary Actor:</strong> User</p>
+            <p><strong>Goal:</strong> Create a new user account</p>
+            <p><strong>Preconditions:</strong> User has not registered; system is available</p>
+            <p><strong>Postconditions:</strong> User account created; user can log in</p>
+            <p><strong>Trigger:</strong> User clicks "Sign Up"</p>
+            <h4>Main Flow:</h4>
+            <ol>
+                <li>User opens the registration page</li>
+                <li>User enters username, email, and password</li>
+                <li>System validates input</li>
+                <li>System stores user account (hashed password)</li>
+                <li>System confirms registration</li>
+            </ol>
+            <h4>Alternate Flows:</h4>
+            <ul>
+                <li><strong>AF-1:</strong> Invalid input → show validation errors</li>
+                <li><strong>AF-2:</strong> Username/email already exists → show error</li>
+            </ul>
+        </div>
+
+        <h3>UC-02: User Login</h3>
+        <div class="box">
+            <p><strong>Primary Actor:</strong> User</p>
+            <p><strong>Goal:</strong> Access the system dashboard</p>
+            <p><strong>Preconditions:</strong> User account exists</p>
+            <p><strong>Postconditions:</strong> Session created; dashboard accessible</p>
+            <p><strong>Trigger:</strong> User clicks "Login"</p>
+            <h4>Main Flow:</h4>
+            <ol>
+                <li>User enters credentials</li>
+                <li>System validates credentials</li>
+                <li>System creates session</li>
+                <li>User is redirected to dashboard</li>
+            </ol>
+            <h4>Alternate Flows:</h4>
+            <ul>
+                <li><strong>AF-1:</strong> Invalid credentials → show error</li>
+            </ul>
+        </div>
+
+        <h3>UC-03: Add Repository</h3>
+        <div class="box">
+            <p><strong>Primary Actor:</strong> User</p>
+            <p><strong>Goal:</strong> Register a GitHub repository for analysis</p>
+            <p><strong>Preconditions:</strong> User logged in; valid repository URL</p>
+            <p><strong>Postconditions:</strong> Repository stored and visible in list</p>
+            <p><strong>Trigger:</strong> User clicks "Add Repository"</p>
+            <h4>Main Flow:</h4>
+            <ol>
+                <li>User enters repository URL</li>
+                <li>System validates the URL</li>
+                <li>System fetches repository metadata from GitHub</li>
+                <li>System saves repository details</li>
+                <li>Repository appears in user list</li>
+            </ol>
+            <h4>Alternate Flows:</h4>
+            <ul>
+                <li><strong>AF-1:</strong> Invalid URL → show error</li>
+                <li><strong>AF-2:</strong> GitHub API failure → show error</li>
+            </ul>
+        </div>
+
+        <h3>UC-04: Analyze Repository</h3>
+        <div class="box">
+            <p><strong>Primary Actor:</strong> User</p>
+            <p><strong>Goal:</strong> Generate code metrics and predictions</p>
+            <p><strong>Preconditions:</strong> Repository exists and is accessible</p>
+            <p><strong>Postconditions:</strong> Metrics and predictions stored</p>
+            <p><strong>Trigger:</strong> User clicks "Analyze"</p>
+            <h4>Main Flow:</h4>
+            <ol>
+                <li>System clones repository</li>
+                <li>System computes code metrics</li>
+                <li>System runs ML predictions</li>
+                <li>System saves results</li>
+                <li>User views analysis results</li>
+            </ol>
+            <h4>Alternate Flows:</h4>
+            <ul>
+                <li><strong>AF-1:</strong> Clone fails → show error</li>
+                <li><strong>AF-2:</strong> Analysis fails → show error</li>
+            </ul>
+        </div>
+
+        <h3>UC-05: View Dashboard</h3>
+        <div class="box">
+            <p><strong>Primary Actor:</strong> User</p>
+            <p><strong>Goal:</strong> Visualize metrics and risks</p>
+            <p><strong>Preconditions:</strong> Analysis data exists</p>
+            <p><strong>Postconditions:</strong> User views summary insights</p>
+            <p><strong>Trigger:</strong> User navigates to dashboard</p>
+            <h4>Main Flow:</h4>
+            <ol>
+                <li>System loads dashboard data</li>
+                <li>System displays charts and cards</li>
+                <li>User explores metrics</li>
+            </ol>
+        </div>
+
+        <h3>UC-06: Manage Bug Reports</h3>
+        <div class="box">
+            <p><strong>Primary Actor:</strong> User</p>
+            <p><strong>Goal:</strong> Create and track bugs</p>
+            <p><strong>Preconditions:</strong> User logged in</p>
+            <p><strong>Postconditions:</strong> Bug record saved and visible</p>
+            <p><strong>Trigger:</strong> User clicks "Report Bug"</p>
+            <h4>Main Flow:</h4>
+            <ol>
+                <li>User submits bug details</li>
+                <li>System validates inputs</li>
+                <li>System stores bug report</li>
+                <li>Bug appears in list</li>
+            </ol>
+        </div>
+
+        <h2>2. Use Case Diagram</h2>
+        <div class="diagram-box">
+            <div class="diagram-title">Use Case Diagram</div>
+            <div class="diagram-description">
+                <strong>Purpose:</strong> Illustrates interactions between actors and system use cases.
+            </div>
+            <div class="diagram-image-container">
+                <div class="mermaid">
+%%{init: {'flowchart': {'nodeSpacing': 28, 'rankSpacing': 70, 'curve': 'basis'}}}%%
+flowchart LR
+    %% Actors
+    Dev([👨‍💻 Software Developer]):::actor
+    QA([🧪 QA Engineer]):::actor
+    PM([📊 Project Manager]):::actor
+    GitHub([🔗 GitHub API]):::external
+
+    %% System boundary
+    subgraph System["Code Quality & Fault Prediction System"]
+        direction TB
+        UC1([🔐 Login/Signup]):::usecase
+        UC2([➕ Add Repository]):::usecase
+        UC3([🔍 Analyze Code]):::usecase
+        UC4([📊 View Metrics]):::usecase
+        UC5([🎯 View Predictions]):::usecase
+        UC6([✅ Prioritize Tests]):::usecase
+        UC7([🐛 Manage Bugs]):::usecase
+        UC8([📈 View Dashboard]):::usecase
+        UC9([⚙️ Configure Settings]):::usecase
+        UC10([💡 View Recommendations]):::usecase
+    end
+
+    %% Associations
+    Dev --- UC1
+    Dev --- UC2
+    Dev --- UC3
+    Dev --- UC4
+    Dev --- UC5
+    Dev --- UC9
+
+    QA --- UC1
+    QA --- UC6
+    QA --- UC7
+    QA --- UC8
+
+    PM --- UC1
+    PM --- UC8
+    PM --- UC10
+
+    %% External dependency
+    UC2 -.-> GitHub
+    UC3 -.-> GitHub
+
+    %% Styling
+    classDef usecase fill:#ffffff,stroke:#6a1b9a,stroke-width:2px,stroke-dasharray:6 4,color:#2c3e50;
+    classDef actor fill:#ffffff,stroke:#6a1b9a,stroke-width:2px,color:#2c3e50;
+    classDef external fill:#ffffff,stroke:#ff6f61,stroke-width:2px,color:#2c3e50;
+    style System fill:#f3eef9,stroke:#6a1b9a,stroke-width:2px;
+                </div>
+            </div>
+        </div>
+
+        <h2>3. Design Description</h2>
+        <p>This section summarizes the high-level design of the Fault Prediction System.</p>
+
+        <h3>3.1 Architecture Overview</h3>
+        <div class="box">
+            <p><strong>Pattern:</strong> Three-tier layered architecture</p>
+            <ul>
+                <li><strong>Presentation Layer:</strong> React + TypeScript frontend for UI and visualization</li>
+                <li><strong>Application Layer:</strong> Flask backend handling APIs, business logic, and ML orchestration</li>
+                <li><strong>Data Layer:</strong> SQLite database for persistence and repository analytics</li>
+            </ul>
+        </div>
+
+        <h3>3.2 Core Components</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Responsibility</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>GitHubService</td>
+                    <td>Repository metadata retrieval and cloning</td>
+                </tr>
+                <tr>
+                    <td>CodeAnalyzer</td>
+                    <td>Code metric calculation (CC, MI, Halstead, churn)</td>
+                </tr>
+                <tr>
+                    <td>MLService</td>
+                    <td>Feature extraction, model prediction, risk classification</td>
+                </tr>
+                <tr>
+                    <td>Auth Service</td>
+                    <td>User registration, login, session handling</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>3.3 Data Model Summary</h3>
+        <ul>
+            <li><strong>users:</strong> authentication and profile data</li>
+            <li><strong>settings:</strong> user preferences and tokens</li>
+            <li><strong>repository:</strong> GitHub repository metadata</li>
+            <li><strong>code_metric:</strong> metrics per file</li>
+            <li><strong>prediction:</strong> ML predictions per file</li>
+            <li><strong>bug_report:</strong> bug tracking</li>
+            <li><strong>test_case:</strong> prioritized test cases</li>
+        </ul>
+
+        <h3>3.4 Interfaces</h3>
+        <div class="box">
+            <p><strong>Frontend ↔ Backend:</strong> REST API over HTTPS with JSON payloads</p>
+            <p><strong>Backend ↔ GitHub:</strong> GitHub REST API v3 (authenticated tokens)</p>
+            <p><strong>Backend ↔ Database:</strong> SQLAlchemy ORM with SQLite</p>
+        </div>
+
+        <h2>4. System Sequence Diagrams</h2>
+        <p>System sequence diagrams show the interactions between actors and the system over time, using standard UML notation with lifelines, activation boxes, and message arrows.</p>
+
+        <h3>4.1 User Authentication Sequence</h3>
+        <div class="diagram-box">
+            <div class="diagram-title">System Sequence Diagram - User Login</div>
+            <div class="diagram-description">
+                <strong>Purpose:</strong> Shows the step-by-step interaction flow when a user attempts to log in to the system. Includes validation, password verification, and session creation.
+            </div>
+            <div class="diagram-image-container">
+                <div class="mermaid">
+sequenceDiagram
+    actor User
+    participant Frontend as :Frontend<br/>(React)
+    participant Backend as :Backend<br/>(Flask API)
+    participant Database as :Database<br/>(SQLite)
+
+    User->>+Frontend: 1: enterCredentials(username, password)
+    Frontend->>Frontend: 2: validateInput()
+    
+    Frontend->>+Backend: 3: POST /api/auth/login<br/>{username, password}
+    Backend->>+Database: 4: queryUser(username)
+    Database-->>-Backend: 5: userRecord
+    
+    alt User Found
+        Backend->>Backend: 6: verifyPassword(password)
+        alt Password Valid
+            Backend->>Backend: 7: createSession()
+            Backend->>+Database: 8: updateLastLogin()
+            Database-->>-Backend: 9: success
+            Backend-->>-Frontend: 10: 200 OK<br/>{user, sessionToken}
+            Frontend->>Frontend: 11: storeAuthState()
+            Frontend-->>-User: 12: redirectToDashboard()
+        else Password Invalid
+            Backend-->>Frontend: 13: 401 Unauthorized<br/>{error: "Invalid credentials"}
+            Frontend-->>User: 14: displayError()
+        end
+    else User Not Found
+        Backend-->>Frontend: 15: 401 Unauthorized<br/>{error: "User not found"}
+        Frontend-->>User: 16: displayError()
+    end
+
+    Note over User,Database: Standard UML Sequence Diagram<br/>Lifelines shown as dashed lines<br/>Activation boxes show active processing<br/>Synchronous messages (solid arrows)<br/>Return messages (dashed arrows)
+                </div>
+            </div>
+            <div class="note-box">
+                <p><strong>Key Elements:</strong></p>
+                <ul>
+                    <li><strong>Actor:</strong> User (stick figure representation)</li>
+                    <li><strong>Participants:</strong> Frontend, Backend, Database (boxes with lifelines)</li>
+                    <li><strong>Lifelines:</strong> Vertical dashed lines showing object lifetime</li>
+                    <li><strong>Activation Boxes:</strong> Rectangles on lifelines (object is processing)</li>
+                    <li><strong>Messages:</strong> Solid arrows (synchronous calls), dashed arrows (returns)</li>
+                    <li><strong>Alt Fragments:</strong> Alternative execution paths (if-else logic)</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>4.2 Repository Analysis Sequence</h3>
+        <div class="diagram-box">
+            <div class="diagram-title">System Sequence Diagram - Code Analysis</div>
+            <div class="diagram-description">
+                <strong>Purpose:</strong> Illustrates the complete workflow when a user triggers code analysis, including repository cloning, metric calculation, ML prediction, and result persistence.
+            </div>
+            <div class="diagram-image-container">
+                <div class="mermaid">
+sequenceDiagram
+    actor User
+    participant Frontend as :Frontend
+    participant Backend as :Backend
+    participant GitHubService as :GitHubService
+    participant CodeAnalyzer as :CodeAnalyzer
+    participant MLService as :MLService
+    participant Database as :Database
+
+    User->>+Frontend: 1: clickAnalyze(repositoryId)
+    Frontend->>+Backend: 2: POST /api/analyze/{repoId}
+    
+    Backend->>+Database: 3: getRepository(repoId)
+    Database-->>-Backend: 4: repositoryData
+    
+    Backend->>+GitHubService: 5: cloneRepository(url)
+    GitHubService-->>-Backend: 6: localPath
+    
+    Backend->>+CodeAnalyzer: 7: analyzeRepository(path)
+    
+    loop For each file
+        CodeAnalyzer->>CodeAnalyzer: 8: calculateMetrics(file)
+        Note right of CodeAnalyzer: LOC, Cyclomatic Complexity<br/>Maintainability Index<br/>Halstead Metrics<br/>Code Churn
+    end
+    
+    CodeAnalyzer-->>-Backend: 9: metricsArray[]
+    
+    Backend->>+Database: 10: saveMetrics(metricsArray)
+    Database-->>-Backend: 11: success
+    
+    Backend->>+MLService: 12: predictFaults(metricsArray)
+    
+    loop For each metric
+        MLService->>MLService: 13: extractFeatures(metric)
+        MLService->>MLService: 14: runModel(features)
+        MLService->>MLService: 15: calculateRisk(probability)
+    end
+    
+    MLService-->>-Backend: 16: predictionsArray[]
+    
+    Backend->>+Database: 17: savePredictions(predictionsArray)
+    Database-->>-Backend: 18: success
+    
+    Backend->>+Database: 19: updateLastAnalyzed(repoId)
+    Database-->>-Backend: 20: success
+    
+    Backend-->>-Frontend: 21: 200 OK<br/>{message: "Analysis complete", filesAnalyzed: 15}
+    Frontend->>Frontend: 22: updateUI()
+    Frontend-->>-User: 23: displayResults()
+
+    Note over User,Database: UML Sequence Diagram with Loop Fragment<br/>Shows iterative processing of files
+                </div>
+            </div>
+            <div class="note-box">
+                <p><strong>Sequence Flow:</strong> 23 steps from user action to result display</p>
+                <p><strong>Loop Fragment:</strong> Demonstrates iterative metric calculation for multiple files</p>
+                <p><strong>Participants:</strong> 6 objects collaborating (User, Frontend, Backend, GitHubService, CodeAnalyzer, MLService, Database)</p>
+            </div>
+        </div>
+
+        <h3>4.3 Add Repository Sequence</h3>
+        <div class="diagram-box">
+            <div class="diagram-title">System Sequence Diagram - Add Repository</div>
+            <div class="diagram-description">
+                <strong>Purpose:</strong> Shows interaction flow when a user adds a new GitHub repository, including URL validation, metadata retrieval from GitHub API, and database persistence.
+            </div>
+            <div class="diagram-image-container">
+                <div class="mermaid">
+sequenceDiagram
+    actor User
+    participant Frontend as :Frontend
+    participant Backend as :Backend
+    participant GitHubService as :GitHubService
+    participant GitHub as :GitHub API
+    participant Database as :Database
+
+    User->>+Frontend: 1: enterRepositoryURL(url)
+    Frontend->>Frontend: 2: validateURL()
+    
+    alt Valid URL Format
+        Frontend->>+Backend: 3: POST /api/repositories<br/>{url}
+        Backend->>Backend: 4: parseURL(url)
+        
+        Backend->>+GitHubService: 5: getRepositoryInfo(owner, name)
+        GitHubService->>+GitHub: 6: GET /repos/{owner}/{name}
+        GitHub-->>-GitHubService: 7: repositoryMetadata<br/>{name, description, stars, forks, language}
+        GitHubService-->>-Backend: 8: repositoryInfo
+        
+        Backend->>+Database: 9: checkDuplicate(url)
+        Database-->>-Backend: 10: notExists
+        
+        alt Repository Not Duplicate
+            Backend->>+Database: 11: saveRepository(repositoryInfo)
+            Database-->>-Backend: 12: repositoryId
+            Backend-->>-Frontend: 13: 201 Created<br/>{repository, id}
+            Frontend->>Frontend: 14: updateRepositoryList()
+            Frontend-->>-User: 15: displaySuccess("Repository added")
+        else Repository Already Exists
+            Backend-->>Frontend: 16: 409 Conflict<br/>{error: "Repository already exists"}
+            Frontend-->>User: 17: displayWarning()
+        end
+    else Invalid URL
+        Frontend-->>User: 18: displayError("Invalid URL format")
+    end
+
+    Note over User,Database: Shows URL validation and duplicate checking<br/>Includes external API interaction
+                </div>
+            </div>
+            <div class="note-box">
+                <p><strong>External System:</strong> GitHub API participant shows external dependency</p>
+                <p><strong>Nested Alt Fragments:</strong> Two levels of conditional logic (URL validation, duplicate check)</p>
+            </div>
+        </div>
+
+        <h3>4.4 View Dashboard Sequence</h3>
+        <div class="diagram-box">
+            <div class="diagram-title">System Sequence Diagram - Dashboard Data Loading</div>
+            <div class="diagram-description">
+                <strong>Purpose:</strong> Demonstrates how dashboard metrics and visualizations are loaded when a user navigates to the dashboard page.
+            </div>
+            <div class="diagram-image-container">
+                <div class="mermaid">
+sequenceDiagram
+    actor User
+    participant Frontend as :Frontend
+    participant Backend as :Backend
+    participant Database as :Database
+
+    User->>+Frontend: 1: navigateToDashboard()
+    Frontend->>Frontend: 2: showLoadingState()
+    
+    par Parallel Data Fetching
+        Frontend->>+Backend: 3a: GET /api/dashboard/overview
+        Backend->>+Database: 4a: getOverviewStats()
+        Database-->>-Backend: 5a: {totalFiles, highRisk, avgComplexity}
+        Backend-->>-Frontend: 6a: overviewData
+    and
+        Frontend->>+Backend: 3b: GET /api/dashboard/risk-distribution
+        Backend->>+Database: 4b: getRiskDistribution()
+        Database-->>-Backend: 5b: {low: 45, medium: 30, high: 20, critical: 5}
+        Backend-->>-Frontend: 6b: riskData
+    and
+        Frontend->>+Backend: 3c: GET /api/dashboard/complexity-trend
+        Backend->>+Database: 4c: getComplexityTrend()
+        Database-->>-Backend: 5c: trendDataArray[]
+        Backend-->>-Frontend: 6c: trendData
+    and
+        Frontend->>+Backend: 3d: GET /api/dashboard/recent-analyses
+        Backend->>+Database: 4d: getRecentAnalyses(limit: 5)
+        Database-->>-Backend: 5d: analysisArray[]
+        Backend-->>-Frontend: 6d: recentData
+    end
+    
+    Frontend->>Frontend: 7: renderCharts(overviewData, riskData, trendData)
+    Frontend->>Frontend: 8: renderRecentList(recentData)
+    Frontend->>Frontend: 9: hideLoadingState()
+    Frontend-->>-User: 10: displayDashboard()
+
+    Note over User,Database: Parallel fragment shows concurrent API calls<br/>for optimized performance
+                </div>
+            </div>
+            <div class="note-box">
+                <p><strong>Par Fragment:</strong> Demonstrates parallel execution of multiple API calls for performance optimization</p>
+                <p><strong>Data Aggregation:</strong> Multiple data sources combined to render complete dashboard</p>
+            </div>
+        </div>
+
+        <h3>4.5 Create Bug Report Sequence</h3>
+        <div class="diagram-box">
+            <div class="diagram-title">System Sequence Diagram - Bug Report Creation</div>
+            <div class="diagram-description">
+                <strong>Purpose:</strong> Shows the interaction flow when a user creates a new bug report with validation and persistence.
+            </div>
+            <div class="diagram-image-container">
+                <div class="mermaid">
+sequenceDiagram
+    actor User
+    participant Frontend as :Frontend
+    participant Backend as :Backend
+    participant Database as :Database
+
+    User->>+Frontend: 1: clickCreateBug()
+    Frontend->>Frontend: 2: showBugForm()
+    
+    User->>Frontend: 3: fillBugDetails(title, description, severity, module)
+    User->>Frontend: 4: submitForm()
+    
+    Frontend->>Frontend: 5: validateFormData()
+    
+    alt All Fields Valid
+        Frontend->>+Backend: 6: POST /api/bugs<br/>{title, description, severity, priority, module, repositoryId}
+        
+        Backend->>Backend: 7: validateBugData()
+        Backend->>Backend: 8: setInitialStatus("Open")
+        Backend->>Backend: 9: setTimestamp()
+        
+        Backend->>+Database: 10: createBugReport(bugData)
+        Database-->>-Backend: 11: bugId
+        
+        Backend->>+Database: 12: getBugById(bugId)
+        Database-->>-Backend: 13: completeBugRecord
+        
+        Backend-->>-Frontend: 14: 201 Created<br/>{bug}
+        Frontend->>Frontend: 15: addBugToList(bug)
+        Frontend->>Frontend: 16: closeBugForm()
+        Frontend-->>-User: 17: displaySuccess("Bug report created")
+    else Missing Required Fields
+        Frontend-->>User: 18: displayValidationErrors()
+    end
+
+    Note over User,Database: Simple CRUD operation with validation<br/>Initial status set to "Open"
+                </div>
+            </div>
+            <div class="note-box">
+                <p><strong>Form Validation:</strong> Client-side validation before server submission</p>
+                <p><strong>CRUD Pattern:</strong> Standard Create operation with immediate read-back for confirmation</p>
+            </div>
+        </div>
+
+        <h2>5. Sequence Diagram Notation Guide</h2>
+        <div class="tech-stack">
+            <h3>Standard UML Elements Used:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Element</th>
+                        <th>Representation</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Actor</strong></td>
+                        <td>Stick figure</td>
+                        <td>External user or system initiating actions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Participant</strong></td>
+                        <td>Rectangle box at top</td>
+                        <td>System component or object</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lifeline</strong></td>
+                        <td>Vertical dashed line</td>
+                        <td>Object's lifetime during interaction</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Activation Box</strong></td>
+                        <td>Thin rectangle on lifeline</td>
+                        <td>Period when object is active/processing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Synchronous Message</strong></td>
+                        <td>Solid arrow →</td>
+                        <td>Method call or request</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Return Message</strong></td>
+                        <td>Dashed arrow ⟵</td>
+                        <td>Response or return value</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Alt Fragment</strong></td>
+                        <td>Rectangle with "alt"</td>
+                        <td>Conditional logic (if-else)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Loop Fragment</strong></td>
+                        <td>Rectangle with "loop"</td>
+                        <td>Iterative processing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Par Fragment</strong></td>
+                        <td>Rectangle with "par"</td>
+                        <td>Parallel execution</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Note</strong></td>
+                        <td>Folded rectangle</td>
+                        <td>Additional information/comments</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd;">
+            <p><strong>Use Cases, Use Case Diagram, Design Description, and System Sequence Diagrams</strong></p>
+            <p style="color: #7f8c8d;">Fault Prediction System | Version 1.0 | February 5, 2026</p>
+        </footer>
+    </div>
+</body>
+</html>

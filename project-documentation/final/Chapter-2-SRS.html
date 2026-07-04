@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chapter 2: Software Requirements Specification (SRS) - IEEE 29148</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose',
+            sequence: { mirrorActors: false },
+            flowchart: { nodeSpacing: 50, rankSpacing: 50, curve: 'basis' },
+            themeVariables: { primaryColor: '#ffffff', primaryBorderColor: '#000000', primaryTextColor: '#000000', lineColor: '#000000', secondaryColor: '#f0f0f0', tertiaryColor: '#e0e0e0', actorLineColor: '#000000', signalColor: '#000000', signalTextColor: '#000000', noteBkgColor: '#f0f0f0', noteBorderColor: '#000000', actorBorder: '#000000', actorTextColor: '#000000', labelBoxBorderColor: '#000000', labelTextColor: '#000000', loopTextColor: '#000000', activationBorderColor: '#000000' }
+        });
+    </script>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', 'Times New Roman', serif; line-height: 1.8; color: #000000; background: white; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 50px 60px; box-shadow: none; }
+        .cover-page { text-align: center; padding: 80px 0; border-bottom: 3px solid #000000; margin-bottom: 40px; }
+        .cover-page h1 { font-size: 2.8em; color: #000000; margin: 20px 0; }
+        .cover-page h2 { font-size: 1.8em; color: #000000; margin: 15px 0; font-weight: normal; }
+        .cover-page .metadata { margin-top: 60px; text-align: left; display: inline-block; }
+        .metadata-row { margin: 12px 0; font-size: 1.05em; }
+        .metadata-label { font-weight: bold; display: inline-block; width: 180px; }
+        h2 { font-size: 1.9em; color: #000000; margin-top: 40px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #000000; page-break-after: avoid; }
+        h3 { font-size: 1.4em; color: #000000; margin-top: 30px; margin-bottom: 15px; page-break-after: avoid; }
+        h4 { font-size: 1.15em; color: #000000; margin-top: 20px; margin-bottom: 10px; }
+        h5 { font-size: 1.05em; color: #000000; margin-top: 15px; margin-bottom: 8px; }
+        p { margin-bottom: 14px; text-align: justify; }
+        ul, ol { margin-left: 30px; margin-bottom: 15px; }
+        li { margin-bottom: 6px; }
+        h4 + ul { margin-left: 50px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; page-break-inside: avoid; }
+        th { background-color: #1d1d1d; color: white; padding: 12px; text-align: center; font-weight: bold; }
+        td { padding: 10px; border: 1px solid #000000; text-align: center; }
+        tr:nth-child(even) { background-color: #f0f0f0; }
+        .box { background: #f0f0f0; border-left: 4px solid #000000; padding: 15px 20px; margin: 20px 0; page-break-inside: avoid; }
+        .note-box { background: #f0f0f0; }
+        .diagram-box { background: #ffffff; border: none; border-radius: 0px; padding: 20px; margin: 25px 0; page-break-inside: avoid; }
+        .diagram-title { display: none; }
+        .diagram-description { background: #f0f0f0; border-left: 4px solid #000000; padding: 12px; margin: 12px 0 18px 0; font-style: italic; }
+        .diagram-image-container { text-align: center; padding: 15px; background: white; border: 1px solid #000000; border-radius: 0px; margin: 15px 0; }
+        .diagram-label { text-align: center; font-weight: bold; font-size: 1em; color: #000000; padding: 10px; margin: 5px 0 0 0; }
+        .mermaid { background: white; padding: 10px; border-radius: 0px; }
+        .toc { margin-bottom: 40px; }
+        .toc h2 { font-size: 1.8em; color: #000000; margin-bottom: 20px; border-bottom: 2px solid #000000; padding-bottom: 10px; }
+        .toc ol { list-style: none; margin-left: 0; }
+        .toc > ol > li { margin: 8px 0; font-weight: bold; }
+        .toc ol ol { margin-left: 25px; }
+        .toc ol ol li { font-weight: normal; margin: 5px 0; font-size: 0.95em; }
+        .toc ol ol ol { margin-left: 25px; }
+        .toc ol ol ol li { font-size: 0.9em; }
+        .toc a { color: #000000; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        @media print {
+            body { background: white; padding: 0; color: #000000; }
+            .container { box-shadow: none; padding: 30px; }
+            h2, h3 { page-break-after: avoid; }
+          
+            tr:nth-child(even) { background-color: #f0f0f0 !important; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<!-- NOTE FOR REVIEWERS: Alternate-flow labels should be prefixed with the originating main-flow step number (example: "1a", "2b"). To auto-apply this across the document, ask the editor to run the mapping tool or request that I apply it. -->
+<!-- COVER PAGE -->
+<div class="cover-page">
+<p style="font-size: 1.2em; color: #333333; letter-spacing: 2px; ">IEEE 29148-2018 / IEEE 830 STANDARD</p>
+<h1>Software Requirements Specification</h1>
+<h2>(SRS)</h2>
+<p style="font-size: 1.4em; color: #000000; margin: 20px 0; ">Code Quality &amp; Fault Prediction System</p>
+<div class="metadata">
+<div class="metadata-row"><span class="metadata-label">Document Title:</span> Software Requirements Specification (SRS)</div>
+<div class="metadata-row"><span class="metadata-label">Project Name:</span> Code Quality &amp; Fault Prediction System</div>
+<div class="metadata-row"><span class="metadata-label">Standard Reference:</span> IEEE 29148-2018 / IEEE 830</div>
+<div class="metadata-row"><span class="metadata-label">Document Version:</span> 1.0</div>
+<div class="metadata-row"><span class="metadata-label">Date:</span> February 4, 2026</div>
+<div class="metadata-row"><span class="metadata-label">Status:</span> Draft</div>
+<div class="metadata-row"><span class="metadata-label">Prepared By:</span> DANIYAL KHALIL</div>
+</div>
+</div>
+
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#introduction">1. Introduction</a>
+<ol>
+<li><a href="#purpose">1.1 Purpose</a></li>
+<li><a href="#scope">1.2 Scope</a></li>
+<li><a href="#product-overview">1.3 Product Overview</a></li>
+<li><a href="#definitions">1.4 Definitions, Acronyms, and Abbreviations</a></li>
+<li><a href="#references">1.5 References</a></li>
+</ol>
+</li>
+<li><a href="#system-description">2. Overall Description</a>
+<ol>
+<li><a href="#product-perspective">2.1 Product Perspective</a></li>
+<li><a href="#product-functions">2.2 Product Functions</a></li>
+<li><a href="#user-characteristics">2.3 User Characteristics</a></li>
+<li><a href="#constraints">2.4 Constraints</a></li>
+<li><a href="#assumptions-dependencies">2.5 Assumptions and Dependencies</a></li>
+</ol>
+</li>
+<li><a href="#system-models">3. System Models</a>
+<ol>
+<li><a href="#use-case-diagram">3.1 Use Case Diagram</a></li>
+<li><a href="#use-case-descriptions">3.2 Use Case Descriptions</a></li>
+<li><a href="#system-sequence-diagrams">3.3 System Sequence Diagrams</a></li>
+
+</ol>
+</li>
+<li><a href="#specific-requirements">4. Specific Requirements</a>
+<ol>
+<li><a href="#external-interfaces">4.1 External Interface Requirements</a>
+<ol>
+<li><a href="#user-interfaces">4.1.1 User Interfaces</a></li>
+<li><a href="#hardware-interfaces">4.1.2 Hardware Interfaces</a></li>
+<li><a href="#software-interfaces">4.1.3 Software Interfaces</a></li>
+<li><a href="#communications-protocols">4.1.4 Communications Protocols</a></li>
+</ol>
+</li>
+<li><a href="#functional-requirements">4.2 Functional Requirements</a></li>
+<li><a href="#nonfunctional-requirements">4.3 Non-Functional Requirements</a></li>
+<li><a href="#database-requirements">4.4 Database Requirements</a></li>
+</ol>
+</li>
+<li><a href="#additional-material">5. Additional Material</a></li>
+</ol>
+</div>
+<!-- 1. INTRODUCTION -->
+<h2 id="introduction">1. Introduction</h2>
+<h3 id="purpose">1.1 Purpose</h3>
+<p>This Software Requirements Specification (SRS) document specifies the functional and non-functional requirements for the <strong>Code Quality &amp; Fault Prediction System</strong>. It is intended for developers, testers, project managers, stakeholders, and maintenance teams to understand system capabilities, constraints, and quality attributes in accordance with IEEE 29148-2018 (superseding IEEE 830-1998).</p>
+<p>This document shall serve as a baseline for software design, implementation, and testing activities. All system features described herein are framed as <em>planned</em> capabilities — the actual coding process has not yet commenced.</p>
+<h3 id="scope">1.2 Scope</h3>
+<p><strong>Product Name:</strong> Code Quality &amp; Fault Prediction System</p>
+<p>The system shall provide an end-to-end solution for code quality analysis and fault prediction by integrating with GitHub repositories. It shall analyze code complexity, predict bug-prone areas using machine learning, and offer intelligent recommendations for test prioritization and code improvements.</p>
+<h4>Major Capabilities:</h4>
+<ol>
+<li><strong>User Authentication &amp; Management</strong> — Secure registration, login, profile management, GitHub token integration</li>
+<li><strong>Repository Analysis</strong> — GitHub repository import, multi-language code analysis, complexity metrics calculation</li>
+<li><strong>Machine Learning Predictions</strong> — Fault-prone module identification, risk scoring, confidence levels</li>
+<li><strong>Interactive Dashboards</strong> — Real-time metrics visualization, risk distribution charts, complexity trends</li>
+<li><strong>Test Prioritization</strong> — ML-based test recommendations, risk-based test ordering</li>
+<li><strong>Bug Report Management</strong> — Bug tracking, severity management, status workflow</li>
+<li><strong>Recommendations Engine</strong> — Code improvement suggestions, refactoring opportunities</li>
+</ol>
+<h3 id="product-overview">1.3 Product Overview</h3>
+<p>The Fault Prediction System is an intelligent web-based platform that analyzes software repositories to predict fault-prone modules using machine learning techniques. The system integrates with GitHub to extract repository data, calculate code complexity metrics (Cyclomatic Complexity, Maintainability Index, Halstead metrics, Lines of Code, Code Churn), and provide actionable insights for improving software quality and reducing technical debt.</p>
+<h3 id="definitions">1.4 Definitions, Acronyms, and Abbreviations</h3>
+<table style=border:1px solid #000;border-collapse:collapse;>
+<thead><tr><th style=border:1px solid #000;>Term / Acronym</th><th style=border:1px solid #000;>Definition</th></tr></thead>
+<tbody>
+<tr><td style=border:1px solid #000;><strong>API</strong></td><td style=border:1px solid #000;>Application Programming Interface — set of protocols for building software</td></tr>
+<tr><td style=border:1px solid #000;><strong>CC</strong></td><td style=border:1px solid #000;>Cyclomatic Complexity — measure of code complexity based on control flow paths</td></tr>
+<tr><td style=border:1px solid #000;><strong>CORS</strong></td><td style=border:1px solid #000;>Cross-Origin Resource Sharing — browser security feature for cross-domain requests</td></tr>
+<tr><td style=border:1px solid #000;><strong>CRUD</strong></td><td style=border:1px solid #000;>Create, Read, Update, Delete — basic database operations</td></tr>
+<tr><td style=border:1px solid #000;><strong>GDPR</strong></td><td style=border:1px solid #000;>General Data Protection Regulation — privacy and data protection law</td></tr>
+<tr><td style=border:1px solid #000;><strong>LOC</strong></td><td style=border:1px solid #000;>Lines of Code — source code size metric</td></tr>
+<tr><td style=border:1px solid #000;><strong>MI</strong></td><td style=border:1px solid #000;>Maintainability Index — code maintainability metric (0-100 scale)</td></tr>
+<tr><td style=border:1px solid #000;><strong>ML</strong></td><td style=border:1px solid #000;>Machine Learning — algorithms that learn patterns from data</td></tr>
+<tr><td style=border:1px solid #000;><strong>ORM</strong></td><td style=border:1px solid #000;>Object-Relational Mapping — database abstraction layer</td></tr>
+<tr><td style=border:1px solid #000;><strong>REST</strong></td><td style=border:1px solid #000;>Representational State Transfer — API architectural style</td></tr>
+<tr><td style=border:1px solid #000;><strong>SDD</strong></td><td style=border:1px solid #000;>Software Design Description</td></tr>
+<tr><td style=border:1px solid #000;><strong>SPMP</strong></td><td style=border:1px solid #000;>Software Project Management Plan</td></tr>
+<tr><td style=border:1px solid #000;><strong>SRS</strong></td><td style=border:1px solid #000;>Software Requirements Specification — this document</td></tr>
+<tr><td style=border:1px solid #000;><strong>STD</strong></td><td style=border:1px solid #000;>Software Test Documentation</td></tr>
+<tr><td style=border:1px solid #000;><strong>UI/UX</strong></td><td style=border:1px solid #000;>User Interface / User Experience — design aspects of the system</td></tr>
+<tr><td style=border:1px solid #000;><strong>WBS</strong></td><td style=border:1px solid #000;>Work Breakdown Structure</td></tr>
+</tbody>
+</table>
+<h3 id="references">1.5 References</h3>
+<ul>
+<li><strong>IEEE 29148-2018:</strong> ISO/IEC/IEEE International Standard — Systems and Software Engineering — Life Cycle Processes — Requirements Engineering</li>
+<li><strong>IEEE 830-1998:</strong> IEEE Recommended Practice for SRS (superseded by IEEE 29148-2018)</li>
+<li><strong>Chapter 1 — SPMP:</strong> Software Project Management Plan (IEEE 1058-1998)</li>
+</ul>
+<!-- 2. OVERALL DESCRIPTION -->
+<h2 id="system-description">2. Overall Description</h2>
+<h3 id="product-perspective">2.1 Product Perspective</h3>
+<p>The Fault Prediction System is a new, self-contained product designed for local deployment. It is not a replacement for or extension of an existing system. It interfaces with the external GitHub API for repository data and shall operate as a standalone web application with a three-tier architecture.</p>
+<div class="diagram-box">
+<div class="diagram-title">System Context Diagram</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+graph LR
+    Dev["Software Developer"]
+    QA["QA Engineer"]
+    PM["Project Manager"]
+    GitHub["GitHub API<br>(External Service)"]
+    System(("Fault Prediction<br>System"))
+
+    Dev --&gt;|Repo URL, Credentials,<br>Analysis Requests| System
+    System --&gt;|Metrics, Predictions,<br>Dashboards, Reports| Dev
+    QA --&gt;|Bug Reports, Test Queries| System
+    System --&gt;|Test Prioritization,<br>Bug Status| QA
+    PM --&gt;|Dashboard Queries| System
+    System --&gt;|Analytics,&lt;br/&gt;Recommendations| PM
+    System &lt;--&gt;|REST API Calls&lt;br/&gt;Repository Data| GitHub
+
+    style Dev fill:#e3f2fd
+    style QA fill:#e3f2fd
+    style PM fill:#e3f2fd
+    style GitHub fill:#ffebee
+    style System fill:#fff3e0
+            </br></br></br></br></br></div>
+<div class="diagram-label">Figure 2.1: System Context Diagram</div>
+</div>
+</div>
+<h3 id="product-functions">2.2 Product Functions</h3>
+<table style=border:1px solid #000;border-collapse:collapse;>
+<thead><tr><th style=border:1px solid #000;>Feature ID</th><th style=border:1px solid #000;>Feature Name</th><th style=border:1px solid #000;>Description</th><th style=border:1px solid #000;>Priority</th></tr></thead>
+<tbody>
+<tr><td style=border:1px solid #000;>F1</td><td style=border:1px solid #000;>User Authentication &amp; Management</td><td style=border:1px solid #000;>Secure user registration, login, logout, session management, profile management, GitHub token integration</td><td style=border:1px solid #000;>High</td></tr>
+<tr><td style=border:1px solid #000;>F2</td><td style=border:1px solid #000;>Repository Management</td><td style=border:1px solid #000;>Add repositories via GitHub URL, list repositories, analyze code, delete repositories, display metadata</td><td style=border:1px solid #000;>High</td></tr>
+<tr><td style=border:1px solid #000;>F3</td><td style=border:1px solid #000;>Code Analysis &amp; Metrics</td><td style=border:1px solid #000;>Extract code files, calculate complexity metrics (CC, MI, Halstead, LOC), analyze code churn across multiple languages</td><td style=border:1px solid #000;>High</td></tr>
+<tr><td style=border:1px solid #000;>F4</td><td style=border:1px solid #000;>Machine Learning Predictions</td><td style=border:1px solid #000;>Train fault prediction model, extract features, predict fault probability, classify risk levels, persist predictions</td><td style=border:1px solid #000;>High</td></tr>
+<tr><td style=border:1px solid #000;>F5</td><td style=border:1px solid #000;>Metrics Visualization</td><td style=border:1px solid #000;>Interactive dashboards, risk distribution charts, complexity trends, code churn analytics, repository overview</td><td style=border:1px solid #000;>High</td></tr>
+<tr><td style=border:1px solid #000;>F6</td><td style=border:1px solid #000;>Test Prioritization</td><td style=border:1px solid #000;>Generate test recommendations based on risk scores, display test cases with priority ranking, coverage optimization</td><td style=border:1px solid #000;>Medium</td></tr>
+<tr><td style=border:1px solid #000;>F7</td><td style=border:1px solid #000;>Bug Report Management</td><td style=border:1px solid #000;>Create bug reports, update status (Open → In Progress → Resolved → Closed), list/filter bugs, assign severity</td><td style=border:1px solid #000;>Medium</td></tr>
+<tr><td style=border:1px solid #000;>F8</td><td style=border:1px solid #000;>Recommendations Engine</td><td style=border:1px solid #000;>Generate code improvement suggestions, highlight refactoring opportunities, best practice recommendations</td><td style=border:1px solid #000;>Low</td></tr>
+</tbody>
+</table>
+<h3 id="user-characteristics">2.3 User Characteristics</h3>
+<div>
+<table style=border:1px solid #000;border-collapse:collapse;>
+<thead><tr><th style=border:1px solid #000;>User Type</th><th style=border:1px solid #000;>Description</th><th style=border:1px solid #000;>Technical Proficiency</th><th style=border:1px solid #000;>Frequency of Use</th></tr></thead>
+<tbody>
+<tr><td style=border:1px solid #000;><strong>Software Developer</strong></td><td style=border:1px solid #000;>Primary user who analyzes repositories, reviews predictions, and views recommendations</td><td style=border:1px solid #000;>High — familiar with GitHub, code metrics</td><td style=border:1px solid #000;>Daily</td></tr>
+<tr><td style=border:1px solid #000;><strong>QA Engineer</strong></td><td style=border:1px solid #000;>Uses test prioritization and bug management features for quality assurance</td><td style=border:1px solid #000;>Medium-High — familiar with testing tools</td><td style=border:1px solid #000;>Daily-Weekly</td></tr>
+<tr><td style=border:1px solid #000;><strong>Project Manager</strong></td><td style=border:1px solid #000;>Monitors dashboards, reviews analytics, and evaluates quality trends</td><td style=border:1px solid #000;>Medium — familiar with project tools</td><td style=border:1px solid #000;>Weekly</td></tr>
+<tr><td style=border:1px solid #000;><strong>Technical Lead</strong></td><td style=border:1px solid #000;>Evaluates code quality trends and risk assessments across the project</td><td style=border:1px solid #000;>High — familiar with architecture, code review</td><td style=border:1px solid #000;>Weekly</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="constraints">2.4 Constraints</h3>
+<ul>
+<li><strong>Technology Stack:</strong> Frontend shall use React 19 / TypeScript 5.9; Backend shall use Python 3.8+ / Flask; Database shall be SQLite</li>
+<li><strong>API Rate Limits:</strong> GitHub API limited to 5,000 requests/hour (authenticated)</li>
+<li><strong>Performance:</strong> Repository analysis shall complete within 5 minutes for repositories with &lt; 1,000 files</li>
+<li><strong>Deployment:</strong> Single-server local deployment model; no cloud infrastructure required</li>
+<li><strong>Security:</strong> Passwords shall be hashed using PBKDF2; GitHub tokens shall be stored securely</li>
+<li><strong>Regulatory:</strong> GDPR-compliant data handling practices</li>
+</ul>
+<h3 id="assumptions-dependencies">2.5 Assumptions and Dependencies</h3>
+<h4>Assumptions:</h4>
+<ol>
+<li>Users shall have stable internet connectivity for GitHub API access</li>
+<li>GitHub API shall remain available and stable throughout the project lifecycle</li>
+<li>Users shall use modern web browsers (Chrome 100+, Firefox 100+, Safari 15+, Edge 100+)</li>
+<li>SQLite shall be sufficient for the expected data volume (up to 10,000 files per repository, 100 users)</li>
+<li>Python 3.8+ and Node.js 18+ runtimes shall be available in the deployment environment</li>
+</ol>
+<h4>Dependencies:</h4>
+<table style=border:1px solid #000;border-collapse:collapse;>
+<thead><tr><th style=border:1px solid #000;>Dependency</th><th style=border:1px solid #000;>Type</th><th style=border:1px solid #000;>Impact if Unavailable</th></tr></thead>
+<tbody>
+<tr><td style=border:1px solid #000;>GitHub REST API v3</td><td style=border:1px solid #000;>External Service</td><td style=border:1px solid #000;>Repository data cannot be fetched; core functionality blocked</td></tr>
+<tr><td style=border:1px solid #000;>Python 3.8+ Runtime</td><td style=border:1px solid #000;>Platform</td><td style=border:1px solid #000;>Backend and ML components cannot execute</td></tr>
+<tr><td style=border:1px solid #000;>Node.js 18+ Runtime</td><td style=border:1px solid #000;>Platform</td><td style=border:1px solid #000;>Frontend cannot be built or served</td></tr>
+<tr><td style=border:1px solid #000;>scikit-learn Library</td><td style=border:1px solid #000;>Library</td><td style=border:1px solid #000;>ML training and prediction pipeline unavailable</td></tr>
+<tr><td style=border:1px solid #000;>Radon / Lizard</td><td style=border:1px solid #000;>Library</td><td style=border:1px solid #000;>Code complexity metrics cannot be calculated</td></tr>
+<tr><td style=border:1px solid #000;>PyGithub / GitPython</td><td style=border:1px solid #000;>Library</td><td style=border:1px solid #000;>GitHub integration and repository cloning unavailable</td></tr>
+</tbody>
+</table>
+<!-- 3. SYSTEM MODELS -->
+<h2 id="system-models">3. System Models</h2>
+<h3 id="use-case-diagram">3.1 Use Case Diagram</h3>
+<div class="diagram-box">
+<div class="diagram-title">Use Case Diagram</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+%%{init: {'flowchart': {'nodeSpacing': 28, 'rankSpacing': 70, 'curve': 'basis'}}}%%
+flowchart LR
+    %% Actors
+    Dev([Software Developer]):::actor
+    QA([QA Engineer]):::actor
+    PM([Project Manager]):::actor
+    GitHub([GitHub API]):::external
+
+    %% System boundary
+    subgraph System["Fault Prediction System"]
+        direction TB
+        UC1([UC-01: Register / Login]):::usecase
+        UC2([UC-02: Manage Profile]):::usecase
+        UC3([UC-03: Add Repository]):::usecase
+        UC4([UC-04: Analyze Repository]):::usecase
+        UC5([UC-05: View Dashboard]):::usecase
+        UC6([UC-06: Manage Bug Reports]):::usecase
+        UC7([UC-07: View Predictions]):::usecase
+        UC8([UC-08: Test Prioritization]):::usecase
+        UC9([UC-09: View Recommendations]):::usecase
+        UC10([UC-10: Configure Settings]):::usecase
+    end
+
+    %% Associations
+    Dev --- UC1
+    Dev --- UC2
+    Dev --- UC3
+    Dev --- UC4
+    Dev --- UC7
+    Dev --- UC10
+
+    QA --- UC1
+    QA --- UC6
+    QA --- UC8
+    QA --- UC5
+
+    PM --- UC1
+    PM --- UC5
+    PM --- UC9
+
+    %% External dependency
+    UC3 -.-&gt; GitHub
+    UC4 -.-&gt; GitHub
+
+    %% Styling
+    classDef usecase fill:#ffffff,stroke:#6a1b9a,stroke-width:2px,stroke-dasharray:6 4,color:#2c3e50;
+    classDef actor fill:#ffffff,stroke:#6a1b9a,stroke-width:2px,color:#2c3e50;
+    classDef external fill:#ffffff,stroke:#ff6f61,stroke-width:2px,color:#2c3e50;
+    style System fill:#f3eef9,stroke:#6a1b9a,stroke-width:2px;
+            </div>
+<div class="diagram-label">Figure 2.2: Use Case Diagram</div>
+</div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h3 id="use-case-descriptions">3.2 Use Case Descriptions</h3>
+<br>
+<br>
+<h4>UC-01: User Registration</h4>
+<div class="box">
+<p><strong>Primary Actor:</strong> User</p>
+<p><strong>Goal:</strong> Create a new user account</p>
+<p><strong>Preconditions:</strong> User has not registered; system is available</p>
+<p><strong>Postconditions:</strong> User account created; user can log in</p>
+<h5>Main Success Scenario (Basic Flow):</h5>
+<ol>
+  <li>User opens registration page.</li>
+  <li>System displays registration form.</li>
+  <li>User enters username, email, and password.</li>
+  <li>User submits form.</li>
+  <li>System validates input.</li>
+  <li>System checks username and email uniqueness.</li>
+  <li>System hashes password.</li>
+  <li>System stores account.</li>
+  <li>System confirms registration.</li>
+  <li>User proceeds to login or dashboard.</li>
+</ol>
+
+<h5>Extensions (Alternative Flows):</h5>
+
+<p><strong>*a:</strong> System failure (at any time). The system logs the error, displays a failure message, and the use case ends.</p>
+
+<p><strong>5a:</strong> Missing or invalid input. The system shows validation errors and returns the user to correct the input.</p>
+
+<p><strong>6a:</strong> Username already exists. The system shows a username unavailable message and prompts the user to enter a different username.</p>
+
+<p><strong>6b:</strong> Email already registered. The system shows an email already registered message and the registration is aborted or user proceeds to login.</p>
+
+<p><strong>8a:</strong> Database failure. The system cannot store the account, displays an error message, and the use case ends.</p>
+
+<p><strong>Frequency of Occurrence:</strong> less expected</p>
+</div>
+<br>
+<br>
+
+<br>
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+   
+<h4>UC-02: User Login</h4>
+<div class="box">
+<p><strong>Primary Actor:</strong> User</p>
+<p><strong>Goal:</strong> Access the system dashboard</p>
+<p><strong>Preconditions:</strong> User account exists</p>
+<p><strong>Postconditions:</strong> Session created; dashboard accessible</p>
+<h5>Main Success Scenario (Basic Flow):</h5>
+<ol>
+  <li>User enters credentials.</li>
+  <li>System validates credentials.</li>
+  <li>System creates user session.</li>
+  <li>User is redirected to dashboard.</li>
+</ol>
+
+<h5>Extensions (Alternative Flows):</h5>
+
+<p><strong>*a:</strong> System failure (at any time). The system logs the error, displays a generic error message, and the use case ends.</p>
+<p><strong>2a:</strong> Invalid credentials. The system displays an authentication error message and prompts the user to re-enter credentials.</p>
+
+<p><strong>2b:</strong> Account does not exist. The system informs the user and provides an option to register.</p>
+
+<p><strong>2c:</strong> Account is locked or disabled. The system notifies the user and advises contacting support or resetting the password.</p>
+
+<p><strong>3a:</strong> Session creation failure. The system logs the error, displays a failure message, and prevents access to the dashboard.</p>
+
+
+<p><strong>Frequency of Occurrence:</strong> Several times per day per user</p>
+</div>
+<h4>UC-03: Add Repository</h4>
+<div class="box">
+<p><strong>Primary Actor:</strong> User</p>
+<p><strong>Goal:</strong> Register a GitHub repository for analysis</p>
+<p><strong>Preconditions:</strong> User logged in; valid repository URL</p>
+<p><strong>Postconditions:</strong> Repository stored and visible in list</p>
+<h5>Main Flow:</h5>
+<ol>
+<li>User enters repository URL</li>
+<li>System validates the URL</li>
+<li>System fetches repository metadata from GitHub</li>
+<li>System saves repository details</li>
+<li>Repository appears in user list</li>
+</ol>
+<h5>Alternate Flows:</h5>
+<div >
+<p><strong>3a: </strong> If the provided repository URL is malformed or not a GitHub URL, the system rejects it with a validation error and requests a corrected URL.</p>
+<p><strong>3b:</strong> If the repository is private or requires authentication, the system prompts the user to provide a valid GitHub Personal Access Token or OAuth consent; the repository is not added until access is granted.</p>
+<p><strong>3c: </strong> If the GitHub API returns an error or hits rate limits, the system shows a descriptive error and suggests retrying later or authenticating to increase rate limits.</p>
+<p><strong>3d: </strong> If the repository already exists in the user's list, the system notifies the user with a link to the existing entry instead of adding a duplicate.</p>
+</div>
+<p><strong>Frequency of Occurrence:</strong> expected occasional/rare</p>
+</div>
+<br>
+<br>
+<br>
+<h4>UC-04: Analyze Repository</h4>
+<div class="box">
+<p><strong>Primary Actor:</strong> User</p>
+<p><strong>Goal:</strong> Generate code metrics and predictions</p>
+<p><strong>Preconditions:</strong> Repository exists and is accessible</p>
+<p><strong>Postconditions:</strong> Metrics and predictions stored</p>
+
+<h5>Main Success Scenario (Basic Flow):</h5>
+<ol>
+  <li>System clones repository.</li>
+  <li>System computes code metrics.</li>
+  <li>System runs ML predictions.</li>
+  <li>System saves results.</li>
+  <li>User views analysis results.</li>
+</ol>
+
+<h5>Extensions (Alternative Flows):</h5>
+
+<p><strong>*a:</strong> System failure (at any time). The system logs the error, displays a generic failure message, and terminates the process safely.</p>
+<p><strong>1a:</strong> Repository not accessible or clone fails. The system displays an error message and aborts the analysis.</p>
+
+<p><strong>2a:</strong> Code metric computation fails due to corrupted or unsupported files. The system logs the issue, skips invalid files if possible, and continues or aborts.</p>
+
+<p><strong>3a:</strong> ML prediction process fails. The system logs the error and informs the user that predictions could not be generated.</p>
+
+<p><strong>4a:</strong> Result storage failure (e.g., database error). The system logs the error and notifies the user that results were not saved.</p>
+
+
+<p><strong>Frequency of Occurrence:</strong> expected occasional/rare</p>
+</div>
+<h4>UC-05: View Dashboard</h4>
+<div class="box">
+<p><strong>Primary Actor:</strong> User</p>
+<p><strong>Goal:</strong> Visualize metrics and risks</p>
+<p><strong>Preconditions:</strong> Analysis data exists</p>
+<p><strong>Postconditions:</strong> User views summary insights</p>
+<h5>Main Flow:</h5>
+<ol>
+<li>System loads dashboard data</li>
+<li>System displays charts and cards</li>
+<li>User explores metrics</li>
+</ol>
+<h5>Alternate Flows:</h5>
+<p><strong>a*: </strong> If no analysis data exists, the dashboard displays an empty state with guidance to add a repository and run analysis.</p>
+<p><strong>2a: </strong> If some metrics are missing (e.g., recent analyses failed), the dashboard displays available data and shows notices explaining missing elements.</p>
+<p><strong>Frequency of Occurrence:</strong> less expected</p>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h4>UC-06: Manage Bug Reports</h4>
+<div class="box">
+<p><strong>Primary Actor:</strong> User</p>
+<p><strong>Goal:</strong> Create and track bugs</p>
+<p><strong>Preconditions:</strong> User logged in</p>
+<p><strong>Postconditions:</strong> Bug record saved and visible</p>
+<h5>Main Flow:</h5>
+<ol>
+<li>User submits bug details</li>
+<li>System validates inputs</li>
+<li>System stores bug report</li>
+<li>Bug appears in list</li>
+</ol>
+<h5>Alternate Flows:</h5>
+<p><strong>2a: </strong> If required fields are missing, the system returns validation errors and highlights the missing fields for correction.</p>
+<p><strong>3a: </strong> If a similar bug already exists, the system prompts the user to confirm creating a duplicate or linking to the existing report.</p>
+<p><strong>Frequency of Occurrence:</strong> less expected</p>
+</div>
+<br>
+<br>
+
+
+<h4>UC-07: View Predictions</h4>
+<div class="box">
+<p><strong>Primary Actor:</strong> Developer</p>
+<p><strong>Goal:</strong> View fault predictions for analyzed files</p>
+<p><strong>Preconditions:</strong> Repository has been analyzed; predictions exist</p>
+<p><strong>Postconditions:</strong> User views fault probability and risk levels</p>
+<h5>Main Flow:</h5>
+<ol>
+<li>User selects an analyzed repository</li>
+<li>System retrieves predictions for all files</li>
+<li>System displays fault probability, risk level, and confidence per file</li>
+<li>User explores file-level prediction details</li>
+</ol>
+<h5>Alternate Flows:</h5>
+<p><strong>2a: </strong> If predictions are not available, the system prompts the user to run analysis and provides a one-click option to start it.</p>
+<strong>Frequency of Occurrence:</strong> less expected</p>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<h4>UC-08: Test Prioritization</h4>
+<div class="box">
+<p><strong>Primary Actor:</strong> QA Engineer</p>
+<p><strong>Goal:</strong> Get ML-recommended test execution order</p>
+<p><strong>Preconditions:</strong> Predictions exist for repository</p>
+<p><strong>Postconditions:</strong> Prioritized test list displayed</p>
+<h5>Main Flow:</h5>
+<ol>
+<li>User selects a repository</li>
+<li>System retrieves predictions and calculates priority scores</li>
+<li>System displays ranked modules by fault risk</li>
+<li>User optionally exports the prioritized test plan</li>
+</ol>
+<h5>Alternate Flows:</h5>
+<div class="note-box">
+<p><strong>1a </strong> If predictions are missing, the system prompts the user to run analysis prior to prioritization.</p>
+</div>
+<p><strong>Frequency of Occurrence:</strong> less expected</p>
+
+</div>
+<br>
+
+<div>
+<h4>UC-09: View Recommendations</h4>
+<div class="box">
+<p><strong>Primary Actor:</strong> Project Manager</p>
+<p><strong>Goal:</strong> View code improvement suggestions</p>
+<p><strong>Preconditions:</strong> Analysis data exists</p>
+<p><strong>Postconditions:</strong> User views actionable recommendations</p>
+<h5>Main Flow:</h5>
+<ol>
+<li>System loads metrics and predictions for the repository</li>
+<li>System generates improvement suggestions based on risk levels</li>
+<li>System displays recommendations grouped by severity</li>
+<li>User reviews and prioritizes improvements</li>
+</ol>
+<h5>Alternate Flows:</h5>
+<div >
+<p><strong>1a </strong> If no recommendations are generated (e.g., metrics below thresholds), the system displays a message stating no action is recommended and suggests running deeper analysis if desired.</p>
+<p><strong>3a </strong> If recommendation generation fails, the system logs the error, notifies the user, and offers to retry the recommendations generation later.</p>
+</div>
+<p><strong>Frequency of Occurrence:</strong> less expected</p>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h4>UC-10: Configure Settings</h4>
+<div class="box">
+<p><strong>Primary Actor:</strong> Developer</p>
+<p><strong>Goal:</strong> Configure system preferences and tokens</p>
+<p><strong>Preconditions:</strong> User logged in</p>
+<p><strong>Postconditions:</strong> Settings saved and applied</p>
+<h5>Main Flow:</h5>
+<ol>
+<li>System displays current settings</li>
+<li>User updates GitHub token, complexity threshold, or notification preferences</li>
+<li>System validates and saves settings</li>
+<li>System confirms changes</li>
+</ol>
+<h5>Alternate Flows:</h5>
+<div >
+<p><strong>2a </strong> If the provided token is invalid or lacks scopes, the system displays an error, prompts for a valid token, and does not save the settings until a valid token is provided.</p>
+<p><strong>3a </strong> If saving settings fails due to server/database errors, the system rolls back changes, notifies the user, and suggests retrying later.</p>
+</div>
+<p><strong>Frequency of Occurrence:</strong> less expected</p>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h3 id="system-sequence-diagrams">3.3 System Sequence Diagrams</h3>
+<p>System sequence diagrams provide a black-box view of the system, showing interactions between external actors and the system as a single entity without revealing internal structure.</p>
+<h4>3.3.1 User Registration (UC-01)</h4>
+<div class="diagram-box">
+<div class="diagram-title">SSD-1: User Registration</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+sequenceDiagram
+    actor User
+    participant System as system:System
+
+    User-&gt;&gt;System: openRegistrationPage()
+    activate System
+    System--&gt;&gt;User: displayRegistrationForm()
+    deactivate System
+
+    User-&gt;&gt;System: submitRegistration(username, email, password, fullName, organization)
+    activate System
+    
+    alt valid credentials
+        System--&gt;&gt;User: confirmRegistration()
+    else invalid data
+        System--&gt;&gt;User: showValidationErrors(errors)
+    else duplicate user
+        System--&gt;&gt;User: showError("User already exists")
+    end
+    deactivate System
+            </div>
+<div class="diagram-label">Figure 3.1: SSD — User Registration (UC-01)</div>
+</div>
+</div>
+<h4>3.3.2 User Login (UC-02)</h4>
+<div class="diagram-box">
+<div class="diagram-title">SSD-2: User Login</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+sequenceDiagram
+    actor User
+    participant System as system:System
+
+    User-&gt;&gt;System: openLoginPage()
+    activate System
+    System--&gt;&gt;User: displayLoginForm()
+    deactivate System
+
+    User-&gt;&gt;System: submitCredentials(username, password)
+    activate System
+    
+    alt credentials valid
+        System--&gt;&gt;User: confirmLogin()
+    else credentials invalid
+        System--&gt;&gt;User: showError("Invalid credentials")
+    end
+    deactivate System
+            </div>
+<div class="diagram-label">Figure 3.2: SSD — User Login (UC-02)</div>
+</div>
+</div>
+<br>
+<h4>3.3.3 Add Repository (UC-03)</h4>
+<div class="diagram-box">
+<div class="diagram-title">SSD-3: Add Repository</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+sequenceDiagram
+    actor User
+    participant System as system:System
+
+    User-&gt;&gt;System: navigateToRepositories()
+    activate System
+    System--&gt;&gt;User: displayRepositoryList()
+    deactivate System
+
+    User-&gt;&gt;System: requestAddRepository()
+    activate System
+    System--&gt;&gt;User: displayRepositoryForm()
+    deactivate System
+
+    User-&gt;&gt;System: submitRepository(githubUrl)
+    activate System
+    
+    alt valid and accessible
+        System--&gt;&gt;User: confirmRepositoryAdded(repoDetails)
+    else invalid URL
+        System--&gt;&gt;User: showError("Invalid GitHub URL")
+    else not accessible
+        System--&gt;&gt;User: showError("Cannot access repository")
+    end
+    deactivate System
+            </div>
+<div class="diagram-label">Figure 3.3: SSD — Add Repository (UC-03)</div>
+</div>
+</div>
+<h4>3.3.4 Analyze Repository (UC-04)</h4>
+<div class="diagram-box">
+<div class="diagram-title">SSD-4: Analyze Repository</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+sequenceDiagram
+    actor User
+    participant System as system:System
+
+    User-&gt;&gt;System: selectRepository(repoId)
+    activate System
+    System--&gt;&gt;User: displayRepositoryDetails()
+    deactivate System
+
+    User-&gt;&gt;System: requestAnalysis()
+    activate System
+    System--&gt;&gt;User: confirmAnalysisStarted()
+    
+   
+    System--&gt;&gt;User: displayAnalysisResults(metrics, predictions)
+    deactivate System
+            </div>
+<div class="diagram-label">Figure 3.4: SSD — Analyze Repository (UC-04)</div>
+</div>
+</div>
+<br>
+<br>
+<br>
+<h4>3.3.5 View Dashboard (UC-05)</h4>
+<div class="diagram-box">
+<div class="diagram-title">SSD-5: View Dashboard</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+sequenceDiagram
+    actor User 
+    participant System as system:System 
+
+    User-&gt;&gt;System: navigateToDashboard()
+    activate System
+    System--&gt;&gt;User: displayDashboard(overview, charts, trends)
+    deactivate System
+
+    User-&gt;&gt;System: selectTimeRange(startDate, endDate)
+    activate System
+    System--&gt;&gt;User: displayFilteredDashboard(filteredData)
+    deactivate System
+            </div>
+<div class="diagram-label">Figure 3.5: SSD — View Dashboard (UC-05)</div>
+</div>
+</div>
+<h4>3.3.6 Manage Bug Reports (UC-06)</h4>
+<div class="diagram-box">
+<div class="diagram-title">SSD-6: Create Bug Report</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+sequenceDiagram
+    actor User
+    participant System as system:System 
+
+    User-&gt;&gt;System: navigateToBugReports()
+    activate System
+    System--&gt;&gt;User: displayBugReportsList()
+    deactivate System
+
+    User-&gt;&gt;System: requestCreateBugReport()
+    activate System
+    System--&gt;&gt;User: displayBugReportForm()
+    deactivate System
+
+    User-&gt;&gt;System: submitBugReport(title, description, severity, module, repository)
+    activate System
+    
+    alt valid data
+        System--&gt;&gt;User: confirmBugCreated(bugId)
+    else missing fields
+        System--&gt;&gt;User: showValidationErrors(errors)
+    end
+    deactivate System
+            </div>
+<div class="diagram-label">Figure 3.6: SSD — Manage Bug Reports (UC-06)</div>
+</div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h4>3.3.7 Test Prioritization (UC-08)</h4>
+<div class="diagram-box">
+<div class="diagram-title">SSD-7: Test Prioritization</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+sequenceDiagram
+    actor User
+    participant System as system:System
+
+    User-&gt;&gt;System: navigateToTestPrioritization()
+    activate System
+    System--&gt;&gt;User: displayRepositorySelector()
+    deactivate System
+
+    User-&gt;&gt;System: selectRepository(repoId)
+    activate System
+    System--&gt;&gt;User: displayPrioritizedTests(rankedModules)
+    deactivate System
+
+    User-&gt;&gt;System: requestExport(format)
+    activate System
+    
+    alt PDF format
+        System--&gt;&gt;User: provideFile(test_plan.pdf)
+    else CSV format
+        System--&gt;&gt;User: provideFile(test_plan.csv)
+    end
+    deactivate System
+            </div>
+<div class="diagram-label">Figure 3.7: SSD — Test Prioritization (UC-08)</div>
+</div>
+</div>
+<h4>3.3.8 Configure Settings (UC-10)</h4>
+<div class="diagram-box">
+<div class="diagram-title">SSD-8: Configure Settings</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+sequenceDiagram
+    actor User
+    participant System as system:System
+
+    User-&gt;&gt;System: navigateToSettings()
+    activate System
+    System--&gt;&gt;User: displaySettingsPage(currentSettings)
+    deactivate System
+
+    User-&gt;&gt;System: submitSettings(githubToken, complexityThreshold, notifications)
+    activate System
+    
+    alt valid data
+        System--&gt;&gt;User: confirmSettingsSaved()
+    else invalid token
+        System--&gt;&gt;User: showError("Invalid GitHub token")
+    end
+    deactivate System
+            </div>
+<div class="diagram-label">Figure 3.8: SSD — Configure Settings (UC-10)</div>
+</div>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<h3 id="dfd-level0">3.4 Data Flow Diagram (Level 0)</h3>
+<br/>
+<div class="diagram-box">
+<div class="diagram-title">Data Flow Diagram — Level 0 (Context Diagram)</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+graph LR
+    Dev["Software Developer<br>(External Entity)"]
+    GitHub["GitHub<br>(External Entity)"]
+    
+    System(("Code Quality<br>Analysis System<br>(Process 0)"))
+    
+    Dev --&gt;|Repository URL<br>User Credentials| System
+    System --&gt;|Analysis Results<br>Predictions<br>Recommendations| Dev
+    
+    GitHub --&gt;|Repository Data<br>Commit History| System
+    System --&gt;|API Requests| GitHub
+    
+    style Dev fill:#e3f2fd
+    style GitHub fill:#ffebee
+    style System fill:#fff3e0
+            </br></br></br></br></br></br></br></br></div>
+<div class="diagram-label">Figure 3.9: DFD Level 0 — Context Diagram</div>
+</div>
+</div>
+<h3 id="dfd-level1">3.5 Data Flow Diagram (Level 1)</h3>
+<div class="diagram-box">
+<div class="diagram-title">Data Flow Diagram — Level 1</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+graph TB
+    Dev["   USER    "  ]
+    GitHub["GitHub"]
+    
+    P1(("1.0<br>Authenticate User"))
+    P2(("2.0<br>Fetch Repository"))
+    P3(("3.0<br>Analyze Code"))
+    P4(("4.0<br>Predict Faults"))
+    P5(("5.0&lt;br/&gt;Generate Reports"))
+    
+    D1["<div style='line-height:0.5'>━━━━━━━━&lt;br/&gt; Users&lt;br/&gt;━━━━━━━━</div>"]
+    D2["<div style='line-height:0.5'>━━━━━━━━━━<br/>Repositories<br/>━━━━━━━━━━</div>"]
+    D3["<div style='line-height:0.5'>━━━━━━━━<br/> Metrics<br/>━━━━━━━━</div>"]
+    D4["<div style='line-height:0.5'>━━━━━━━━━━<br/>Predictions<br/>━━━━━━━━━━</div>"]
+    
+    Dev --&gt;|Login Credentials| P1
+    P1 --&gt;|Auth Token| Dev
+    P1 &lt;--&gt;|User Data| D1
+    
+    Dev --&gt;|Repository URL| P2
+    P2 --&gt;|Repository Info| Dev
+    P2 &lt;--&gt;|Repo Details| D2
+    P2 --&gt;|Source Code| GitHub
+    GitHub --&gt;|Repository Data| P2
+    
+    P2 --&gt;|Code Files| P3
+    P3 &lt;--&gt;|Code Metrics| D3
+    
+    P3 --&gt;|Metric Features| P4
+    P4 &lt;--&gt;|Fault Predictions| D4
+    
+    D3 --&gt;|Historical Metrics| P5
+    D4 --&gt;|Prediction Data| P5
+    D2 --&gt;|Repository Info| P5
+    P5 --&gt;|Analysis Report| Dev
+    
+    style Dev fill:#e3f2fd
+    style GitHub fill:#ffebee
+    style P1 fill:#fff3e0
+    style P2 fill:#fff3e0
+    style P3 fill:#fff3e0
+    style P4 fill:#fff3e0
+    style P5 fill:#fff3e0
+    style D1 fill:none,stroke:none
+    style D2 fill:none,stroke:none
+    style D3 fill:none,stroke:none
+    style D4 fill:none,stroke:none
+            </br></br></br></br></div>
+<div class="diagram-label">Figure 3.10: DFD Level 1 — System Decomposition</div>
+</div>
+</div>
+<!-- 4. SPECIFIC REQUIREMENTS -->
+<h2 id="specific-requirements">4. Specific Requirements</h2>
+<h3 id="external-interfaces">4.1 External Interface Requirements</h3>
+<h4 id="user-interfaces">4.1.1 User Interfaces</h4>
+<p>The system shall provide a modern, responsive web-based user interface built with React 19 and TypeScript. The interface shall be designed for intuitive interaction across desktop and tablet devices (768px to 1920px width).</p>
+<h5>Key UI Components:</h5>
+<ul>
+<li><strong>Dashboard:</strong> Overview of repositories, metrics summaries, and risk distribution</li>
+<li><strong>Repository Management:</strong> Add, list, analyze, and delete repositories with metadata display</li>
+<li><strong>Metrics Visualization:</strong> Interactive charts (Recharts) showing complexity trends, code churn, and risk analysis</li>
+<li><strong>Test Prioritization:</strong> Recommendations and priority ranking for test cases</li>
+<li><strong>Bug Report Management:</strong> Create, track, and manage bug reports with status workflows</li>
+<li><strong>Settings:</strong> User profile management and GitHub token configuration</li>
+</ul>
+<h5>UI Standards:</h5>
+<ul>
+<li>Built with Radix UI components for accessibility (WCAG 2.1 Level AA)</li>
+<li>Styled with Tailwind CSS 3.4.19 for responsive design</li>
+<li>Keyboard navigation shall be fully supported</li>
+<li>Color contrast ratios shall meet accessibility standards</li>
+</ul>
+<h4 id="hardware-interfaces">4.1.2 Hardware Interfaces</h4>
+<table style=border:1px solid #000;border-collapse:collapse;>
+<thead><tr><th style=border:1px solid #000;>Environment</th><th style=border:1px solid #000;>Component</th><th style=border:1px solid #000;>Requirement</th></tr></thead>
+<tbody>
+<tr><td rowspan="4" style=border:1px solid #000;><strong>Development</strong></td><td style=border:1px solid #000;>Processor</td><td style=border:1px solid #000;>Intel Core i5 or equivalent (2.5GHz+)</td></tr>
+<tr><td style=border:1px solid #000;>RAM</td><td style=border:1px solid #000;>8GB minimum, 16GB recommended</td></tr>
+<tr><td style=border:1px solid #000;>Storage</td><td style=border:1px solid #000;>10GB free disk space for repositories and database</td></tr>
+<tr><td style=border:1px solid #000;>Network</td><td style=border:1px solid #000;>Broadband internet (GitHub API access required)</td></tr>
+<tr><td rowspan="4" style=border:1px solid #000;><strong>Production</strong></td><td style=border:1px solid #000;>Processor</td><td style=border:1px solid #000;>Intel Core i7 or equivalent (3.0GHz+)</td></tr>
+<tr><td style=border:1px solid #000;>RAM</td><td style=border:1px solid #000;>16GB minimum</td></tr>
+<tr><td style=border:1px solid #000;>Storage</td><td style=border:1px solid #000;>50GB SSD for database, repositories, and ML models</td></tr>
+<tr><td style=border:1px solid #000;>Network</td><td style=border:1px solid #000;>Stable internet with 100Mbps+ bandwidth</td></tr>
+</tbody>
+</table>
+<h4 id="software-interfaces">4.1.3 Software Interfaces</h4>
+<h5>Frontend Technology Stack:</h5>
+<table style=border:1px solid #000;border-collapse:collapse;>
+<thead><tr><th style=border:1px solid #000;>Component</th><th style=border:1px solid #000;>Technology</th><th style=border:1px solid #000;>Version</th><th style=border:1px solid #000;>Purpose</th></tr></thead>
+<tbody>
+<tr><td style=border:1px solid #000;>Runtime</td><td style=border:1px solid #000;>Node.js</td><td style=border:1px solid #000;>18+</td><td style=border:1px solid #000;>JavaScript runtime for build and development</td></tr>
+<tr><td style=border:1px solid #000;>Framework</td><td style=border:1px solid #000;>React</td><td style=border:1px solid #000;>19.2.3</td><td style=border:1px solid #000;>UI component framework (SPA)</td></tr>
+<tr><td style=border:1px solid #000;>Language</td><td style=border:1px solid #000;>TypeScript</td><td style=border:1px solid #000;>5.9.3</td><td style=border:1px solid #000;>Type-safe JavaScript development</td></tr>
+<tr><td style=border:1px solid #000;>Build Tool</td><td style=border:1px solid #000;>Vite</td><td style=border:1px solid #000;>5.4.21</td><td style=border:1px solid #000;>Fast bundling and HMR</td></tr>
+<tr><td style=border:1px solid #000;>Styling</td><td style=border:1px solid #000;>Tailwind CSS</td><td style=border:1px solid #000;>3.4.19</td><td style=border:1px solid #000;>Utility-first CSS framework</td></tr>
+<tr><td style=border:1px solid #000;>UI Components</td><td style=border:1px solid #000;>Radix UI</td><td style=border:1px solid #000;>Latest</td><td style=border:1px solid #000;>Accessible component primitives</td></tr>
+<tr><td style=border:1px solid #000;>State Mgmt</td><td style=border:1px solid #000;>Zustand</td><td style=border:1px solid #000;>4.5.0</td><td style=border:1px solid #000;>Lightweight state management</td></tr>
+<tr><td style=border:1px solid #000;>Charts</td><td style=border:1px solid #000;>Recharts</td><td style=border:1px solid #000;>3.6.0</td><td style=border:1px solid #000;>Interactive data visualization</td></tr>
+</tbody>
+</table>
+<h5>Backend Technology Stack:</h5>
+<br/>
+<br/>
+<br/>
+<br/>
+<h4 id="communications-protocols">4.1.4 Communications Protocols</h4>
+<ul>
+<li><strong>Frontend ↔ Backend:</strong> REST API over HTTP (HTTPS in production), JSON payloads</li>
+<li><strong>Authentication:</strong> Session-based authentication with secure cookies (PBKDF2 password hashing)</li>
+<li><strong>External APIs:</strong> GitHub REST API v3 via PyGithub library (authenticated with PAT)</li>
+<li><strong>Data Format:</strong> JSON for all API request/response bodies</li>
+<li><strong>Error Handling:</strong> Standard HTTP status codes (200, 201, 400, 401, 403, 404, 500)</li>
+</ul>
+<h3 id="functional-requirements">4.2 Functional Requirements</h3>
+<p>Each requirement uses IEEE 29148 "shall" language and includes unique identifiers for traceability.</p>
+<h4>4.2.1 User Authentication &amp; Management </h4>
+<ul>
+<li><strong>FR-01:</strong> The system <strong>shall</strong> allow new users to register by providing a username, email address, and password.</li>
+<li><strong>FR-02:</strong> The system <strong>shall</strong> validate that the username and email are unique before creating a user account.</li>
+<li><strong>FR-03:</strong> The system <strong>shall</strong> hash user passwords using PBKDF2-SHA256 (via werkzeug.security) before storing them in the database.</li>
+<li><strong>FR-04:</strong> The system <strong>shall</strong> authenticate users via username/password and create a server-side session upon successful login.</li>
+<li><strong>FR-05:</strong> The system <strong>shall</strong> allow authenticated users to update their profile information (full name, organization).</li>
+<li><strong>FR-06:</strong> The system <strong>shall</strong> allow users to store a GitHub Personal Access Token securely in the Settings table for repository access.</li>
+</ul>
+<h4>4.2.2 Repository Management </h4>
+<ul>
+<li><strong>FR-07:</strong> The system <strong>shall</strong> allow authenticated users to add a GitHub repository by providing a valid repository URL.</li>
+<li><strong>FR-08:</strong> The system <strong>shall</strong> fetch repository metadata (name, owner, description, language, stars, forks) from the GitHub API upon repository addition.</li>
+<li><strong>FR-09:</strong> The system <strong>shall</strong> display a paginated list of all repositories owned by the authenticated user.</li>
+<li><strong>FR-10:</strong> The system <strong>shall</strong> allow users to delete a repository and cascade-delete all associated metrics, predictions, bug reports, and test cases.</li>
+</ul>
+<h4>4.2.3 Code Analysis &amp; Metrics </h4>
+<ul>
+<li><strong>FR-11:</strong> The system <strong>shall</strong> clone the selected GitHub repository to the server for analysis.</li>
+<li><strong>FR-12:</strong> The system <strong>shall</strong> identify and extract all analyzable source code files (Python, JavaScript, TypeScript, Java) from the cloned repository.</li>
+<li><strong>FR-13:</strong> The system <strong>shall</strong> calculate the following metrics for each source file: Lines of Code (LOC), Cyclomatic Complexity (CC), Maintainability Index (MI), Halstead Volume, and Halstead Difficulty.</li>
+<li><strong>FR-14:</strong> The system <strong>shall</strong> use Radon for Python file analysis and Lizard for multi-language code complexity computation.</li>
+<li><strong>FR-15:</strong> The system <strong>shall</strong> calculate code churn (number of commits modifying each file) using GitPython.</li>
+<li><strong>FR-16:</strong> The system <strong>shall</strong> persist all calculated metrics in the CODE_METRIC table with a timestamp.</li>
+</ul>
+<h4>4.2.4 Machine Learning Predictions </h4>
+<ul>
+<li><strong>FR-17:</strong> The system <strong>shall</strong> train a Random Forest classifier using scikit-learn on code metric features to predict fault-prone modules.</li>
+<li><strong>FR-18:</strong> The system <strong>shall</strong> extract feature vectors from code metrics (LOC, CC, MI, Halstead metrics, code churn) for each file.</li>
+<li><strong>FR-19:</strong> The system <strong>shall</strong> output a fault probability (0.0 – 1.0) and a confidence score (0.0 – 1.0) for each analyzed file.</li>
+<li><strong>FR-20:</strong> The system <strong>shall</strong> classify each file into a risk level: Low (0–0.3), Medium (0.3–0.6), High (0.6–0.8), or Critical (0.8–1.0) based on fault probability.</li>
+<li><strong>FR-21:</strong> The system <strong>shall</strong> persist trained model artifacts as .pkl files using Joblib for later inference.</li>
+</ul>
+<h4>4.2.5 Dashboard &amp; Visualization </h4>
+<ul>
+<li><strong>FR-22:</strong> The system <strong>shall</strong> display an overview dashboard with summary cards showing: Total Files Analyzed, High Risk Modules Count, Average Complexity, and Recent Analysis Timestamp.</li>
+<li><strong>FR-23:</strong> The system <strong>shall</strong> display a risk distribution chart (pie/donut) showing the breakdown of Low, Medium, High, and Critical risk files.</li>
+<li><strong>FR-24:</strong> The system <strong>shall</strong> display a complexity trend line chart showing cyclomatic complexity changes over analysis history.</li>
+<li><strong>FR-25:</strong> The system <strong>shall</strong> display a list of the 5 most recently analyzed repositories with timestamps.</li>
+</ul>
+<h4>4.2.6 Test Prioritization </h4>
+<ul>
+<li><strong>FR-26:</strong> The system <strong>shall</strong> generate test case prioritization recommendations based on ML-predicted risk scores.</li>
+<li><strong>FR-27:</strong> The system <strong>shall</strong> display test cases ranked by priority score in descending order.</li>
+<li><strong>FR-28:</strong> The system <strong>shall</strong> indicate the target module/file associated with each test case recommendation.</li>
+</ul>
+<h4>4.2.7 Bug Report Management </h4>
+<ul>
+<li><strong>FR-29:</strong> The system <strong>shall</strong> allow authenticated users to create bug reports with fields: title, description, severity (Low/Medium/High/Critical), and associated file path.</li>
+<li><strong>FR-30:</strong> The system <strong>shall</strong> support a bug lifecycle with status transitions: Open → In Progress → Resolved → Closed.</li>
+<li><strong>FR-31:</strong> The system <strong>shall</strong> display all bug reports for a repository with filtering by status and severity.</li>
+</ul>
+<h4>4.2.8 Recommendations &amp; Settings </h4>
+<ul>
+<li><strong>FR-32:</strong> The system <strong>shall</strong> generate code improvement recommendations based on detected complexity and risk patterns.</li>
+<li><strong>FR-33:</strong> The system <strong>shall</strong> allow users to configure: theme (light/dark), notification preferences, auto-analyze toggle, and analysis depth level.</li>
+</ul>
+<h4>Stimulus/Response Sequences:</h4>
+<table style=border:1px solid #000;border-collapse:collapse;>
+<thead><tr><th style=border:1px solid #000;>Stimulus</th><th style=border:1px solid #000;>Source</th><th style=border:1px solid #000;>Response</th><th style=border:1px solid #000;>Requirements</th></tr></thead>
+<tbody>
+<tr><td style=border:1px solid #000;>User submits registration form</td><td style=border:1px solid #000;>Login Page</td><td style=border:1px solid #000;>System creates user account and redirects to login</td><td style=border:1px solid #000;>FR-01, FR-02, FR-03</td></tr>
+<tr><td style=border:1px solid #000;>User submits login credentials</td><td style=border:1px solid #000;>Login Page</td><td style=border:1px solid #000;>System authenticates and redirects to Dashboard</td><td style=border:1px solid #000;>FR-04</td></tr>
+<tr><td style=border:1px solid #000;>User enters GitHub repository URL</td><td style=border:1px solid #000;>Repository Page</td><td style=border:1px solid #000;>System fetches metadata and adds repo to user's list</td><td style=border:1px solid #000;>FR-07, FR-08</td></tr>
+<tr><td style=border:1px solid #000;>User clicks "Analyze" button</td><td style=border:1px solid #000;>Repository Page</td><td style=border:1px solid #000;>System clones repo, calculates metrics, runs ML prediction, displays results</td><td style=border:1px solid #000;>FR-11 to FR-21</td></tr>
+<tr><td style=border:1px solid #000;>User navigates to Dashboard</td><td style=border:1px solid #000;>Navigation</td><td style=border:1px solid #000;>System loads overview cards, risk chart, complexity trend, recent analyses</td><td style=border:1px solid #000;>FR-22 to FR-25</td></tr>
+<tr><td style=border:1px solid #000;>User submits bug report form</td><td style=border:1px solid #000;>Bug Reports Page</td><td style=border:1px solid #000;>System creates bug record with "Open" status</td><td style=border:1px solid #000;>FR-29, FR-30</td></tr>
+</tbody>
+</table>
+<h3 id="nonfunctional-requirements">4.3 Non-Functional Requirements</h3>
+<h4 id="performance">4.3.1 Performance</h4>
+<ul>
+<li><strong>NFR-01:</strong> The system <strong>shall</strong> respond to 95% of API requests within 2 seconds under normal load.</li>
+<li><strong>NFR-02:</strong> The Dashboard page <strong>shall</strong> load within 3 seconds including chart rendering.</li>
+<li><strong>NFR-03:</strong> Repository analysis <strong>shall</strong> complete within 5 minutes for repositories containing fewer than 1,000 source files.</li>
+<li><strong>NFR-04:</strong> The system <strong>shall</strong> support at least 50 concurrent authenticated users.</li>
+<li><strong>NFR-05:</strong> The database <strong>shall</strong> handle a minimum of 100 queries per second.</li>
+</ul>
+<table style=border:1px solid #000;border-collapse:collapse;>
+<thead><tr><th style=border:1px solid #000;>Performance Metric</th><th style=border:1px solid #000;>Target Value</th></tr></thead>
+<tbody>
+<tr><td style=border:1px solid #000;>API Response Time</td><td style=border:1px solid #000;>≤ 2 seconds for 95th percentile</td></tr>
+<tr><td style=border:1px solid #000;>Dashboard Load Time</td><td style=border:1px solid #000;>≤ 3 seconds</td></tr>
+<tr><td style=border:1px solid #000;>Repository Analysis Time</td><td style=border:1px solid #000;>≤ 5 minutes for &lt; 1,000 files</td></tr>
+<tr><td style=border:1px solid #000;>Concurrent Users</td><td style=border:1px solid #000;>≥ 50</td></tr>
+<tr><td style=border:1px solid #000;>Database Throughput</td><td style=border:1px solid #000;>≥ 100 queries/second</td></tr>
+<tr><td style=border:1px solid #000;>Data Scalability</td><td style=border:1px solid #000;>Up to 10,000 files/repository, 100 users, 1M predictions</td></tr>
+</tbody>
+</table>
+<h4 id="reliability">4.3.2 Reliability</h4>
+<ul>
+<li><strong>NFR-06:</strong> The system <strong>shall</strong> gracefully handle GitHub API failures without crashing, displaying appropriate error messages.</li>
+<li><strong>NFR-07:</strong> Database errors <strong>shall not</strong> corrupt existing data; transactions shall be rolled back on failure.</li>
+<li><strong>NFR-08:</strong> Failed repository analyses <strong>shall not</strong> corrupt existing metrics in the database.</li>
+<li><strong>NFR-09:</strong> All user inputs <strong>shall</strong> be validated with appropriate error messages for invalid data.</li>
+</ul>
+<h4 id="availability">4.3.3 Availability</h4>
+<ul>
+<li><strong>NFR-10:</strong> The system <strong>shall</strong> maintain 99% uptime during business hours, excluding planned maintenance.</li>
+<li><strong>NFR-11:</strong> Scheduled maintenance windows <strong>shall not</strong> exceed 2 hours.</li>
+</ul>
+<h4 id="security">4.3.4 Security</h4>
+<ul>
+<li><strong>NFR-12:</strong> User passwords <strong>shall</strong> be hashed using PBKDF2-SHA256 — plain-text passwords shall never be stored.</li>
+<li><strong>NFR-13:</strong> User sessions <strong>shall</strong> expire after 7 days of inactivity.</li>
+<li><strong>NFR-14:</strong> All protected API endpoints <strong>shall</strong> require valid authentication; unauthenticated requests shall receive HTTP 401.</li>
+<li><strong>NFR-15:</strong> Users <strong>shall</strong> only access their own repositories, metrics, and data.</li>
+<li><strong>NFR-16:</strong> SQL injection <strong>shall</strong> be prevented through ORM parameterized queries (SQLAlchemy).</li>
+<li><strong>NFR-17:</strong> Cross-site scripting (XSS) <strong>shall</strong> be prevented via React's automatic output escaping.</li>
+<li><strong>NFR-18:</strong> GitHub tokens <strong>shall</strong> be encrypted before storage and never logged or exposed in API responses.</li>
+</ul>
+<h4 id="maintainability">4.3.5 Maintainability</h4>
+<ul>
+<li><strong>NFR-19:</strong> The codebase <strong>shall</strong> follow established coding standards: PEP 8 for Python, ESLint for TypeScript.</li>
+<li><strong>NFR-20:</strong> The system <strong>shall</strong> use a layered architecture with loosely coupled components.</li>
+<li><strong>NFR-21:</strong> Code coverage <strong>shall</strong> exceed 70% for backend services.</li>
+<li><strong>NFR-22:</strong> All public functions and API endpoints <strong>shall</strong> be documented.</li>
+</ul>
+<h4 id="portability">4.3.6 Portability</h4>
+<ul>
+<li><strong>NFR-23:</strong> The frontend <strong>shall</strong> function correctly on Chrome 100+, Firefox 100+, Safari 15+, Edge 100+.</li>
+<li><strong>NFR-24:</strong> The backend <strong>shall</strong> run on Windows 10/11, Ubuntu 20.04+, and macOS 11+ without modification.</li>
+<li><strong>NFR-25:</strong> The UI <strong>shall</strong> be responsive across screen widths from 768px to 1920px.</li>
+</ul>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<h3 id="database-requirements">4.4 Database Requirements</h3>
+<h4>Database Type: SQLite 3.35+</h4>
+<p>File-based relational database suitable for single-instance deployment with cross-platform portability.</p>
+<h4>Data Integrity &amp; Constraints:</h4>
+<ul>
+<li>Primary keys: All tables shall have unique auto-incrementing integer primary key (id)</li>
+<li>Foreign keys: Referential integrity shall be maintained between all related tables</li>
+<li>Unique constraints: username, email in USER table shall be unique</li>
+<li>Indexes: Shall be created on frequently queried columns (user_id, repository_id, file_path)</li>
+<li>Cascading deletes: Deleting a repository shall cascade to metrics, predictions, bugs, and test cases</li>
+</ul>
+<div class="diagram-box">
+<div class="diagram-title">Domain Model</div>
+<div class="diagram-image-container">
+<div class="mermaid">
+%%{init: {'class': {'direction': 'LR'}}}%%
+classDiagram
+    direction LR
+
+    class User {
+        id
+        username
+        email
+        fullName
+        organization
+        createdAt
+        lastLogin
+    }
+
+    class Settings {
+        id
+        githubToken
+        preferences
+        updatedAt
+    }
+
+    class Repository {
+        id
+        name
+        owner
+        url
+        description
+        language
+        stars
+        forks
+        lastAnalyzed
+    }
+
+    class AnalysisRun {
+        id
+        startedAt
+        completedAt
+        status
+    }
+
+    class CodeMetric {
+        id
+        filePath
+        linesOfCode
+        cyclomaticComplexity
+        maintainabilityIndex
+        halsteadVolume
+        halsteadDifficulty
+        codeChurn
+        calculatedAt
+    }
+
+    class FaultPrediction {
+        id
+        filePath
+        faultProbability
+        riskLevel
+        confidence
+        predictedAt
+    }
+
+    class BugReport {
+        id
+        title
+        description
+        severity
+        priority
+        status
+        modulePath
+        createdAt
+        resolvedAt
+    }
+
+    class TestCase {
+        id
+        name
+        targetModule
+        priorityScore
+        status
+    }
+
+    class ModelArtifact {
+        id
+        path
+        version
+        createdAt
+    }
+
+    %% Relationships (multiplicities aligned with SRS semantics)
+    User "1" -- "1" Settings : configures
+    User "1" -- "*" Repository : owns
+
+    Repository "1" -- "*" AnalysisRun : analyzed_by
+    AnalysisRun "1" -- "*" CodeMetric : produces
+    AnalysisRun "1" -- "*" FaultPrediction : produces
+
+    Repository "1" -- "*" BugReport : tracks
+    Repository "1" -- "*" TestCase : tested_by
+
+    CodeMetric ..> FaultPrediction : features_for
+    FaultPrediction ..> TestCase : prioritizes
+
+    AnalysisRun "0..*" -- "0..1" ModelArtifact : uses_model
+            </div>
+<div class="diagram-label">Figure 3.11: Domain Model</div>
+</div>
+</div>
+<div class="page-break"></div>
+<!-- 5. ADDITIONAL MATERIAL -->
+<h2 id="additional-material">5. Additional Material</h2>
+<h4>Requirements Traceability Matrix:</h4>
+<table style=border:1px solid #000;border-collapse:collapse;>
+<thead><tr><th style=border:1px solid #000;>Req. ID</th><th style=border:1px solid #000;>Feature</th><th style=border:1px solid #000;>Priority</th><th style=border:1px solid #000;>SDD Component</th><th style=border:1px solid #000;>Test Case</th></tr></thead>
+<tbody>
+<tr><td style=border:1px solid #000;>FR-01 to FR-06</td><td style=border:1px solid #000;>F1: User Auth</td><td style=border:1px solid #000;>High</td><td style=border:1px solid #000;>AuthContext, Login Page, Auth API</td><td style=border:1px solid #000;>TC-001, TC-002, TC-008</td></tr>
+<tr><td style=border:1px solid #000;>FR-07 to FR-10</td><td style=border:1px solid #000;>F2: Repository Mgmt</td><td style=border:1px solid #000;>High</td><td style=border:1px solid #000;>Repository Page, Repo API, GitHubService</td><td style=border:1px solid #000;>TC-003</td></tr>
+<tr><td style=border:1px solid #000;>FR-11 to FR-16</td><td style=border:1px solid #000;>F3: Code Analysis</td><td style=border:1px solid #000;>High</td><td style=border:1px solid #000;>CodeAnalyzer, Analysis API</td><td style=border:1px solid #000;>TC-004</td></tr>
+<tr><td style=border:1px solid #000;>FR-17 to FR-21</td><td style=border:1px solid #000;>F4: ML Predictions</td><td style=border:1px solid #000;>High</td><td style=border:1px solid #000;>MLService, Prediction API</td><td style=border:1px solid #000;>TC-007</td></tr>
+<tr><td style=border:1px solid #000;>FR-22 to FR-25</td><td style=border:1px solid #000;>F5: Dashboard</td><td style=border:1px solid #000;>High</td><td style=border:1px solid #000;>Dashboard Page, Chart Components</td><td style=border:1px solid #000;>TC-005, TC-010</td></tr>
+<tr><td style=border:1px solid #000;>FR-26 to FR-28</td><td style=border:1px solid #000;>F6: Test Prioritization</td><td style=border:1px solid #000;>Medium</td><td style=border:1px solid #000;>TestPrioritization Page</td><td style=border:1px solid #000;>—</td></tr>
+<tr><td style=border:1px solid #000;>FR-29 to FR-31</td><td style=border:1px solid #000;>F7: Bug Reports</td><td style=border:1px solid #000;>Medium</td><td style=border:1px solid #000;>BugReports Page, Bug API</td><td style=border:1px solid #000;>TC-006</td></tr>
+<tr><td style=border:1px solid #000;>FR-32</td><td style=border:1px solid #000;>F8: Recommendations</td><td style=border:1px solid #000;>Low</td><td style=border:1px solid #000;>Recommendations Page</td><td style=border:1px solid #000;>—</td></tr>
+<tr><td style=border:1px solid #000;>FR-33</td><td style=border:1px solid #000;>F9: Settings</td><td style=border:1px solid #000;>Medium</td><td style=border:1px solid #000;>Settings Page, Settings API</td><td style=border:1px solid #000;>—</td></tr>
+<tr><td style=border:1px solid #000;>NFR-12 to NFR-18</td><td style=border:1px solid #000;>Security</td><td style=border:1px solid #000;>High</td><td style=border:1px solid #000;>Auth Middleware, CORS</td><td style=border:1px solid #000;>TC-008, TC-009</td></tr>
+<tr><td style=border:1px solid #000;>NFR-01 to NFR-05</td><td style=border:1px solid #000;>Performance</td><td style=border:1px solid #000;>High</td><td style=border:1px solid #000;>DB Indexes, API Caching</td><td style=border:1px solid #000;>TC-010</td></tr>
+</tbody>
+</table>
+<h4>Related Documents:</h4>
+<ul>
+<li>Chapter 1 — SPMP (Software Project Management Plan) — IEEE 1058-1998</li>
+<li>Chapter 3 — SDD (Software Design Description) — IEEE 1016-2009</li>
+<li>Chapter 4 — STD (Software Test Documentation) — IEEE 829-2008</li>
+</ul>
+
+</body>
+</html>
+
+<script>
+// After page load and Mermaid rendering, underline only labels that read "system" (case-insensitive).
+window.addEventListener('load', function(){
+    // small delay to allow mermaid to render SVGs
+    setTimeout(function(){
+        document.querySelectorAll('.mermaid svg').forEach(function(svg){
+            svg.querySelectorAll('text').forEach(function(t){
+                try{
+                    if(t.textContent && t.textContent.trim().toLowerCase().endsWith('system')){
+                        t.style.textDecoration = 'underline';
+                    }
+                }catch(e){ /* ignore */ }
+            });
+        });
+    }, 300);
+});
+</script>

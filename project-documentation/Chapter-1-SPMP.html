@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 1: Software Project Management Plan (SPMP) - IEEE 1058-1998</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose',
+            flowchart: { nodeSpacing: 50, rankSpacing: 50, curve: 'basis' },
+            gantt: { fontSize: 11, barHeight: 20, barGap: 4, topPadding: 50 },
+            themeVariables: { primaryColor: '#ffffff', primaryBorderColor: '#000000', primaryTextColor: '#000000', lineColor: '#000000', secondaryColor: '#f0f0f0', tertiaryColor: '#e0e0e0' }
+        });
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', 'Times New Roman', serif; line-height: 1.8; color: #000000; background: white; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 50px 60px; box-shadow: none; }
+        .cover-page { text-align: center; padding: 80px 0; border-bottom: 3px solid #000000; margin-bottom: 40px; page-break-after: always; }
+        .cover-page h1 { font-size: 2.8em; color: #000000; margin: 20px 0; }
+        .cover-page h2 { font-size: 1.8em; color: #000000; margin: 15px 0; font-weight: normal; }
+        .cover-page .metadata { margin-top: 60px; text-align: left; display: inline-block; }
+        .metadata-row { margin: 12px 0; font-size: 1.05em; }
+        .metadata-label { font-weight: bold; display: inline-block; width: 180px; }
+        header { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 3px solid #000000; }
+        h1 { font-size: 2.5em; color: #000000; margin-bottom: 10px; }
+        .doc-info { color: #333333; font-size: 1.1em; }
+        h2 { font-size: 1.9em; color: #000000; margin-top: 40px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #000000; page-break-after: avoid; }
+        h3 { font-size: 1.4em; color: #000000; margin-top: 30px; margin-bottom: 15px; page-break-after: avoid; }
+        h4 { font-size: 1.15em; color: #000000; margin-top: 20px; margin-bottom: 10px; }
+        h5 { font-size: 1.05em; color: #000000; margin-top: 15px; margin-bottom: 8px; }
+        p { margin-bottom: 14px; text-align: justify; }
+        ul, ol { margin-left: 30px; margin-bottom: 15px; }
+        li { margin-bottom: 6px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; page-break-inside: avoid; }
+        th { background-color: #1d1d1d; color: white; padding: 12px; text-align: center; font-weight: bold; }
+        td { padding: 10px; border: 1px solid #000000; text-align: center; }
+        td:first-child { text-align: center; }
+        td:last-child { text-align: center; }
+        tr:nth-child(even) { background-color: #f0f0f0; }
+        .box { background: #f0f0f0; border-left: 4px solid #000000; padding: 15px 20px; margin: 20px 0; page-break-inside: avoid; }
+        .note-box { background: #f0f0f0; border-left: 4px solid #000000; padding: 15px 20px; margin: 20px 0; }
+        .warning-box { background: #f0f0f0; border-left: 4px solid #000000; padding: 15px 20px; margin: 20px 0; }
+        .diagram-box { background: #ffffff; border: 2px solid #000000; border-radius: 0px; padding: 20px; margin: 25px 0; page-break-inside: avoid; }
+        .diagram-title { font-size: 1.2em; font-weight: bold; color: #000000; margin-bottom: 10px; text-align: center; }
+        .diagram-description { background: #f0f0f0; border-left: 4px solid #000000; padding: 12px; margin: 12px 0 18px 0; font-style: italic; }
+        .diagram-image-container { text-align: center; padding: 15px; background: white; border: 1px solid #000000; border-radius: 0px; margin: 15px 0; }
+        .diagram-label { text-align: center; font-weight: bold; font-size: 1em; color: #000000; padding: 10px; margin: 10px 0;}
+        .toc { page-break-after: always; margin-bottom: 40px; }
+        .toc h2 { font-size: 1.8em; color: #000000; margin-bottom: 20px; border-bottom: 2px solid #000000; padding-bottom: 10px; }
+        .toc ol { counter-reset: toc-counter; list-style: none; margin-left: 0; }
+        .toc > ol > li { margin: 8px 0; font-weight: bold; }
+        .toc ol ol { margin-left: 25px; }
+        .toc ol ol li { font-weight: normal; margin: 5px 0; font-size: 0.95em; }
+        .toc a { color: #000000; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .page-break { page-break-after: always; }
+        .risk-high { background-color: #e0e0e0; }
+        .risk-medium { background-color: #f0f0f0; }
+        .risk-low { background-color: #f8f8f8; }
+        table.risk-register {
+            font-size: 12px;
+            width: 90%;
+            
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+        table.risk-register th, table.risk-register td {
+            padding: 6px 8px;
+            border: 1px solid #bbb;
+        }
+        @media print {
+            table.risk-register {
+                font-size: 15px;
+                page-break-inside: avoid;
+            }
+            table.risk-register th, table.risk-register td {
+                padding: 5px 6px;
+            }
+        }
+        @media print {
+            body { background: white; padding: 0; color: #000000; }
+            .container { box-shadow: none; padding: 30px; }
+            h2 { page-break-after: avoid; }
+            h3 { page-break-after: avoid; }
+            table, .box, .diagram-box { page-break-inside: avoid; }
+            .page-break { page-break-after: always; }
+            tr:nth-child(even) { background-color: #f0f0f0 !important; }
+            .risk-high { background-color: #e0e0e0 !important; }
+            .risk-medium { background-color: #f0f0f0 !important; }
+            .risk-low { background-color: #f8f8f8 !important; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ==================== COVER PAGE ==================== -->
+    <div class="cover-page">
+        <p style="font-size: 1.2em; color: #333333; letter-spacing: 2px;">IEEE 1058-1998 STANDARD</p>
+        <h1>Project Management Plan for Software Development</h1>
+        <h2>(SPMP)</h2>
+        <p style="font-size: 1.4em; color: #000000; margin: 20px 0;">Intelligent Code Quality & Fault Analysis Platform</p>
+        <div class="metadata">
+            <div class="metadata-row"><span class="metadata-label">Document Title:</span> Project Management Plan (SPMP)</div>
+            <div class="metadata-row"><span class="metadata-label">Project Name:</span> Intelligent Code Quality & Fault Analysis Platform</div>
+            <div class="metadata-row"><span class="metadata-label">Standard Reference:</span> IEEE 1058-1998</div>
+            <div class="metadata-row"><span class="metadata-label">Document Version:</span> 1.0</div>
+            <div class="metadata-row"><span class="metadata-label">Date:</span> February 4, 2026</div>
+            <div class="metadata-row"><span class="metadata-label">Status:</span> Draft</div>
+            <div class="metadata-row"><span class="metadata-label">Prepared By:</span> DANIYAL KHALIL</div>
+        </div>
+    </div>
+
+    <!-- ==================== TABLE OF CONTENTS ==================== -->
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ol>
+            <li><a href="#overview">1. Overview</a>
+                <ol>
+                    <li><a href="#project-summary">1.1 Project Summary</a></li>
+                    <li><a href="#references">1.2 Reference Materials</a></li>
+                    <li><a href="#definitions">1.3 Definitions and Acronyms</a></li>
+                </ol>
+            </li>
+            <li><a href="#project-organization">2. Project Organization</a>
+                <ol>
+                    <li><a href="#process-model">2.1 Process Model</a></li>
+                    <li><a href="#org-structure">2.2 Organizational Structure</a></li>
+                    <li><a href="#org-boundaries">2.3 Organizational Boundaries and Interfaces</a></li>
+                    <li><a href="#responsibilities">2.4 Project Responsibilities</a></li>
+                </ol>
+            </li>
+            <li><a href="#managerial-process">3. Managerial Process</a>
+                <ol>
+                    <li><a href="#objectives">3.1 Management Objectives and Priorities</a></li>
+                    <li><a href="#assumptions">3.2 Assumptions, Dependencies, and Constraints</a></li>
+                    <li><a href="#risk-management">3.3 Risk Management</a></li>
+                    <li><a href="#monitoring">3.4 Monitoring and Controlling Mechanisms</a></li>
+                    <li><a href="#staffing">3.5 Staffing Plan</a></li>
+                </ol>
+            </li>
+            <li><a href="#technical-process">4. Technical Process</a>
+                <ol>
+                    <li><a href="#methods-tools">4.1 Methods, Tools, and Techniques</a></li>
+                    <li><a href="#software-documentation">4.2 Software Documentation</a></li>
+                    <li><a href="#support-functions">4.3 Project Support Functions</a></li>
+                </ol>
+            </li>
+            <li><a href="#work-packages">5. Work Packages, Schedule, and Budget</a>
+                <ol>
+                    <li><a href="#wbs">5.1 Work Packages (Work Breakdown Structure)</a></li>
+                    <li><a href="#dependencies">5.2 Dependencies</a></li>
+                    <li><a href="#resources">5.3 Resource Requirements</a></li>
+                    <li><a href="#budget">5.4 Budget and Resource Allocation</a></li>
+                    <li><a href="#schedule">5.5 Schedule</a></li>
+                </ol>
+            </li>
+            <li><a href="#additional">6. Additional Components</a></li>
+        </ol>
+    </div>
+
+    <!-- ==================== 1. OVERVIEW ==================== -->
+    <h2 id="overview">1. Introduction</h2>
+
+    <h3 id="project-summary">1.1 Project Overview</h3>
+
+    <h4>1.1.1 Purpose</h4>
+    <p>This Project Management Plan outlines the strategies and structure for developing the <strong>Intelligent Code Quality & Fault Analysis Platform</strong>. The platform uses advanced machine learning to examine code repositories, identify modules likely to contain faults, and suggest improvements to enhance software quality.</p>
+    <p>The document is intended to guide developers, stakeholders, and project supervisors throughout the software development process. It details the project’s goals, scope, expected outcomes, team structure, risk management, and the plan for execution and monitoring, following IEEE 1058-1998 standards.</p>
+
+    <h4>1.1.2 Scope</h4>
+    <p><strong>Project Name:</strong> Intelligent Code Quality & Fault Analysis Platform</p>
+    <p>This platform delivers a comprehensive solution for code quality assessment and fault prediction, connecting directly with GitHub repositories. It evaluates code complexity, forecasts bug-prone areas using machine learning, and provides smart suggestions for testing and code improvement.</p>
+
+    <h5>Main Deliverables:</h5>
+    <ol>
+        <li>Web-based user interface</li>
+        <li>Backend API service</li>
+        <li>Machine learning prediction module</li>
+        <li>SQLite database with normalized tables</li>
+        <li>GitHub integration for repository data</li>
+        <li>User authentication and session management</li>
+        <li>Analytics dashboard with interactive charts</li>
+        <li>Full documentation set (SPMP, SRS, SDD, STD)</li>
+    </ol>
+    <br>
+    <br>
+
+    <h5>Project Boundaries:</h5>
+    <table>
+        <thead><tr><th>Included Features</th><th>Excluded Features</th></tr></thead>
+        <tbody>
+            <tr><td>GitHub repository integration and analysis</td><td>CI/CD pipeline integration (future)</td></tr>
+            <tr><td>Code complexity metrics (CC, MI, LOC, Churn)</td><td>Support for other version control systems</td></tr>
+            <tr><td>ML-based fault prediction (Random Forest)</td><td>Mobile app development</td></tr>
+            <tr><td>User management and authentication</td><td>Enterprise-level scalability</td></tr>
+            <tr><td>Interactive dashboards and visualizations</td><td>Collaborative editing</td></tr>
+            <tr><td>Test prioritization recommendations</td><td>Cloud deployment</td></tr>
+            <tr><td>Bug report tracking</td><td>Multi-tenant SaaS</td></tr>
+            <tr><td>Settings and configuration management</td><td>Automated code refactoring</td></tr>
+        </tbody>
+    </table>
+
+    <h5>Intended Users:</h5>
+    <ul>
+        <li><strong>Software Developers</strong> — Analyze repositories and review predictions</li>
+        <li><strong>QA Engineers</strong> — Use testing and bug tracking features</li>
+        <li><strong>Project Managers</strong> — Monitor analytics and review reports</li>
+        <li><strong>Technical Leads</strong> — Assess code quality and risks</li>
+    </ul>
+
+    <h4>1.1.3 Objectives</h4>
+    <ol>
+        <li>Build a web application that connects to GitHub for automated code analysis</li>
+        <li>Develop a machine learning pipeline to predict fault-prone modules with at least 75% accuracy</li>
+        <li>Offer actionable metrics and dashboards for code quality evaluation</li>
+        <li>Produce IEEE-compliant documentation (SPMP, SRS, SDD, STD) before coding starts</li>
+        <li>Finish the project within 30 weeks (Nov 2025 – Jun 2026) with clear milestones</li>
+    </ol>
+    <br>
+    <br>
+    <h3 id="references">1.2 Reference Materials</h3>
+    <ul>
+        <li><strong>IEEE 1058-1998:</strong> IEEE Standard for Software Project Management Plans</li>
+        <li><strong>IEEE 1016-2009:</strong> IEEE Standard for Information Technology — Software Design Descriptions</li>
+        <li><strong>IEEE 829-2008:</strong> IEEE Standard for Software and System Test Documentation</li>
+        <li><strong>IEEE 1540-2001:</strong> IEEE Standard for Software Life Cycle Processes — Risk Management</li>
+       
+    </ul>
+
+    <h3 id="definitions">1.3 Definitions and Acronyms</h3>
+    <table>
+        <thead><tr><th>Term / Acronym</th><th>Definition</th></tr></thead>
+        <tbody>
+            <tr><td class="tc"><strong>API</strong></td><td>Application Programming Interface</td></tr>
+            <tr><td class="tc"><strong>CC</strong></td><td>Cyclomatic Complexity — measure of code complexity based on control flow</td></tr>
+            <tr><td class="tc"><strong>CORS</strong></td><td>Cross-Origin Resource Sharing — security feature for web browsers</td></tr>
+            <tr><td class="tc"><strong>CRUD</strong></td><td>Create, Read, Update, Delete — basic database operations</td></tr>
+            <tr><td class="tc"><strong>LOC</strong></td><td>Lines of Code — source code size metric</td></tr>
+            <tr><td class="tc"><strong>MI</strong></td><td>Maintainability Index — code maintainability metric (0-100)</td></tr>
+            <tr><td class="tc"><strong>ML</strong></td><td>Machine Learning — algorithms that learn patterns from data</td></tr>
+            <tr><td class="tc"><strong>ORM</strong></td><td>Object-Relational Mapping — database abstraction layer</td></tr>
+            <tr><td class="tc"><strong>REST</strong></td><td>Representational State Transfer — API architectural style</td></tr>
+            <tr><td class="tc"><strong>SDD</strong></td><td>Software Design Description</td></tr>
+            <tr><td class="tc"><strong>SPMP</strong></td><td>Software Project Management Plan (this document)</td></tr>
+            <tr><td class="tc"><strong>SRS</strong></td><td>Software Requirements Specification</td></tr>
+            <tr><td class="tc"><strong>STD</strong></td><td>Software Test Documentation</td></tr>
+            <tr><td class="tc"><strong>WBS</strong></td><td>Work Breakdown Structure</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ==================== 2. PROJECT ORGANIZATION ==================== -->
+    <h2 id="project-organization">2. Project Structure & Approach</h2>
+
+    <h3 id="process-model">2.1 Development Methodology</h3>
+    <p><strong>Chosen Model:</strong> Iterative and Agile. The project is divided into several cycles, each ending with a working increment. This allows for early validation of the machine learning model, continuous integration, and flexibility to refine requirements and design as needed. This approach is based on my experience with academic projects and industry best practices.</p>
+
+    <div class="diagram-box">
+        <div class="diagram-title">Development Lifecycle (Custom Iterative Model)</div>
+        <div class="mermaid">
+graph LR
+    A[Requirements Gathering] --> B[System Design]
+    B --> C[Implementation]
+    C --> D[Testing]
+    D --> E[Review & Feedback]
+    E --> F[Next Iteration or Delivery]
+    style A fill:#f0f0f0,stroke:#000000
+    style B fill:#f0f0f0,stroke:#000000
+    style C fill:#f0f0f0,stroke:#000000
+    style D fill:#f0f0f0,stroke:#000000
+    style E fill:#f0f0f0,stroke:#000000
+    style F fill:#f0f0f0,stroke:#000000
+        </div>
+        <div class="diagram-label">Figure: Custom Iterative Development Lifecycle (inspired by IEEE 1058-1998)</div>
+    </div>
+
+    <h4>Phases & Activities:</h4>
+    <table>
+        <thead><tr><th>Phase</th><th>Activities</th><th>Outcomes</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Planning & Requirements</strong></td><td>Define scope, gather requirements, assess feasibility, identify risks</td><td>SPMP, SRS</td></tr>
+            <tr><td><strong>Design</strong></td><td>Design architecture, database, APIs, and UI wireframes</td><td>SDD, diagrams</td></tr>
+            <tr><td><strong>Implementation</strong></td><td>Develop frontend, backend, ML pipeline, and database</td><td>Source code, builds</td></tr>
+            <tr><td><strong>Testing</strong></td><td>Conduct unit, integration, and system tests</td><td>STD, test reports</td></tr>
+            <tr><td><strong>Deployment & Closure</strong></td><td>Deploy system, write user docs, review project</td><td>Final system, documentation</td></tr>
+        </tbody>
+    </table>
+
+    <h3 id="org-structure">2.2 Team & Roles</h3>
+
+    <div class="diagram-box">
+        <div class="diagram-image-container">
+            <div class="diagram-title">Project Team Structure</div>
+            <div class="mermaid">
+graph TB
+    SUP["Academic Supervisor: Oversight & Guidance"]
+    SUP --> DEV["Daniyal Khalil: Developer & Project Owner"]
+    DEV --> FE["Frontend: React/TypeScript"]
+    DEV --> BE["Backend: Flask & DB"]
+    DEV --> ML["ML Pipeline: Model Training"]
+    DEV --> QA["Testing: Unit & Integration"]
+    DEV --> DOC["Documentation: All IEEE Docs"]
+    style SUP fill:#e0e0e0,stroke:#000000,stroke-width:2px
+    style DEV fill:#e0e0e0,stroke:#000000,stroke-width:2px
+    style FE fill:#f0f0f0,stroke:#000000
+    style BE fill:#f0f0f0,stroke:#000000
+    style ML fill:#f0f0f0,stroke:#000000
+    style QA fill:#f0f0f0,stroke:#000000
+    style DOC fill:#f0f0f0,stroke:#000000
+            </div>
+        </div>
+        <div class="diagram-label">Figure: Team Structure (customized for academic project)</div>
+    </div>
+
+    <h3 id="org-boundaries">2.3 External Interfaces</h3>
+    <p>Throughout the project, I will interact with several external entities:</p>
+    <table>
+        <thead><tr><th>Entity</th><th>Description</th><th>Interaction Method</th></tr></thead>
+        <tbody>
+            <tr><td><strong>GitHub</strong></td><td>Source for repository data and metadata</td><td>REST API (PyGithub)</td></tr>
+            <tr><td><strong>Academic Supervisor</strong></td><td>Oversight, reviews, and evaluation</td><td>Meetings, document review</td></tr>
+            <tr><td><strong>End Users</strong></td><td>Developers, QA, managers</td><td>Feedback, testing</td></tr>
+            <tr><td><strong>Open Source Libraries</strong></td><td>Tools and frameworks used</td><td>npm, pip</td></tr>
+        </tbody>
+    </table>
+
+    <h3 id="responsibilities">2.4 Responsibilities</h3>
+    <p>All technical and management tasks are handled by myself, with guidance from my supervisor. This includes coding, testing, documentation, and project planning. The supervisor provides feedback and ensures academic standards are met.</p>
+    <table>
+        <thead><tr><th>Role</th><th>Person</th><th>Main Duties</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Developer / Owner</strong></td><td>Daniyal Khalil</td><td>Full-stack development, ML pipeline, database, testing, documentation, planning</td></tr>
+            <tr><td><strong>Supervisor</strong></td><td>Dr. Muddassar Azam Sindhu</td><td>Oversight, reviews, guidance, grading</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ==================== 3. MANAGERIAL PROCESS ==================== -->
+    <h2 id="managerial-process">3. Management & Priorities</h2>
+    <h3 id="objectives">3.1 Project Goals</h3>
+    <h4>Key Objectives:</h4>
+    <ol>
+        <li><strong>Quality:</strong> Meet all requirements, achieve high ML accuracy (≥ 75%)</li>
+        <li><strong>Timeliness:</strong> Complete within 30 weeks, hit milestones</li>
+        <li><strong>Documentation:</strong> Follow IEEE standards for all documents</li>
+        <li><strong>Integration:</strong> Ensure smooth connection between frontend, backend, and ML</li>
+    </ol>
+    <h4>Priority Table:</h4>
+    <table>
+        <thead><tr><th>Priority</th><th>Factor</th><th>Reason</th></tr></thead>
+        <tbody>
+            <tr><td>1 (Top)</td><td>Functionality</td><td>Core features must work reliably</td></tr>
+            <tr><td>2</td><td>Quality</td><td>Code and ML accuracy are essential</td></tr>
+            <tr><td>3</td><td>Schedule</td><td>Timely delivery for academic requirements</td></tr>
+            <tr><td>4</td><td>Cost</td><td>Open-source tools minimize expenses</td></tr>
+        </tbody>
+    </table>
+
+    <h3 id="assumptions">3.2 Assumptions, Dependencies, Constraints</h3>
+    <h4>Assumptions:</h4>
+    <ol>
+        <li>I have the necessary skills in React, Python, Flask, and ML</li>
+        <li>GitHub API will be accessible and stable</li>
+        <li>Internet access is available for development and testing</li>
+        <li>SQLite is sufficient for the project’s data needs</li>
+        <li>Open-source tools (Radon, Lizard, scikit-learn) are reliable</li>
+        <li>Users will use modern browsers (Chrome, Firefox, Safari, Edge)</li>
+    </ol>
+
+    <h4>Dependencies:</h4>
+    <table>
+        <thead><tr><th>Dependency</th><th>Type</th><th>Impact if Missing</th></tr></thead>
+        <tbody>
+            <tr><td>GitHub REST API v3</td><td>External Service</td><td>Cannot fetch repository data</td></tr>
+            <tr><td>Python 3.8+</td><td>Platform</td><td>Backend and ML won’t run</td></tr>
+            <tr><td>Node.js 18+</td><td>Platform</td><td>Frontend won’t build</td></tr>
+            <tr><td>scikit-learn</td><td>Library</td><td>No ML pipeline</td></tr>
+            <tr><td>Radon / Lizard</td><td>Library</td><td>No code metrics</td></tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <br>
+    <h4>Constraints:</h4>
+    <ul>
+        <li>Frontend: React/TypeScript; Backend: Python/Flask; Database: SQLite</li>
+        <li>GitHub API rate limit: 5,000 requests/hour</li>
+        <li>Analysis must finish in under 5 minutes for medium repos</li>
+        <li>Local deployment only, no cloud</li>
+        <li>Passwords hashed, tokens stored securely</li>
+    </ul>
+
+    <h3 id="risk-management">3.3 Risk Management</h3>
+    <p>Risks are identified, assessed, and managed according to IEEE 1540-2001. I have added my own risk analysis based on previous academic and practical experience.</p>
+
+
+
+    <table class="risk-register">
+        <thead><tr><th>ID</th><th>Risk</th><th>Probability</th><th>Impact</th><th>Mitigation</th><th>Backup Plan</th></tr></thead>
+        <tbody>
+            <tr class="risk-high">
+                <td>R1</td><td>GitHub API rate limit/downtime</td><td>Medium</td><td>High</td>
+                <td>Cache data, retry, local storage</td><td>Use cached data, queue requests</td>
+            </tr>
+            <tr class="risk-high">
+                <td>R2</td><td>ML accuracy below 75%</td><td>Medium</td><td>High</td>
+                <td>Prototype early, tune features</td><td>Fallback scoring</td>
+            </tr>
+            <tr class="risk-medium">
+                <td>R3</td><td>Schedule slip</td><td>Medium</td><td>Medium</td>
+                <td>Buffer time, weekly tracking</td><td>Defer less important features</td>
+            </tr>
+            <tr class="risk-medium">
+                <td>R4</td><td>Scope creep</td><td>Medium</td><td>Medium</td>
+                <td>Change control, freeze baseline</td><td>Move new requests to next cycle</td>
+            </tr>
+            <tr class="risk-medium">
+                <td>R5</td><td>Inconsistent metrics</td><td>Medium</td><td>Medium</td>
+                <td>Validate input, normalize data</td><td>Fallback values</td>
+            </tr>
+            <tr class="risk-low">
+                <td>R6</td><td>Learning curve</td><td>Low</td><td>Medium</td>
+                <td>Self-study, use familiar tools</td><td>Allocate extra time</td>
+            </tr>
+            <tr class="risk-low">
+                <td>R7</td><td>Browser issues</td><td>Low</td><td>Low</td>
+                <td>Use tested libraries</td><td>Focus on Chrome/Firefox</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 id="monitoring">3.4 Monitoring & Control</h3>
+    <table>
+        <thead><tr><th>Method</th><th>Frequency</th><th>Details</th></tr></thead>
+        <tbody>
+            <tr><td>Weekly Meetings</td><td>Weekly</td><td>Review progress and blockers with supervisor</td></tr>
+            <tr><td>Milestone Reviews</td><td>At milestones</td><td>Formal review and sign-off</td></tr>
+            <tr><td>Git Tracking</td><td>Continuous</td><td>Track all code changes</td></tr>
+            <tr><td>Issue Tracking</td><td>Continuous</td><td>Use GitHub Issues for bugs and features</td></tr>
+            <tr><td>Risk Review</td><td>Bi-weekly</td><td>Update risk register</td></tr>
+            <tr><td>Self Code Review</td><td>Per feature</td><td>Check code before commit</td></tr>
+            <tr><td>Document Review</td><td>Per document</td><td>Check IEEE compliance</td></tr>
+        </tbody>
+    </table>
+
+    <h4>Reporting:</h4>
+    <ul>
+        <li>Weekly status: Completed tasks, blockers, risks, next steps</li>
+        <li>Milestone: Deliverables, acceptance, deviations</li>
+        <li>Final report: Achievements, lessons, recommendations</li>
+    </ul>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h3 id="staffing">3.5 Staffing Plan</h3>
+    <p>All roles are handled by myself, with supervisor oversight. This ensures consistency and accountability throughout the project.</p>
+    <table>
+        <thead><tr><th>Phase</th><th>Focus Area</th><th>Duration</th></tr></thead>
+        <tbody>
+            <tr><td>Planning & Requirements</td><td>Project planning, authoring docs</td><td>Weeks 1-4</td></tr>
+            <tr><td>Design</td><td>Architecture, database, API, UI, docs</td><td>Weeks 5-15</td></tr>
+            <tr><td>Implementation</td><td>Frontend, backend, ML pipeline</td><td>Weeks 16-23</td></tr>
+            <tr><td>Testing</td><td>Unit, integration, system tests, bug fixes</td><td>Weeks 21-27</td></tr>
+            <tr><td>Documentation & Closure</td><td>Final docs, deployment, closure</td><td>Weeks 28-30</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ==================== 4. TECHNICAL PROCESS ==================== -->
+    <br>
+    <h2 id="technical-process">4. Technical Process</h2>
+    <h3 id="methods-tools">4.1 Methods, Tools, and Techniques</h3>
+    <h4>4.1.1 Development Tools</h4>
+    <h5>Frontend Development</h5>
+    <table>
+        <thead><tr><th>Category</th><th>Tool / Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>Framework</td><td>React</td><td>19.2.3</td><td>SPA UI framework</td></tr>
+            <tr><td>Language</td><td>TypeScript</td><td>5.9.3</td><td>Typed JavaScript</td></tr>
+            <tr><td>Build Tool</td><td>Vite</td><td>5.4.21</td><td>Fast bundling</td></tr>
+            <tr><td>UI Library</td><td>Radix UI</td><td>Latest</td><td>Accessible UI primitives</td></tr>
+            <tr><td>Styling</td><td>Tailwind CSS</td><td>3.4.19</td><td>Utility CSS</td></tr>
+            <tr><td>Charts</td><td>Recharts</td><td>3.6.0</td><td>Data visualization</td></tr>
+            <tr><td>State Management</td><td>Zustand</td><td>4.5.0</td><td>State management</td></tr>
+            <tr><td>Routing</td><td>React Router</td><td>6.26.2</td><td>Routing</td></tr>
+            <tr><td>Forms</td><td>React Hook Form + Zod</td><td>7.53.0 / 3.23.8</td><td>Form handling/validation</td></tr>
+        </tbody>
+    </table>
+
+    <h5>Backend Development</h5>
+    <table>
+        <thead><tr><th>Category</th><th>Tool / Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>Framework</td><td>Flask</td><td>Latest</td><td>Python web framework</td></tr>
+            <tr><td>Language</td><td>Python</td><td>3.8+</td><td>Backend language</td></tr>
+            <tr><td>ORM</td><td>SQLAlchemy</td><td>Latest</td><td>Database ORM</td></tr>
+            <tr><td>API</td><td>Flask-CORS</td><td>Latest</td><td>CORS support</td></tr>
+            <tr><td>Environment</td><td>python-dotenv</td><td>Latest</td><td>Env management</td></tr>
+        </tbody>
+    </table>
+
+    <h5>Machine Learning</h5>
+    <table>
+        <thead><tr><th>Category</th><th>Tool / Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>ML Library</td><td>scikit-learn</td><td>Latest</td><td>Random Forest classifier</td></tr>
+            <tr><td>Data Processing</td><td>Pandas</td><td>Latest</td><td>Data manipulation</td></tr>
+            <tr><td>Numerical Computing</td><td>NumPy</td><td>Latest</td><td>Scientific computing</td></tr>
+            <tr><td>Model Serialization</td><td>Joblib</td><td>Latest</td><td>Model persistence</td></tr>
+        </tbody>
+    </table>
+ 
+    <h5>Code Analysis</h5>
+    <table>
+        <thead><tr><th>Category</th><th>Tool / Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>Python Metrics</td><td>Radon</td><td>Latest</td><td>Complexity, maintainability</td></tr>
+            <tr><td>Multi-language</td><td>Lizard</td><td>Latest</td><td>Complexity across languages</td></tr>
+        </tbody>
+    </table>
+
+    <h5>Integration & Version Control</h5>
+    <table>
+        <thead><tr><th>Category</th><th>Tool / Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>VCS</td><td>Git</td><td>Latest</td><td>Version control</td></tr>
+            <tr><td>GitHub API</td><td>PyGithub</td><td>Latest</td><td>API integration</td></tr>
+            <tr><td>Git Operations</td><td>GitPython</td><td>Latest</td><td>Repo manipulation</td></tr>
+        </tbody>
+    </table>
+
+    <h5>Database</h5>
+    <table>
+        <thead><tr><th>Category</th><th>Tool / Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>DBMS</td><td>SQLite</td><td>3.35+</td><td>Relational database</td></tr>
+        </tbody>
+    </table>
+
+    <h5>Testing & Development Environment</h5>
+    <table>
+        <thead><tr><th>Category</th><th>Tool / Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>Backend Testing</td><td>PyTest</td><td>Latest</td><td>Unit/integration testing</td></tr>
+            <tr><td>API Testing</td><td>Postman</td><td>Latest</td><td>API validation</td></tr>
+            <tr><td>IDE</td><td>Visual Studio Code</td><td>Latest</td><td>Development environment</td></tr>
+        </tbody>
+    </table>
+
+    <h4>4.1.2 Development Methods</h4>
+    <ul>
+        <li>Agile: Iterative sprints, self-managed tasks</li>
+        <li>Code review: Check against standards before commit</li>
+        <li>Branching: Feature branches, merge after review</li>
+        <li>Standards: PEP 8 (Python), ESLint (TypeScript), consistent naming</li>
+        <li>Documentation-first: IEEE docs before coding</li>
+    </ul>
+
+    <h3 id="software-documentation">4.2 Documentation</h3>
+    <table>
+        <thead><tr><th>Document</th><th>Standard</th><th>Purpose</th><th>Planned Completion</th></tr></thead>
+        <tbody>
+            <tr><td>SPMP</td><td>IEEE 1058-1998</td><td>Management plan, schedule, risks, resources</td><td>Week 2</td></tr>
+            <tr><td>SRS</td><td>IEEE 29148-2018</td><td>Requirements specification</td><td>Week 4</td></tr>
+            <tr><td>SDD</td><td>IEEE 1016-2009</td><td>Architecture, design, data models</td><td>Week 15</td></tr>
+            <tr><td>STD</td><td>IEEE 829-2008</td><td>Test plans, cases, procedures</td><td>Week 15</td></tr>
+            <tr><td>User Guide</td><td>—</td><td>Setup and usage instructions</td><td>Week 30</td></tr>
+        </tbody>
+    </table>
+
+    <h3 id="support-functions">4.3 Support Functions</h3>
+    <h4>4.3.1 Configuration Management</h4>
+    <ul>
+        <li>All code is version-controlled with Git</li>
+        <li>.env files excluded from version control; templates provided</li>
+        <li>Database schema changes tracked and documented</li>
+    </ul>
+    <h4>4.3.2 Quality Assurance</h4>
+    <ul>
+        <li>Self code reviews before commit</li>
+        <li>Automated tests for critical paths</li>
+        <li>Code coverage target: ≥ 70% (backend)</li>
+        <li>Static analysis: ESLint (frontend), Radon (backend)</li>
+    </ul>
+    <h4>4.3.3 Problem Resolution</h4>
+    <ul>
+        <li>Track issues with GitHub Issues (bug, feature, docs)</li>
+        <li>Bug priority: Critical (immediate), High (1 day), Medium (sprint), Low (backlog)</li>
+        <li>Escalation: Developer → Supervisor</li>
+    </ul>
+
+    <!-- ==================== 5. WORK PACKAGES, SCHEDULE, BUDGET ==================== -->
+    <h2 id="work-packages">5. Work Packages, Schedule, and Budget</h2>
+
+    <h3 id="wbs">5.1 Work Packages (Work Breakdown Structure)</h3>
+
+ 
+
+    <h4>Work Package Details:</h4>
+    <table>
+        <thead><tr><th>WP ID</th><th>Work Package</th><th>Description</th><th>Deliverables</th><th>Owner</th><th>Dependencies</th></tr></thead>
+        <tbody>
+            <tr><td class="tc">WP1</td><td>Project Management</td><td>SPMP creation, risk assessment, progress tracking, stakeholder communication</td><td>SPMP, risk register, status reports</td><td>Daniyal Khalil</td><td>—</td></tr>
+            <tr><td class="tc">WP2</td><td>Requirements &amp; Analysis</td><td>Requirements elicitation, SRS creation, use case modeling, stakeholder approval</td><td>SRS document, use case diagrams</td><td>Daniyal Khalil</td><td>WP1</td></tr>
+            <tr><td class="tc">WP3</td><td>System Design</td><td>Architecture design, database schema, API specification, UI wireframes, SDD creation</td><td>SDD document, design diagrams</td><td>Daniyal Khalil</td><td>WP2</td></tr>
+            <tr><td class="tc">WP4</td><td>Frontend Development</td><td>React project setup, UI components, pages/routing, API integration, state management</td><td>Frontend application</td><td>Daniyal Khalil</td><td>WP3</td></tr>
+            <tr><td class="tc">WP5</td><td>Backend Development</td><td>Flask setup, authentication, REST API, GitHub integration, code analyzer service</td><td>Backend API service</td><td>Daniyal Khalil</td><td>WP3</td></tr>
+            <tr><td class="tc">WP6</td><td>ML Pipeline</td><td>Feature engineering, model training, prediction service, model evaluation</td><td>Trained model, prediction API</td><td>Daniyal Khalil</td><td>WP5</td></tr>
+            <tr><td class="tc">WP7</td><td>Testing &amp; QA</td><td>Test planning (STD), unit testing, integration testing, system testing, defect tracking</td><td>STD, test reports, defect logs</td><td>Daniyal Khalil</td><td>WP4, WP5, WP6</td></tr>
+            <tr><td class="tc">WP8</td><td>Documentation &amp; Delivery</td><td>Final documentation review, deployment guide, project closure report</td><td>Final docs, deployed system</td><td>Daniyal Khalil</td><td>WP7</td></tr>
+        </tbody>
+    </table>
+
+    <h3 id="dependencies">5.2 Dependencies</h3>
+
+    <div class="diagram-box">
+       
+        <div class="diagram-image-container">
+            <div class="diagram-title">Work Package Dependencies</div>
+            <div class="mermaid">
+graph LR
+    WP1["WP1: Project<br/>Management"] --> WP2["WP2: Requirements<br/>&amp; Analysis"]
+    WP2 --> WP3["WP3: System<br/>Design"]
+    WP3 --> WP4["WP4: Frontend<br/>Development"]
+    WP3 --> WP5["WP5: Backend<br/>Development"]
+    WP5 --> WP6["WP6: ML Pipeline"]
+    WP4 --> WP7["WP7: Testing<br/>&amp; QA"]
+    WP5 --> WP7
+    WP6 --> WP7
+    WP7 --> WP8["WP8: Documentation<br/>&amp; Delivery"]
+
+    style WP1 fill:#ffffff,stroke:#000000
+    style WP2 fill:#ffffff,stroke:#000000
+    style WP3 fill:#ffffff,stroke:#000000
+    style WP4 fill:#ffffff,stroke:#000000
+    style WP5 fill:#ffffff,stroke:#000000
+    style WP6 fill:#ffffff,stroke:#000000
+    style WP7 fill:#ffffff,stroke:#000000,stroke-width:3px
+    style WP8 fill:#ffffff,stroke:#000000
+            </div>
+        </div>
+        <div class="diagram-label" >Figure 1.5: Work Package Dependencies (Critical Path highlighted)</div>
+    </div>
+
+    <h3 id="resources">5.3 Resource Requirements</h3>
+
+    <h4>Human Resources:</h4>
+    <table>
+        <thead><tr><th>Resource</th><th>Quantity</th><th>Allocation (%)</th><th>Duration</th></tr></thead>
+        <tbody>
+            <tr><td>Daniyal Khalil (Sole Developer)</td><td>1</td><td>100%</td><td>Weeks 1-30</td></tr>
+            <tr><td>Academic Supervisor</td><td>1</td><td>Advisory</td><td>Weeks 1-30</td></tr>
+        </tbody>
+    </table>
+
+    <h4>Hardware/Software Resources:</h4>
+    <table>
+        <thead><tr><th>Resource</th><th>Specification</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>Development Workstation</td><td>Intel i5+ / 8GB RAM / 10GB SSD</td><td>Development and local testing</td></tr>
+            <tr><td>Internet Connection</td><td>Broadband (50 Mbps+)</td><td>GitHub API access, package downloads</td></tr>
+            <tr><td>VS Code IDE</td><td>Latest version</td><td>Primary development environment</td></tr>
+            <tr><td>GitHub Account</td><td>With personal access token</td><td>Repository access and API integration</td></tr>
+            <tr><td>Python 3.8+ / Node.js 18+</td><td>Runtime environments</td><td>Backend and frontend execution</td></tr>
+        </tbody>
+    </table>
+
+    <h3 id="budget">5.4 Budget and Resource Allocation</h3>
+    <div class="note-box">
+        <p><strong>Note:</strong> All tools used are open-source. The only cost is developer time. No software licenses are required. (Cited: IEEE 1058-1998, projectlibre.org)</p>
+    </div>
+    <table>
+        <thead><tr><th>Cost Category</th><th>Description</th><th>Estimated Cost</th></tr></thead>
+        <tbody>
+            <tr><td>Personnel</td><td>Solo developer effort (30 weeks)</td><td>Primary cost (academic project)</td></tr>
+            <tr><td>Software Licenses</td><td>All open-source: React, Flask, scikit-learn, SQLite</td><td>$0</td></tr>
+            <tr><td>Hardware</td><td>Existing development workstations</td><td>$0 (existing)</td></tr>
+            <tr><td>Cloud Services</td><td>Not required (local deployment)</td><td>$0</td></tr>
+            <tr><td>GitHub API</td><td>Free tier (5,000 requests/hour with PAT)</td><td>$0</td></tr>
+            <tr><td><strong>Total</strong></td><td></td><td><strong>Developer effort only</strong></td></tr>
+        </tbody>
+    </table>
+<br>
+<br>
+    <h3 id="schedule">5.5 Schedule</h3>
+
+    <style>
+        /* === ProjectLibre-style Gantt Chart === */
+        .pl-gantt { width: 100%; border-collapse: collapse; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 0.78em; table-layout: fixed; border: 1px solid #8a8a8a; }
+        .pl-gantt td, .pl-gantt th { border: 1px solid #c0c0c0; padding: 0; margin: 0; }
+        /* Header row - light steel blue like ProjectLibre toolbar */
+        .pl-hdr th { background: #dce6f0; color: #000; text-align: center; padding: 5px 2px; font-weight: 600; font-size: 0.92em; border-bottom: 2px solid #8a8a8a; }
+        .pl-hdr-id { width: 28px; min-width: 28px; text-align: center; }
+        .pl-hdr-name { text-align: left !important; padding-left: 6px !important; width: 175px; min-width: 175px; }
+        .pl-hdr-start, .pl-hdr-end { width: 72px; min-width: 72px; font-size: 0.85em; }
+        /* Summary/group row - bold with black bracket bar */
+        .pl-summary-row td { background: #f0f0f0; font-weight: bold; padding: 0; height: 24px; }
+        .pl-summary-row .pl-id { background: #f0f0f0; text-align: center; font-weight: bold; color: #333; }
+        .pl-summary-row .pl-name { background: #f0f0f0; padding-left: 6px; font-weight: bold; color: #000; }
+        .pl-summary-row .pl-date { background: #f0f0f0; text-align: center; font-size: 0.85em; color: #333; }
+        /* Summary bracket bar */
+        .pl-summary-bar-wrap { position: relative; height: 24px; }
+        .pl-summary-bar { position: absolute; top: 8px; height: 6px; background: #333; min-width: 4px; }
+        .pl-summary-bar::before, .pl-summary-bar::after { content: ''; position: absolute; bottom: -5px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #333; }
+        .pl-summary-bar::before { left: 0; margin-left: -2px; }
+        .pl-summary-bar::after { right: 0; margin-right: -2px; }
+        /* Task rows */
+        .pl-task-row td { height: 22px; padding: 0; }
+        .pl-task-row:nth-child(even) td { background: #f7f9fc; }
+        .pl-task-row:nth-child(odd) td { background: #fff; }
+        .pl-id { text-align: center; color: #555; font-size: 0.9em; padding: 2px; }
+        .pl-name { text-align: left; padding: 2px 4px 2px 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000; }
+        .pl-date { text-align: center; font-size: 0.8em; color: #444; padding: 2px 2px; white-space: nowrap; }
+        /* Chart cells */
+        .pl-chart { position: relative; height: 22px; padding: 0; border-right: 1px solid #e0e0e0; }
+        .pl-summary-row .pl-chart { height: 24px; border-right-color: #e0e0e0; }
+        /* Task bar - solid blue like ProjectLibre */
+        .pl-bar { position: absolute; top: 5px; height: 11px; background: #3174c0; border-radius: 0; min-width: 3px; }
+        /* Milestone - black diamond */
+        .pl-milestone { position: absolute; top: 4px; width: 11px; height: 11px; background: #000; transform: rotate(45deg); margin-left: -5px; }
+        /* Milestone task label */
+        .pl-ms-label { font-style: italic; color: #555; }
+        /* Vertical dashed grid (quarter-month markers) */
+        .pl-chart { background-image: linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px); background-size: 25% 100%; }
+        /* Left panel border */
+        .pl-divider { border-right: 2px solid #8a8a8a !important; }
+        @media print { .pl-gantt { font-size: 0.75em; } }
+    </style>
+
+   
+        <div class="diagram-image-container">
+            <div class="diagram-title" style="color: #000; font-size: 1em; margin-bottom: 8px;">Project Schedule (Gantt Chart)</div>
+            <div style="width:100%; overflow-x:auto;">
+            <table class="pl-gantt">
+                <colgroup>
+                    <col class="pl-hdr-id">
+                    <col class="pl-hdr-name">
+                    <col class="pl-hdr-start">
+                    <col class="pl-hdr-end">
+                    <col style="width:12.1%;"><!-- Nov -->
+                    <col style="width:12.55%;"><!-- Dec -->
+                    <col style="width:12.55%;"><!-- Jan -->
+                    <col style="width:11.35%;"><!-- Feb -->
+                    <col style="width:12.55%;"><!-- Mar -->
+                    <col style="width:12.1%;"><!-- Apr -->
+                    <col style="width:12.55%;"><!-- May -->
+                    <col style="width:1.7%;"><!-- Jun -->
+                </colgroup>
+                <thead>
+                    <tr class="pl-hdr">
+                        <th>#</th>
+                        <th class="pl-hdr-name">Task Name</th>
+                        <th>Start</th>
+                        <th class="pl-divider">End</th>
+                        <th>Nov 25</th>
+                        <th>Dec 25</th>
+                        <th>Jan 26</th>
+                        <th>Feb 26</th>
+                        <th>Mar 26</th>
+                        <th>Apr 26</th>
+                        <th>May 26</th>
+                        <th>Jun</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ===== 1. PLANNING (Summary) ===== -->
+                    <tr class="pl-summary-row">
+                        <td class="pl-id">1</td>
+                        <td class="pl-name">Planning</td>
+                        <td class="pl-date">01 Nov</td>
+                        <td class="pl-date pl-divider">10 Nov</td>
+                        <td class="pl-chart" colspan="8"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:0%;width:4.7%;"></div></div></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">2</td>
+                        <td class="pl-name">SPMP Creation</td>
+                        <td class="pl-date">01 Nov</td>
+                        <td class="pl-date pl-divider">10 Nov</td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:0%;width:33%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">3</td>
+                        <td class="pl-name">Risk Assessment</td>
+                        <td class="pl-date">01 Nov</td>
+                        <td class="pl-date pl-divider">07 Nov</td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:0%;width:23%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+
+                    <!-- ===== 4. REQUIREMENTS (Summary) ===== -->
+                    <tr class="pl-summary-row">
+                        <td class="pl-id">4</td>
+                        <td class="pl-name">Requirements</td>
+                        <td class="pl-date">15 Nov</td>
+                        <td class="pl-date pl-divider">05 Dec</td>
+                        <td class="pl-chart" colspan="8"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:6.5%;width:10.3%;"></div></div></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">5</td>
+                        <td class="pl-name">Requirements Elicitation</td>
+                        <td class="pl-date">15 Nov</td>
+                        <td class="pl-date pl-divider">03 Dec</td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:47%;width:47%;"></div></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:0%;width:10%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">6</td>
+                        <td class="pl-name">SRS Document</td>
+                        <td class="pl-date">20 Nov</td>
+                        <td class="pl-date pl-divider">04 Dec</td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:63%;width:37%;"></div></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:0%;width:13%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">7</td>
+                        <td class="pl-name">Use Case Modeling</td>
+                        <td class="pl-date">20 Nov</td>
+                        <td class="pl-date pl-divider">30 Nov</td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:63%;width:33%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">8</td>
+                        <td class="pl-name pl-ms-label">SRS Review &amp; Approval</td>
+                        <td class="pl-date">05 Dec</td>
+                        <td class="pl-date pl-divider">05 Dec</td>
+                        <td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-milestone" style="left:16%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+
+                    <!-- ===== 9. DESIGN (Summary) ===== -->
+                    <tr class="pl-summary-row">
+                        <td class="pl-id">9</td>
+                        <td class="pl-name">Design</td>
+                        <td class="pl-date">08 Dec</td>
+                        <td class="pl-date pl-divider">14 Feb</td>
+                        <td class="pl-chart" colspan="8"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:17.4%;width:33.7%;"></div></div></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">10</td>
+                        <td class="pl-name">Architecture Design</td>
+                        <td class="pl-date">08 Dec</td>
+                        <td class="pl-date pl-divider">22 Dec</td>
+                        <td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:23%;width:45%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">11</td>
+                        <td class="pl-name">Database Schema Design</td>
+                        <td class="pl-date">15 Dec</td>
+                        <td class="pl-date pl-divider">25 Dec</td>
+                        <td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:45%;width:32%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">12</td>
+                        <td class="pl-name">API Specification</td>
+                        <td class="pl-date">15 Dec</td>
+                        <td class="pl-date pl-divider">27 Dec</td>
+                        <td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:45%;width:39%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">13</td>
+                        <td class="pl-name">UI Wireframes</td>
+                        <td class="pl-date">22 Dec</td>
+                        <td class="pl-date pl-divider">31 Dec</td>
+                        <td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:68%;width:32%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">14</td>
+                        <td class="pl-name">SDD Document</td>
+                        <td class="pl-date">15 Dec</td>
+                        <td class="pl-date pl-divider">14 Jan</td>
+                        <td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:45%;width:55%;"></div></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:0%;width:45%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">15</td>
+                        <td class="pl-name">STD Document</td>
+                        <td class="pl-date">05 Jan</td>
+                        <td class="pl-date pl-divider">26 Jan</td>
+                        <td class="pl-chart"></td>
+                        <td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:13%;width:68%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">16</td>
+                        <td class="pl-name pl-ms-label">Design Review</td>
+                        <td class="pl-date">14 Feb</td>
+                        <td class="pl-date pl-divider">14 Feb</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-milestone" style="left:50%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+
+                    <!-- ===== 17. IMPLEMENTATION (Summary) ===== -->
+                    <tr class="pl-summary-row">
+                        <td class="pl-id">17</td>
+                        <td class="pl-name">Implementation</td>
+                        <td class="pl-date">16 Feb</td>
+                        <td class="pl-date pl-divider">10 Apr</td>
+                        <td class="pl-chart" colspan="8"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:50.8%;width:25.8%;"></div></div></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">18</td>
+                        <td class="pl-name">Frontend Setup</td>
+                        <td class="pl-date">16 Feb</td>
+                        <td class="pl-date pl-divider">21 Feb</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:54%;width:18%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">19</td>
+                        <td class="pl-name">Backend Setup</td>
+                        <td class="pl-date">16 Feb</td>
+                        <td class="pl-date pl-divider">21 Feb</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:54%;width:18%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">20</td>
+                        <td class="pl-name">Auth System</td>
+                        <td class="pl-date">23 Feb</td>
+                        <td class="pl-date pl-divider">02 Mar</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:79%;width:21%;"></div></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:0%;width:3%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">21</td>
+                        <td class="pl-name">GitHub Integration</td>
+                        <td class="pl-date">23 Feb</td>
+                        <td class="pl-date pl-divider">04 Mar</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:79%;width:21%;"></div></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:0%;width:13%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">22</td>
+                        <td class="pl-name">UI Components</td>
+                        <td class="pl-date">02 Mar</td>
+                        <td class="pl-date pl-divider">15 Mar</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:3%;width:45%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">23</td>
+                        <td class="pl-name">REST API Routes</td>
+                        <td class="pl-date">05 Mar</td>
+                        <td class="pl-date pl-divider">17 Mar</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:13%;width:39%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">24</td>
+                        <td class="pl-name">Code Analyzer Service</td>
+                        <td class="pl-date">12 Mar</td>
+                        <td class="pl-date pl-divider">20 Mar</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:35%;width:26%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">25</td>
+                        <td class="pl-name">ML Feature Engineering</td>
+                        <td class="pl-date">16 Mar</td>
+                        <td class="pl-date pl-divider">26 Mar</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:48%;width:32%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">26</td>
+                        <td class="pl-name">ML Model Training</td>
+                        <td class="pl-date">23 Mar</td>
+                        <td class="pl-date pl-divider">02 Apr</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:71%;width:29%;"></div></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:0%;width:7%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">27</td>
+                        <td class="pl-name">Frontend-Backend Integration</td>
+                        <td class="pl-date">26 Mar</td>
+                        <td class="pl-date pl-divider">05 Apr</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:81%;width:19%;"></div></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:0%;width:17%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">28</td>
+                        <td class="pl-name">ML Integration</td>
+                        <td class="pl-date">03 Apr</td>
+                        <td class="pl-date pl-divider">10 Apr</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:7%;width:23%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">29</td>
+                        <td class="pl-name pl-ms-label">Implementation Complete</td>
+                        <td class="pl-date">10 Apr</td>
+                        <td class="pl-date pl-divider">10 Apr</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-milestone" style="left:33%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+
+                    <!-- ===== 30. TESTING (Summary) ===== -->
+                    <tr class="pl-summary-row">
+                        <td class="pl-id">30</td>
+                        <td class="pl-name">Testing</td>
+                        <td class="pl-date">30 Mar</td>
+                        <td class="pl-date pl-divider">08 May</td>
+                        <td class="pl-chart" colspan="8"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:69.5%;width:18.8%;"></div></div></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">31</td>
+                        <td class="pl-name">Unit Testing</td>
+                        <td class="pl-date">30 Mar</td>
+                        <td class="pl-date pl-divider">10 Apr</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:94%;width:6%;"></div></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:0%;width:33%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">32</td>
+                        <td class="pl-name">Integration Testing</td>
+                        <td class="pl-date">10 Apr</td>
+                        <td class="pl-date pl-divider">20 Apr</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:33%;width:33%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">33</td>
+                        <td class="pl-name">System Testing</td>
+                        <td class="pl-date">21 Apr</td>
+                        <td class="pl-date pl-divider">30 Apr</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:67%;width:33%;"></div></td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">34</td>
+                        <td class="pl-name">Bug Fixes</td>
+                        <td class="pl-date">28 Apr</td>
+                        <td class="pl-date pl-divider">08 May</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:90%;width:10%;"></div></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:0%;width:23%;"></div></td>
+                        <td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">35</td>
+                        <td class="pl-name pl-ms-label">Testing Complete</td>
+                        <td class="pl-date">08 May</td>
+                        <td class="pl-date pl-divider">08 May</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-milestone" style="left:26%;"></div></td>
+                        <td class="pl-chart"></td>
+                    </tr>
+
+                    <!-- ===== 36. DELIVERY (Summary) ===== -->
+                    <tr class="pl-summary-row">
+                        <td class="pl-id">36</td>
+                        <td class="pl-name">Delivery</td>
+                        <td class="pl-date">10 May</td>
+                        <td class="pl-date pl-divider">01 Jun</td>
+                        <td class="pl-chart" colspan="8"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:89.7%;width:10.3%;"></div></div></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">37</td>
+                        <td class="pl-name">Final Documentation</td>
+                        <td class="pl-date">10 May</td>
+                        <td class="pl-date pl-divider">20 May</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:32%;width:32%;"></div></td>
+                        <td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">38</td>
+                        <td class="pl-name">Deployment</td>
+                        <td class="pl-date">14 May</td>
+                        <td class="pl-date pl-divider">21 May</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:45%;width:23%;"></div></td>
+                        <td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">39</td>
+                        <td class="pl-name">Project Closure</td>
+                        <td class="pl-date">26 May</td>
+                        <td class="pl-date pl-divider">31 May</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-bar" style="left:81%;width:16%;"></div></td>
+                        <td class="pl-chart"></td>
+                    </tr>
+                    <tr class="pl-task-row">
+                        <td class="pl-id">40</td>
+                        <td class="pl-name pl-ms-label">Final Delivery</td>
+                        <td class="pl-date">01 Jun</td>
+                        <td class="pl-date pl-divider">01 Jun</td>
+                        <td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td><td class="pl-chart"></td>
+                        <td class="pl-chart"><div class="pl-milestone" style="left:50%;"></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Legend -->
+       
+   </div>
+<br>
+<br>
+    <!-- ==================== 6. ADDITIONAL COMPONENTS ==================== -->
+    <h2 id="additional">6. Additional Components</h2>
+    <h4>6.1 Project Management Tools</h4>
+    <ul>
+        <li><strong>ProjectLibre:</strong> Open-source Gantt chart and resource planning (projectlibre.org)</li>
+        <li><strong>GitHub Issues:</strong> Issue tracking and project boards</li>
+        <li><strong>Git:</strong> Version control for code/docs</li>
+    </ul>
+    <h4>6.2 Standards Compliance</h4>
+    <ul>
+        <li><strong>IEEE 1058-1998:</strong> Project Management Plan</li>
+        <li><strong>IEEE 1540-2001:</strong> Risk Management (Section 3.3)</li>
+        <li><strong>IEEE 29148-2018:</strong> Requirements Engineering (SRS)</li>
+        <li><strong>IEEE 1016-2009:</strong> Design Descriptions (SDD)</li>
+        <li><strong>IEEE 829-2008:</strong> Test Documentation (STD)</li>
+    </ul>
+
+
+    <!-- ==================== DOCUMENT APPROVAL ==================== -->
+    <div style="margin-top: 40px;">
+        <h2>Document Approval</h2>
+        <table>
+            <thead><tr><th>Role</th><th> Name</th><th>Signature</th><th>Date</th></tr></thead>
+            <tbody>
+                <tr><td>Developer</td>         <td>Daniyal Khalil</td><td> </td><td></td></tr>
+                <tr><td>Academic Supervisor</td><td>Dr. Muddassar Azam Sindhu</td><td> </td><td> </td></tr>
+            </tbody>
+        </table>
+
+        <h3>Revision History</h3>
+        <table>
+            <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Changes</th></tr></thead>
+            <tbody>
+                <tr><td>1.0</td><td>February 4, 2026</td><td>Daniyal Khalil</td><td>Initial SPMP creation — IEEE 1058-1998 compliant</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+  
+
+</div>
+</body>
+</html>

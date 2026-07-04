@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chapter 1: Software Project Management Plan (SPMP) - IEEE 1058-1998</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose',
+            flowchart: { nodeSpacing: 50, rankSpacing: 50, curve: 'basis' },
+            gantt: { fontSize: 11, barHeight: 20, barGap: 4, topPadding: 50 },
+            themeVariables: { primaryColor: '#ffffff', primaryBorderColor: '#000000', primaryTextColor: '#000000', lineColor: '#000000', secondaryColor: '#f0f0f0', tertiaryColor: '#e0e0e0' }
+        });
+    </script>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', 'Times New Roman', serif; line-height: 1.8; color: #000000; background: white; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 50px 60px; box-shadow: none; }
+        .cover-page { text-align: center; padding: 80px 0; border-bottom: 3px solid #000000; margin-bottom: 40px; page-break-after: always; }
+        .cover-page h1 { font-size: 2.8em; color: #000000; margin: 20px 0; }
+        .cover-page h2 { font-size: 1.8em; color: #000000; margin: 15px 0; font-weight: normal; }
+        .cover-page .metadata { margin-top: 60px; text-align: left; display: inline-block; }
+        .metadata-row { margin: 12px 0; font-size: 1.05em; }
+        .metadata-label { font-weight: bold; display: inline-block; width: 180px; }
+        header { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 3px solid #000000; }
+        h1 { font-size: 2.5em; color: #000000; margin-bottom: 10px; }
+        .doc-info { color: #333333; font-size: 1.1em; }
+        h2 { font-size: 1.9em; color: #000000; margin-top: 40px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #000000; page-break-after: avoid; }
+        h3 { font-size: 1.4em; color: #000000; margin-top: 30px; margin-bottom: 15px; page-break-after: avoid; }
+        h4 { font-size: 1.15em; color: #000000; margin-top: 20px; margin-bottom: 10px; }
+        h5 { font-size: 1.05em; color: #000000; margin-top: 15px; margin-bottom: 8px; }
+        p { margin-bottom: 14px; text-align: justify; }
+        ul, ol { margin-left: 30px; margin-bottom: 15px; }
+        li { margin-bottom: 6px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; page-break-inside: avoid; }
+        th { background-color: #1d1d1d; color: white; padding: 12px; text-align: center; font-weight: bold; }
+        td { padding: 10px; border: 1px solid #000000; text-align: center; }
+        td:first-child { text-align: center; }
+        td:last-child { text-align: center; }
+        tr:nth-child(even) { background-color: #f0f0f0; }
+        .box { background: #f0f0f0; border-left: 4px solid #000000; padding: 15px 20px; margin: 20px 0; page-break-inside: avoid; }
+        .note-box { background: #f0f0f0; border-left: 4px solid #000000; padding: 15px 20px; margin: 20px 0; }
+        .warning-box { background: #f0f0f0; border-left: 4px solid #000000; padding: 15px 20px; margin: 20px 0; }
+        .diagram-box { background: #ffffff; border: 2px solid #000000; border-radius: 0px; padding: 20px; margin: 25px 0; page-break-inside: avoid; }
+        .diagram-title { font-size: 1.2em; font-weight: bold; color: #000000; margin-bottom: 10px; text-align: center; }
+        .diagram-description { background: #f0f0f0; border-left: 4px solid #000000; padding: 12px; margin: 12px 0 18px 0; font-style: italic; }
+        .diagram-image-container { text-align: center; padding: 15px; background: white; border: 1px solid #000000; border-radius: 0px; margin: 15px 0; }
+        .diagram-label { text-align: center; font-weight: bold; font-size: 1em; color: #000000; padding: 10px; margin: 10px 0;}
+        .toc { page-break-after: always; margin-bottom: 40px; }
+        .toc h2 { font-size: 1.8em; color: #000000; margin-bottom: 20px; border-bottom: 2px solid #000000; padding-bottom: 10px; }
+        .toc ol { counter-reset: toc-counter; list-style: none; margin-left: 0; }
+        .toc > ol > li { margin: 8px 0; font-weight: bold; }
+        .toc ol ol { margin-left: 25px; }
+        .toc ol ol li { font-weight: normal; margin: 5px 0; font-size: 0.95em; }
+        .toc a { color: #000000; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .page-break { page-break-after: always; }
+        .risk-high { background-color: #e0e0e0; }
+        .risk-medium { background-color: #f0f0f0; }
+        .risk-low { background-color: #f8f8f8; }
+        table.risk-register {
+            font-size: 12px;
+            width: 90%;
+            
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+        table.risk-register th, table.risk-register td {
+            padding: 6px 8px;
+            border: 1px solid #bbb;
+        }
+        @media print {
+            table.risk-register {
+                font-size: 15px;
+                page-break-inside: avoid;
+            }
+            table.risk-register th, table.risk-register td {
+                padding: 5px 6px;
+            }
+        }
+        @media print {
+            body { background: white; padding: 0; color: #000000; }
+            .container { box-shadow: none; padding: 30px; }
+            h2 { page-break-after: avoid; }
+            h3 { page-break-after: avoid; }
+            table, .box, .diagram-box { page-break-inside: avoid; }
+            .page-break { page-break-after: always; }
+            tr:nth-child(even) { background-color: #f0f0f0 !important; }
+            .risk-high { background-color: #e0e0e0 !important; }
+            .risk-medium { background-color: #f0f0f0 !important; }
+            .risk-low { background-color: #f8f8f8 !important; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<!-- ==================== COVER PAGE ==================== -->
+<div class="cover-page">
+<p style="font-size: 1.2em; color: #333333; letter-spacing: 2px;">IEEE 1058-1998 STANDARD</p>
+<h1>Software Project Management Plan</h1>
+<h2>(SPMP)</h2>
+<p style="font-size: 1.4em; color: #000000; margin: 20px 0;">Code Quality &amp; Fault Prediction System</p>
+<div class="metadata">
+<div class="metadata-row"><span class="metadata-label">Document Title:</span> Software Project Management Plan (SPMP)</div>
+<div class="metadata-row"><span class="metadata-label">Project Name:</span> Code Quality &amp; Fault Prediction System</div>
+<div class="metadata-row"><span class="metadata-label">Standard Reference:</span> IEEE 1058-1998</div>
+<div class="metadata-row"><span class="metadata-label">Document Version:</span> 1.0</div>
+<div class="metadata-row"><span class="metadata-label">Date:</span> February 4, 2026</div>
+<div class="metadata-row"><span class="metadata-label">Status:</span> Draft</div>
+<div class="metadata-row"><span class="metadata-label">Prepared By:</span> DANIYAL KHALIL</div>
+</div>
+</div>
+<!-- ==================== TABLE OF CONTENTS ==================== -->
+<div class="toc">
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#overview">1. Overview</a>
+<ol>
+<li><a href="#project-summary">1.1 Project Summary</a></li>
+<li><a href="#references">1.2 Reference Materials</a></li>
+<li><a href="#definitions">1.3 Definitions and Acronyms</a></li>
+</ol>
+</li>
+<li><a href="#project-organization">2. Project Organization</a>
+<ol>
+<li><a href="#process-model">2.1 Process Model</a></li>
+<li><a href="#org-structure">2.2 Organizational Structure</a></li>
+<li><a href="#org-boundaries">2.3 Organizational Boundaries and Interfaces</a></li>
+<li><a href="#responsibilities">2.4 Project Responsibilities</a></li>
+</ol>
+</li>
+<li><a href="#managerial-process">3. Managerial Process</a>
+<ol>
+<li><a href="#objectives">3.1 Management Objectives and Priorities</a></li>
+<li><a href="#assumptions">3.2 Assumptions, Dependencies, and Constraints</a></li>
+<li><a href="#risk-management">3.3 Risk Management</a></li>
+<li><a href="#monitoring">3.4 Monitoring and Controlling Mechanisms</a></li>
+<li><a href="#staffing">3.5 Staffing Plan</a></li>
+</ol>
+</li>
+<li><a href="#technical-process">4. Technical Process</a>
+<ol>
+<li><a href="#methods-tools">4.1 Methods, Tools, and Techniques</a></li>
+<li><a href="#software-documentation">4.2 Software Documentation</a></li>
+<li><a href="#support-functions">4.3 Project Support Functions</a></li>
+</ol>
+</li>
+<li><a href="#work-packages">5. Work Packages, Schedule, and Budget</a>
+<ol>
+<li><a href="#wbs">5.1 Work Packages (Work Breakdown Structure)</a></li>
+<li><a href="#dependencies">5.2 Dependencies</a></li>
+<li><a href="#resources">5.3 Resource Requirements</a></li>
+<li><a href="#budget">5.4 Budget and Resource Allocation</a></li>
+<li><a href="#schedule">5.5 Schedule</a></li>
+</ol>
+</li>
+<li><a href="#additional">6. Additional Components</a></li>
+</ol>
+</div>
+<!-- ==================== 1. OVERVIEW ==================== -->
+<h2 id="overview">1. Overview</h2>
+<h3 id="project-summary">1.1 Project Summary</h3>
+<h4>1.1.1 Purpose</h4>
+<p>This Software Project Management Plan (SPMP) defines the project management approach for the <strong>Code Quality &amp; Fault Prediction System</strong> — an intelligent web-based platform that leverages machine learning to analyze code repositories, predict fault-prone modules, and provide actionable recommendations for software quality improvement.</p>
+<p>This document shall serve as a reference guide for the development team, stakeholders, and project managers throughout the software development lifecycle. It establishes project objectives, scope, deliverables, organizational structure, risk management strategies, and a roadmap for project execution and monitoring in accordance with IEEE 1058-1998.</p>
+<h4>1.1.2 Scope</h4>
+<p><strong>Project Name:</strong> Code Quality &amp; Fault Prediction System</p>
+<p>The system shall provide an end-to-end solution for code quality analysis and fault prediction by integrating with GitHub repositories. It shall analyze code complexity, predict bug-prone areas using machine learning, and offer intelligent recommendations for test prioritization and code improvements.</p>
+<h5>Key Deliverables:</h5>
+<ol>
+<li>Web-based frontend application</li>
+<li>RESTful API backend service</li>
+<li>Machine Learning prediction engine</li>
+<li>SQLite database with 7 normalized tables for data persistence</li>
+<li>GitHub integration service for repository ingestion and metadata</li>
+<li>User authentication and session management system</li>
+<li>Real-time analytics dashboard with interactive visualizations</li>
+<li>Comprehensive documentation set (SPMP, SRS, SDD, STD)</li>
+</ol>
+<br/>
+<br/>
+<h5>Project Boundaries:</h5>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">In Scope</th><th style="border:1px solid #000;">Out of Scope</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;">GitHub repository integration and analysis</td><td style="border:1px solid #000;">CI/CD pipeline integration (future enhancement)</td></tr>
+<tr><td style="border:1px solid #000;">Code complexity metrics (CC, MI, LOC, Churn)</td><td style="border:1px solid #000;">Support for non-GitHub version control systems</td></tr>
+<tr><td style="border:1px solid #000;">ML-based fault prediction using Random Forest</td><td style="border:1px solid #000;">Mobile application development</td></tr>
+<tr><td style="border:1px solid #000;">User management and session-based authentication</td><td style="border:1px solid #000;">Enterprise-level horizontal scalability</td></tr>
+<tr><td style="border:1px solid #000;">Interactive dashboards and visualizations (Recharts)</td><td style="border:1px solid #000;">Real-time collaborative editing features</td></tr>
+<tr><td style="border:1px solid #000;">Test case prioritization recommendations</td><td style="border:1px solid #000;">Cloud deployment infrastructure</td></tr>
+<tr><td style="border:1px solid #000;">Bug report management with lifecycle tracking</td><td style="border:1px solid #000;">Multi-tenant SaaS architecture</td></tr>
+<tr><td style="border:1px solid #000;">Settings and configuration management</td><td style="border:1px solid #000;">Automated code refactoring</td></tr>
+</tbody>
+</table>
+<h5>Target Users:</h5>
+<ul>
+<li><strong>Software Developers</strong> — Primary users who analyze repositories and review predictions</li>
+<li><strong>QA Engineers</strong> — Use test prioritization and bug management features</li>
+<li><strong>Project Managers</strong> — Monitor dashboards and review recommendation reports</li>
+<li><strong>Technical Leads</strong> — Evaluate code quality trends and risk assessments</li>
+</ul>
+<h4>1.1.3 Objectives</h4>
+<ol>
+<li>Develop a functional web application that integrates with GitHub for automated code analysis</li>
+<li>Implement a machine learning pipeline capable of predicting fault-prone modules with ≥ 75% accuracy</li>
+<li>Provide actionable visualizations and metrics dashboards for code quality assessment</li>
+<li>Deliver complete IEEE-standard documentation (SPMP, SRS, SDD, STD) before implementation begins</li>
+<li>Complete the project within the planned 30-week timeline (November 2025 – June 2026) with iterative milestones</li>
+</ol>
+<br/>
+<br/>
+<h3 id="references">1.2 Reference Materials</h3>
+<ul>
+<li><strong>IEEE 1058-1998:</strong> IEEE Standard for Software Project Management Plans</li>
+<li><strong>IEEE 1016-2009:</strong> IEEE Standard for Information Technology — Software Design Descriptions</li>
+<li><strong>IEEE 829-2008:</strong> IEEE Standard for Software and System Test Documentation</li>
+<li><strong>IEEE 1540-2001:</strong> IEEE Standard for Software Life Cycle Processes — Risk Management</li>
+</ul>
+<h3 id="definitions">1.3 Definitions and Acronyms</h3>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Term / Acronym</th><th style="border:1px solid #000;">Definition</th></tr></thead>
+<tbody>
+<tr><td class="tc" style="border:1px solid #000;"><strong>API</strong></td><td style="border:1px solid #000;">Application Programming Interface</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>CC</strong></td><td style="border:1px solid #000;">Cyclomatic Complexity — measure of code complexity based on control flow</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>CORS</strong></td><td style="border:1px solid #000;">Cross-Origin Resource Sharing — security feature for web browsers</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>CRUD</strong></td><td style="border:1px solid #000;">Create, Read, Update, Delete — basic database operations</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>LOC</strong></td><td style="border:1px solid #000;">Lines of Code — source code size metric</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>MI</strong></td><td style="border:1px solid #000;">Maintainability Index — code maintainability metric (0-100)</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>ML</strong></td><td style="border:1px solid #000;">Machine Learning — algorithms that learn patterns from data</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>ORM</strong></td><td style="border:1px solid #000;">Object-Relational Mapping — database abstraction layer</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>REST</strong></td><td style="border:1px solid #000;">Representational State Transfer — API architectural style</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>SDD</strong></td><td style="border:1px solid #000;">Software Design Description</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>SPMP</strong></td><td style="border:1px solid #000;">Software Project Management Plan (this document)</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>SRS</strong></td><td style="border:1px solid #000;">Software Requirements Specification</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>STD</strong></td><td style="border:1px solid #000;">Software Test Documentation</td></tr>
+<tr><td class="tc" style="border:1px solid #000;"><strong>WBS</strong></td><td style="border:1px solid #000;">Work Breakdown Structure</td></tr>
+</tbody>
+</table>
+<!-- ==================== 2. PROJECT ORGANIZATION ==================== -->
+<h2 id="project-organization">2. Project Organization</h2>
+<h3 id="process-model">2.1 Process Model</h3>
+<p><strong>Model:</strong> Iterative Incremental Lifecycle with Agile Practices <br/> An iterative incremental approach reduces risk by delivering working increments at the end of each iteration, validating ML model performance early, and enabling continuous integration across components. This model allows for requirements refinement and design adjustments between iterations.</p>
+<div class="diagram-box">
+<div class="diagram-title"><br/></div>
+<div class="mermaid">
+graph LR
+    subgraph "Iteration 1: Foundation"
+        A1[Requirements<br>Analysis] --&gt; A2[System<br>Design]
+        A2 --&gt; A3[Core<br>Implementation]
+        A3 --&gt; A4[Unit<br>Testing]
+        A4 --&gt; A5[Review &amp;<br>Feedback]
+    end
+
+    subgraph "Iteration 2: Integration"
+        B1[Refined<br>Requirements] --&gt; B2[Detailed<br/>Design]
+        B2 --&gt; B3[Feature<br/>Implementation]
+        B3 --&gt; B4[Integration<br/>Testing]
+        B4 --&gt; B5[Review &amp;<br/>Feedback]
+    end
+
+    subgraph "Iteration 3: Completion"
+        C1[Final<br/>Adjustments] --&gt; C2[ML Pipeline<br/>Tuning]
+        C2 --&gt; C3[System<br/>Testing]
+        C3 --&gt; C4[Documentation<br/>Finalization]
+        C4 --&gt; C5[Delivery]
+    end
+
+    A5 --&gt;|Feedback| B1
+    B5 --&gt;|Feedback| C1
+
+    style A1 fill:#ffffff,stroke:#000000
+    style B1 fill:#ffffff,stroke:#000000
+    style C1 fill:#ffffff,stroke:#000000
+            </br></br></br></br></br></br></div>
+<div class="diagram-label">Figure 1.1: Iterative Incremental Development Lifecycle</div>
+</div>
+<h4>Lifecycle Phases:</h4>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Phase</th><th style="border:1px solid #000;">Activities</th><th style="border:1px solid #000;">Deliverables</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;"><strong>Planning &amp; Requirements</strong></td><td style="border:1px solid #000;">Scope definition, requirements elicitation, feasibility study, risk assessment</td><td style="border:1px solid #000;">SPMP, SRS documents</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Design</strong></td><td style="border:1px solid #000;">Architecture design, database schema design, API design, UI wireframing</td><td style="border:1px solid #000;">SDD document, diagrams</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Implementation</strong></td><td style="border:1px solid #000;">Frontend development, backend development, ML pipeline development, database setup</td><td style="border:1px solid #000;">Source code, build artifacts</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Testing</strong></td><td style="border:1px solid #000;">Unit testing, integration testing, system testing, acceptance testing</td><td style="border:1px solid #000;">STD document, test reports</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Deployment &amp; Closure</strong></td><td style="border:1px solid #000;">System deployment, user documentation, project review, lessons learned</td><td style="border:1px solid #000;">Deployed system, final documentation</td></tr>
+</tbody>
+</table>
+<h3 id="org-structure">2.2 Organizational Structure</h3>
+<div class="diagram-box">
+<div class="diagram-image-container">
+<div class="diagram-title">Project Organizational Structure</div>
+<div class="mermaid">
+graph TB
+    SUP["Academic Supervisor<br/>Oversight, Reviews, Evaluation"]
+
+    SUP --&gt; DEV["Daniyal Khalil<br/>Sole Developer"]
+
+    DEV --&gt; FE["Frontend<br/>React/TypeScript UI"]
+    DEV --&gt; BE["Backend<br/>Flask API, DB, Integration"]
+    DEV --&gt; ML["ML Pipeline<br/>Model Training, Prediction"]
+    DEV --&gt; QA["Testing<br/>Unit, Integration, System"]
+    DEV --&gt; DOC["Documentation<br/>SPMP, SRS, SDD, STD"]
+
+    style SUP fill:#ffffff,stroke:#000000,stroke-width:2px
+    style DEV fill:#ffffff,stroke:#000000,stroke-width:2px
+    style FE fill:#ffffff,stroke:#000000
+    style BE fill:#ffffff,stroke:#000000
+    style ML fill:#ffffff,stroke:#000000
+    style QA fill:#ffffff,stroke:#000000
+    style DOC fill:#ffffff,stroke:#000000
+            </div>
+</div>
+<div class="diagram-label">Figure 1.2: Project Organizational Structure</div>
+</div>
+<h3 id="org-boundaries">2.3 Organizational Boundaries and Interfaces</h3>
+<p>The developer shall interface with the following external entities:</p>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Interface</th><th style="border:1px solid #000;">Description</th><th style="border:1px solid #000;">Communication Method</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;"><strong>GitHub Platform</strong></td><td style="border:1px solid #000;">External API provider for repository data, commit history, and metadata</td><td style="border:1px solid #000;">REST API (PyGithub library)</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Academic Supervisor</strong></td><td style="border:1px solid #000;">Project oversight, milestone reviews, final evaluation</td><td style="border:1px solid #000;">Scheduled meetings, documentation review</td></tr>
+<tr><td style="border:1px solid #000;"><strong>End Users</strong></td><td style="border:1px solid #000;">Software developers, QA engineers, and project managers who will use the system</td><td style="border:1px solid #000;">Requirements feedback, acceptance testing</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Open Source Libraries</strong></td><td style="border:1px solid #000;">Third-party libraries (React, Flask, scikit-learn, Radon, Lizard)</td><td style="border:1px solid #000;">Package managers (npm, pip)</td></tr>
+</tbody>
+</table>
+<h3 id="responsibilities">2.4 Project Responsibilities</h3>
+<p>As a solo-developer project, all technical roles are performed by a single developer (Daniyal Khalil), with academic supervision provided by the course instructor.</p>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Role</th><th style="border:1px solid #000;">Performed By</th><th style="border:1px solid #000;">Primary Responsibilities</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;"><strong>Developer / Project Owner</strong></td><td style="border:1px solid #000;">Daniyal Khalil</td><td style="border:1px solid #000;">Full-stack development (React frontend, Flask backend), ML pipeline (scikit-learn), database design, testing, documentation, project planning and tracking</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Academic Supervisor</strong></td><td style="border:1px solid #000;">Course Instructor</td><td style="border:1px solid #000;">Project oversight, milestone reviews, guidance, final evaluation and grading</td></tr>
+</tbody>
+</table>
+<!-- ==================== 3. MANAGERIAL PROCESS ==================== -->
+<h2 id="managerial-process">3. Managerial Process</h2>
+<br/>
+<h3 id="objectives">3.1 Management Objectives and Priorities</h3>
+<h4>Primary Objectives:</h4>
+<ol>
+<li><strong>Quality:</strong> Deliver a system that meets all functional and non-functional requirements specified in the SRS, with ML prediction accuracy ≥ 75%</li>
+<li><strong>Timeliness:</strong> Complete the project within the 30-week planned schedule (Nov 2025 – Jun 2026), meeting all milestone deadlines</li>
+<li><strong>Documentation:</strong> Produce IEEE-compliant documentation (SPMP, SRS, SDD, STD) before implementation begins</li>
+<li><strong>Integration:</strong> Achieve seamless integration between frontend, backend, and ML components</li>
+</ol>
+<br/>
+<br/>
+<br/>
+<br/>
+<h4>Priority Ranking:</h4>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Priority</th><th style="border:1px solid #000;">Factor</th><th style="border:1px solid #000;">Rationale</th></tr></thead>
+<tbody>
+<tr><td class="tc" style="border:1px solid #000;">1 (Highest)</td><td class="tc" style="border:1px solid #000;">Functionality</td><td style="border:1px solid #000;">Core features must work correctly — analysis, prediction, visualization</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">2</td><td class="tc" style="border:1px solid #000;">Quality</td><td style="border:1px solid #000;">Code quality and ML accuracy are fundamental to the system's value</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">3</td><td class="tc" style="border:1px solid #000;">Schedule</td><td style="border:1px solid #000;">Timely delivery is important for academic submission</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">4</td><td class="tc" style="border:1px solid #000;">Cost</td><td style="border:1px solid #000;">Open-source stack minimizes cost; primary cost is developer time</td></tr>
+</tbody>
+</table>
+<h3 id="assumptions">3.2 Assumptions, Dependencies, and Constraints</h3>
+<h4>Assumptions:</h4>
+<ol>
+<li>The sole developer has the requisite skills in React, Python, Flask, and ML</li>
+<li>GitHub API shall remain available and stable throughout the project</li>
+<li>Internet connectivity shall be available for GitHub API access during development and testing</li>
+<li>SQLite shall be sufficient for the expected data volume (up to 10,000 files per repository, 100 users)</li>
+<li>Open-source tools (Radon, Lizard, scikit-learn) shall provide accurate metrics and predictions</li>
+<li>Modern web browsers (Chrome 100+, Firefox 100+, Safari 15+, Edge 100+) shall be used by end users</li>
+</ol>
+<h4>Dependencies:</h4>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Dependency</th><th style="border:1px solid #000;">Type</th><th style="border:1px solid #000;">Impact if Unavailable</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;">GitHub REST API v3</td><td class="tc" style="border:1px solid #000;">External Service</td><td style="border:1px solid #000;">Repository data cannot be fetched; core functionality blocked</td></tr>
+<tr><td style="border:1px solid #000;">Python 3.8+ Runtime</td><td class="tc" style="border:1px solid #000;">Platform</td><td style="border:1px solid #000;">Backend and ML components cannot execute</td></tr>
+<tr><td style="border:1px solid #000;">Node.js 18+ Runtime</td><td class="tc" style="border:1px solid #000;">Platform</td><td style="border:1px solid #000;">Frontend cannot be built or served</td></tr>
+<tr><td style="border:1px solid #000;">scikit-learn Library</td><td class="tc" style="border:1px solid #000;">Library</td><td style="border:1px solid #000;">ML training and prediction pipeline unavailable</td></tr>
+<tr><td style="border:1px solid #000;">Radon / Lizard</td><td class="tc" style="border:1px solid #000;">Library</td><td style="border:1px solid #000;">Code complexity metrics cannot be calculated</td></tr>
+</tbody>
+</table>
+<br/>
+<br/>
+<br/>
+<h4>Constraints:</h4>
+<ul>
+<li><strong>Technology:</strong> Frontend must use React/TypeScript; Backend must use Python/Flask; Database must be SQLite</li>
+<li><strong>API Rate Limits:</strong> GitHub API limited to 5,000 requests/hour (authenticated)</li>
+<li><strong>Performance:</strong> Repository analysis shall complete within 5 minutes for repositories with &lt; 1,000 files</li>
+<li><strong>Deployment:</strong> Single-server local deployment model; no cloud infrastructure</li>
+<li><strong>Security:</strong> Passwords shall be hashed (PBKDF2); GitHub tokens shall be stored securely</li>
+</ul>
+<h3 id="risk-management">3.3 Risk Management</h3>
+<p>Risk management follows IEEE 1540-2001 guidelines. Risks are identified, assessed for probability and impact, and mitigation strategies are defined.</p>
+<table class="risk-register" style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">ID</th><th style="border:1px solid #000;">Risk</th><th style="border:1px solid #000;">Prob.</th><th style="border:1px solid #000;">Impact</th><th style="border:1px solid #000;">Mitigation</th><th style="border:1px solid #000;">Contingency</th></tr></thead>
+<tbody>
+<tr class="risk-high">
+<td class="tc" style="border:1px solid #000;">R1</td><td style="border:1px solid #000;">GitHub API rate limiting or downtime</td><td class="tc" style="border:1px solid #000;">Med</td><td class="tc" style="border:1px solid #000;">High</td>
+<td style="border:1px solid #000;">Caching, retry with backoff, local repo storage</td><td style="border:1px solid #000;">Use cached data; queue off-peak requests</td>
+</tr>
+<tr class="risk-high">
+<td class="tc" style="border:1px solid #000;">R2</td><td style="border:1px solid #000;">ML model accuracy below 75%</td><td class="tc" style="border:1px solid #000;">Med</td><td class="tc" style="border:1px solid #000;">High</td>
+<td style="border:1px solid #000;">Early prototyping, cross-validation, feature tuning</td><td style="border:1px solid #000;">Fallback heuristic scoring</td>
+</tr>
+<tr class="risk-medium">
+<td class="tc" style="border:1px solid #000;">R3</td><td style="border:1px solid #000;">Schedule overrun</td><td class="tc" style="border:1px solid #000;">Med</td><td class="tc" style="border:1px solid #000;">Med</td>
+<td style="border:1px solid #000;">Buffer time, weekly tracking, priority delivery</td><td style="border:1px solid #000;">Defer low-priority features</td>
+</tr>
+<tr class="risk-medium">
+<td class="tc" style="border:1px solid #000;">R4</td><td style="border:1px solid #000;">Scope creep</td><td class="tc" style="border:1px solid #000;">Med</td><td class="tc" style="border:1px solid #000;">Med</td>
+<td style="border:1px solid #000;">Change control, frozen baseline after SRS</td><td style="border:1px solid #000;">Defer new requests to next iteration</td>
+</tr>
+<tr class="risk-medium">
+<td class="tc" style="border:1px solid #000;">R5</td><td style="border:1px solid #000;">Inconsistent repository metrics</td><td class="tc" style="border:1px solid #000;">Med</td><td class="tc" style="border:1px solid #000;">Med</td>
+<td style="border:1px solid #000;">Input validation, null handling, normalization</td><td style="border:1px solid #000;">Use fallback values for missing data</td>
+</tr>
+<tr class="risk-low">
+<td class="tc" style="border:1px solid #000;">R6</td><td style="border:1px solid #000;">Technology learning curve</td><td class="tc" style="border:1px solid #000;">Low</td><td class="tc" style="border:1px solid #000;">Med</td>
+<td style="border:1px solid #000;">Self-study, online resources, documentation</td><td style="border:1px solid #000;">Prioritize familiar tools; allocate extra time</td>
+</tr>
+<tr class="risk-low">
+<td class="tc" style="border:1px solid #000;">R7</td><td style="border:1px solid #000;">Browser compatibility issues</td><td class="tc" style="border:1px solid #000;">Low</td><td class="tc" style="border:1px solid #000;">Low</td>
+<td style="border:1px solid #000;">Use cross-browser tested libraries</td><td style="border:1px solid #000;">Focus on Chrome/Firefox as primary</td>
+</tr>
+</tbody>
+</table>
+<h3 id="monitoring">3.4 Monitoring and Controlling Mechanisms</h3>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Mechanism</th><th style="border:1px solid #000;">Frequency</th><th style="border:1px solid #000;">Description</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;"><strong>Weekly Progress Meeting</strong></td><td class="tc" style="border:1px solid #000;">Weekly</td><td style="border:1px solid #000;">Review completed tasks and blockers with supervisor; update SPMP if needed</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Milestone Reviews</strong></td><td class="tc" style="border:1px solid #000;">At each milestone</td><td style="border:1px solid #000;">Formal review of deliverables with supervisor; sign-off required</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Git Commit Tracking</strong></td><td class="tc" style="border:1px solid #000;">Continuous</td><td style="border:1px solid #000;">All code changes tracked via Git with meaningful commit messages</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Issue/Bug Tracking</strong></td><td class="tc" style="border:1px solid #000;">Continuous</td><td style="border:1px solid #000;">GitHub Issues for task tracking, defect reporting, and feature requests</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Risk Register Review</strong></td><td class="tc" style="border:1px solid #000;">Bi-weekly</td><td style="border:1px solid #000;">Review and update risk register; reassess probabilities and mitigation status</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Self Code Review</strong></td><td class="tc" style="border:1px solid #000;">Per feature</td><td style="border:1px solid #000;">Review own code before committing; follow coding standards and best practices</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Documentation Review</strong></td><td class="tc" style="border:1px solid #000;">Per document</td><td style="border:1px solid #000;">IEEE standard compliance check before document submission to supervisor</td></tr>
+</tbody>
+</table>
+<h4>Reporting:</h4>
+<ul>
+<li><strong>Weekly Status Report:</strong> Tasks completed, tasks in progress, blockers, risks, planned next week</li>
+<li><strong>Milestone Report:</strong> Deliverables completed, acceptance criteria met, deviations from plan</li>
+<li><strong>Final Project Report:</strong> Summary of achievements, lessons learned, recommendations</li>
+</ul>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<h3 id="staffing">3.5 Staffing Plan</h3>
+<p>This is a solo-developer academic project. All roles are performed by a single developer with supervisor oversight.</p>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Phase</th><th style="border:1px solid #000;">Developer Focus Area</th><th style="border:1px solid #000;">Duration</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;">Planning &amp; Requirements</td><td style="border:1px solid #000;">Project planning, SPMP/SRS authoring</td><td class="tc" style="border:1px solid #000;">Week 1-4</td></tr>
+<tr><td style="border:1px solid #000;">Design</td><td style="border:1px solid #000;">Architecture, database, API &amp; UI design, SDD/STD authoring</td><td class="tc" style="border:1px solid #000;">Week 5-15</td></tr>
+<tr><td style="border:1px solid #000;">Implementation</td><td style="border:1px solid #000;">Frontend, backend, ML pipeline development</td><td class="tc" style="border:1px solid #000;">Week 16-23</td></tr>
+<tr><td style="border:1px solid #000;">Testing</td><td style="border:1px solid #000;">Unit, integration, system testing, bug fixes</td><td class="tc" style="border:1px solid #000;">Week 21-27</td></tr>
+<tr><td style="border:1px solid #000;">Documentation &amp; Closure</td><td style="border:1px solid #000;">Final documentation, deployment, project closure</td><td class="tc" style="border:1px solid #000;">Week 28-30</td></tr>
+</tbody>
+</table>
+<!-- ==================== 4. TECHNICAL PROCESS ==================== -->
+<br/>
+<h2 id="technical-process">4. Technical Process</h2>
+<br/>
+<h3 id="methods-tools">4.1 Methods, Tools, and Techniques</h3>
+<br/>
+<h4>4.1.1 Development Tools</h4>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<h5>Frontend Development</h5>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Category</th><th style="border:1px solid #000;">Tool / Technology</th><th style="border:1px solid #000;">Version</th><th style="border:1px solid #000;">Purpose</th></tr></thead>
+<tbody>
+<tr><td class="tc" style="border:1px solid #000;">Framework</td><td style="border:1px solid #000;">React</td><td class="tc" style="border:1px solid #000;">19.2.3</td><td style="border:1px solid #000;">UI component framework (SPA)</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Language</td><td style="border:1px solid #000;">TypeScript</td><td class="tc" style="border:1px solid #000;">5.9.3</td><td style="border:1px solid #000;">Type-safe JavaScript development</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Build Tool</td><td style="border:1px solid #000;">Vite</td><td class="tc" style="border:1px solid #000;">5.4.21</td><td style="border:1px solid #000;">Fast bundling and hot module replacement</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">UI Library</td><td style="border:1px solid #000;">Radix UI</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Accessible, unstyled component primitives</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Styling</td><td style="border:1px solid #000;">Tailwind CSS</td><td class="tc" style="border:1px solid #000;">3.4.19</td><td style="border:1px solid #000;">Utility-first CSS framework</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Charts</td><td style="border:1px solid #000;">Recharts</td><td class="tc" style="border:1px solid #000;">3.6.0</td><td style="border:1px solid #000;">Data visualization and charting</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">State Management</td><td style="border:1px solid #000;">Zustand</td><td class="tc" style="border:1px solid #000;">4.5.0</td><td style="border:1px solid #000;">Lightweight client state management</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Routing</td><td style="border:1px solid #000;">React Router</td><td class="tc" style="border:1px solid #000;">6.26.2</td><td style="border:1px solid #000;">Client-side routing</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Forms</td><td style="border:1px solid #000;">React Hook Form + Zod</td><td class="tc" style="border:1px solid #000;">7.53.0 / 3.23.8</td><td style="border:1px solid #000;">Form handling and validation</td></tr>
+</tbody>
+</table>
+<h5>Backend Development</h5>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Category</th><th style="border:1px solid #000;">Tool / Technology</th><th style="border:1px solid #000;">Version</th><th style="border:1px solid #000;">Purpose</th></tr></thead>
+<tbody>
+<tr><td class="tc" style="border:1px solid #000;">Framework</td><td style="border:1px solid #000;">Flask</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Lightweight Python web framework</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Language</td><td style="border:1px solid #000;">Python</td><td class="tc" style="border:1px solid #000;">3.8+</td><td style="border:1px solid #000;">Backend programming language</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">ORM</td><td style="border:1px solid #000;">SQLAlchemy (Flask-SQLAlchemy)</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Database abstraction and ORM</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">API</td><td style="border:1px solid #000;">Flask-CORS</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Cross-Origin Resource Sharing</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Environment</td><td style="border:1px solid #000;">python-dotenv</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Environment variable management</td></tr>
+</tbody>
+</table>
+<h5>Machine Learning</h5>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Category</th><th style="border:1px solid #000;">Tool / Technology</th><th style="border:1px solid #000;">Version</th><th style="border:1px solid #000;">Purpose</th></tr></thead>
+<tbody>
+<tr><td class="tc" style="border:1px solid #000;">ML Library</td><td style="border:1px solid #000;">scikit-learn</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Random Forest classifier for fault prediction</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Data Processing</td><td style="border:1px solid #000;">Pandas</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Data manipulation and feature engineering</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Numerical Computing</td><td style="border:1px solid #000;">NumPy</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Scientific computing and array operations</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Model Serialization</td><td style="border:1px solid #000;">Joblib</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Persisting trained model artifacts (.pkl)</td></tr>
+</tbody>
+</table>
+<h5>Code Analysis</h5>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Category</th><th style="border:1px solid #000;">Tool / Technology</th><th style="border:1px solid #000;">Version</th><th style="border:1px solid #000;">Purpose</th></tr></thead>
+<tbody>
+<tr><td class="tc" style="border:1px solid #000;">Python Metrics</td><td style="border:1px solid #000;">Radon</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Cyclomatic complexity, Halstead metrics, MI</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Multi-language</td><td style="border:1px solid #000;">Lizard</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Code complexity analysis across languages</td></tr>
+</tbody>
+</table>
+<h5>Integration &amp; Version Control</h5>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Category</th><th style="border:1px solid #000;">Tool / Technology</th><th style="border:1px solid #000;">Version</th><th style="border:1px solid #000;">Purpose</th></tr></thead>
+<tbody>
+<tr><td class="tc" style="border:1px solid #000;">VCS</td><td style="border:1px solid #000;">Git</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Version control system</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">GitHub API</td><td style="border:1px solid #000;">PyGithub</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">GitHub REST API integration (Python)</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">Git Operations</td><td style="border:1px solid #000;">GitPython</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Git repository manipulation and commit history</td></tr>
+</tbody>
+</table>
+<h5>Database</h5>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Category</th><th style="border:1px solid #000;">Tool / Technology</th><th style="border:1px solid #000;">Version</th><th style="border:1px solid #000;">Purpose</th></tr></thead>
+<tbody>
+<tr><td class="tc" style="border:1px solid #000;">DBMS</td><td style="border:1px solid #000;">SQLite</td><td class="tc" style="border:1px solid #000;">3.35+</td><td style="border:1px solid #000;">Lightweight relational database</td></tr>
+</tbody>
+</table>
+<h5>Testing &amp; Development Environment</h5>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Category</th><th style="border:1px solid #000;">Tool / Technology</th><th style="border:1px solid #000;">Version</th><th style="border:1px solid #000;">Purpose</th></tr></thead>
+<tbody>
+<tr><td class="tc" style="border:1px solid #000;">Backend Testing</td><td style="border:1px solid #000;">PyTest</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Python unit and integration testing</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">API Testing</td><td style="border:1px solid #000;">Postman</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">API endpoint validation and testing</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">IDE</td><td style="border:1px solid #000;">Visual Studio Code</td><td class="tc" style="border:1px solid #000;">Latest</td><td style="border:1px solid #000;">Primary development environment</td></tr>
+</tbody>
+</table>
+<h4>4.1.2 Development Methods</h4>
+<ul>
+<li><strong>Agile Practices:</strong> Iterative development with 1-2 week sprints, self-managed task tracking</li>
+<li><strong>Code Reviews:</strong> Self-review of code against coding standards before committing</li>
+<li><strong>Branching Strategy:</strong> Feature branches off main; merge after self-review</li>
+<li><strong>Coding Standards:</strong> PEP 8 for Python, ESLint for TypeScript, consistent naming conventions</li>
+<li><strong>Documentation-First:</strong> IEEE-compliant documents (SPMP, SRS, SDD, STD) shall be completed before implementation begins</li>
+</ul>
+<h3 id="software-documentation">4.2 Software Documentation</h3>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Document</th><th style="border:1px solid #000;">Standard</th><th style="border:1px solid #000;">Purpose</th><th style="border:1px solid #000;">Planned Completion</th></tr></thead>
+<tbody>
+<tr><td class="tc" style="border:1px solid #000;">SPMP</td><td class="tc" style="border:1px solid #000;">IEEE 1058-1998</td><td style="border:1px solid #000;">Project management plan, schedule, risks, resources</td><td class="tc" style="border:1px solid #000;">Week 2</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">SRS</td><td class="tc" style="border:1px solid #000;">IEEE 29148-2018</td><td style="border:1px solid #000;">Functional and non-functional requirements specification</td><td class="tc" style="border:1px solid #000;">Week 4</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">SDD</td><td class="tc" style="border:1px solid #000;">IEEE 1016-2009</td><td style="border:1px solid #000;">System architecture, component design, data models</td><td class="tc" style="border:1px solid #000;">Week 15</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">STD</td><td class="tc" style="border:1px solid #000;">IEEE 829-2008</td><td style="border:1px solid #000;">Test plans, test cases, test procedures</td><td class="tc" style="border:1px solid #000;">Week 15</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">User Guide</td><td class="tc" style="border:1px solid #000;">—</td><td style="border:1px solid #000;">End-user documentation and setup instructions</td><td class="tc" style="border:1px solid #000;">Week 30</td></tr>
+</tbody>
+</table>
+<h3 id="support-functions">4.3 Project Support Functions</h3>
+<h4>4.3.1 Configuration Management</h4>
+<ul>
+<li>All source code shall be version-controlled using Git</li>
+<li>Configuration files (.env) shall be excluded from version control; templates provided</li>
+<li>Database schema changes shall be tracked and documented</li>
+</ul>
+<h4>4.3.2 Quality Assurance</h4>
+<ul>
+<li>Self code reviews shall be performed before committing changes</li>
+<li>Automated testing shall cover critical paths (unit + integration tests)</li>
+<li>Code coverage target: ≥ 70% for backend services</li>
+<li>Static analysis using ESLint (frontend) and Radon (backend)</li>
+</ul>
+<h4>4.3.3 Problem Resolution</h4>
+<ul>
+<li>Issues shall be tracked using GitHub Issues with labels (bug, feature, documentation)</li>
+<li>Bugs shall be prioritized: Critical (fix immediately), High (fix within 1 day), Medium (fix within sprint), Low (backlog)</li>
+<li>Escalation path: Developer → Academic Supervisor</li>
+</ul>
+<!-- ==================== 5. WORK PACKAGES, SCHEDULE, BUDGET ==================== -->
+<h2 id="work-packages">5. Work Packages, Schedule, and Budget</h2>
+<h3 id="wbs">5.1 Work Packages (Work Breakdown Structure)</h3>
+<h4>Work Package Details:</h4>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">WP ID</th><th style="border:1px solid #000;">Work Package</th><th style="border:1px solid #000;">Description</th><th style="border:1px solid #000;">Deliverables</th><th style="border:1px solid #000;">Owner</th><th style="border:1px solid #000;">Dependencies</th></tr></thead>
+<tbody>
+<tr><td class="tc" style="border:1px solid #000;">WP1</td><td style="border:1px solid #000;">Project Management</td><td style="border:1px solid #000;">SPMP creation, risk assessment, progress tracking, stakeholder communication</td><td style="border:1px solid #000;">SPMP, risk register, status reports</td><td style="border:1px solid #000;">Daniyal Khalil</td><td style="border:1px solid #000;">—</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">WP2</td><td style="border:1px solid #000;">Requirements &amp; Analysis</td><td style="border:1px solid #000;">Requirements elicitation, SRS creation, use case modeling, stakeholder approval</td><td style="border:1px solid #000;">SRS document, use case diagrams</td><td style="border:1px solid #000;">Daniyal Khalil</td><td style="border:1px solid #000;">WP1</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">WP3</td><td style="border:1px solid #000;">System Design</td><td style="border:1px solid #000;">Architecture design, database schema, API specification, UI wireframes, SDD creation</td><td style="border:1px solid #000;">SDD document, design diagrams</td><td style="border:1px solid #000;">Daniyal Khalil</td><td style="border:1px solid #000;">WP2</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">WP4</td><td style="border:1px solid #000;">Frontend Development</td><td style="border:1px solid #000;">React project setup, UI components, pages/routing, API integration, state management</td><td style="border:1px solid #000;">Frontend application</td><td style="border:1px solid #000;">Daniyal Khalil</td><td style="border:1px solid #000;">WP3</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">WP5</td><td style="border:1px solid #000;">Backend Development</td><td style="border:1px solid #000;">Flask setup, authentication, REST API, GitHub integration, code analyzer service</td><td style="border:1px solid #000;">Backend API service</td><td style="border:1px solid #000;">Daniyal Khalil</td><td style="border:1px solid #000;">WP3</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">WP6</td><td style="border:1px solid #000;">ML Pipeline</td><td style="border:1px solid #000;">Feature engineering, model training, prediction service, model evaluation</td><td style="border:1px solid #000;">Trained model, prediction API</td><td style="border:1px solid #000;">Daniyal Khalil</td><td style="border:1px solid #000;">WP5</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">WP7</td><td style="border:1px solid #000;">Testing &amp; QA</td><td style="border:1px solid #000;">Test planning (STD), unit testing, integration testing, system testing, defect tracking</td><td style="border:1px solid #000;">STD, test reports, defect logs</td><td style="border:1px solid #000;">Daniyal Khalil</td><td style="border:1px solid #000;">WP4, WP5, WP6</td></tr>
+<tr><td class="tc" style="border:1px solid #000;">WP8</td><td style="border:1px solid #000;">Documentation &amp; Delivery</td><td style="border:1px solid #000;">Final documentation review, deployment guide, project closure report</td><td style="border:1px solid #000;">Final docs, deployed system</td><td style="border:1px solid #000;">Daniyal Khalil</td><td style="border:1px solid #000;">WP7</td></tr>
+</tbody>
+</table>
+<h3 id="dependencies">5.2 Dependencies</h3>
+<div class="diagram-box">
+<div class="diagram-image-container">
+<div class="diagram-title">Work Package Dependencies</div>
+<div class="mermaid">
+graph LR
+    WP1["WP1: Project<br>Management"] --&gt; WP2["WP2: Requirements<br>&amp; Analysis"]
+    WP2 --&gt; WP3["WP3: System<br>Design"]
+    WP3 --&gt; WP4["WP4: Frontend<br>Development"]
+    WP3 --&gt; WP5["WP5: Backend<br>Development"]
+    WP5 --&gt; WP6["WP6: ML Pipeline"]
+    WP4 --&gt; WP7["WP7: Testing<br>&amp; QA"]
+    WP5 --&gt; WP7
+    WP6 --&gt; WP7
+    WP7 --&gt; WP8["WP8: Documentation<br>&amp; Delivery"]
+
+    style WP1 fill:#ffffff,stroke:#000000
+    style WP2 fill:#ffffff,stroke:#000000
+    style WP3 fill:#ffffff,stroke:#000000
+    style WP4 fill:#ffffff,stroke:#000000
+    style WP5 fill:#ffffff,stroke:#000000
+    style WP6 fill:#ffffff,stroke:#000000
+    style WP7 fill:#ffffff,stroke:#000000,stroke-width:3px
+    style WP8 fill:#ffffff,stroke:#000000
+            </br></br></br></br></br></br></br></div>
+</div>
+<div class="diagram-label">Figure 1.5: Work Package Dependencies (Critical Path highlighted)</div>
+</div>
+<h3 id="resources">5.3 Resource Requirements</h3>
+<h4>Human Resources:</h4>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Resource</th><th style="border:1px solid #000;">Quantity</th><th style="border:1px solid #000;">Allocation (%)</th><th style="border:1px solid #000;">Duration</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;">Daniyal Khalil (Sole Developer)</td><td style="border:1px solid #000;">1</td><td style="border:1px solid #000;">100%</td><td style="border:1px solid #000;">Weeks 1-30</td></tr>
+<tr><td style="border:1px solid #000;">Academic Supervisor</td><td style="border:1px solid #000;">1</td><td style="border:1px solid #000;">Advisory</td><td style="border:1px solid #000;">Weeks 1-30</td></tr>
+</tbody>
+</table>
+<h4>Hardware/Software Resources:</h4>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Resource</th><th style="border:1px solid #000;">Specification</th><th style="border:1px solid #000;">Purpose</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;">Development Workstation</td><td style="border:1px solid #000;">Intel i5+ / 8GB RAM / 10GB SSD</td><td style="border:1px solid #000;">Development and local testing</td></tr>
+<tr><td style="border:1px solid #000;">Internet Connection</td><td style="border:1px solid #000;">Broadband (50 Mbps+)</td><td style="border:1px solid #000;">GitHub API access, package downloads</td></tr>
+<tr><td style="border:1px solid #000;">VS Code IDE</td><td style="border:1px solid #000;">Latest version</td><td style="border:1px solid #000;">Primary development environment</td></tr>
+<tr><td style="border:1px solid #000;">GitHub Account</td><td style="border:1px solid #000;">With personal access token</td><td style="border:1px solid #000;">Repository access and API integration</td></tr>
+<tr><td style="border:1px solid #000;">Python 3.8+ / Node.js 18+</td><td style="border:1px solid #000;">Runtime environments</td><td style="border:1px solid #000;">Backend and frontend execution</td></tr>
+</tbody>
+</table>
+<h3 id="budget">5.4 Budget and Resource Allocation</h3>
+<div class="note-box">
+<p><strong>Note:</strong> This project utilizes exclusively open-source technologies. The primary cost is developer effort (person-hours). No software licensing fees are incurred.</p>
+</div>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Cost Category</th><th style="border:1px solid #000;">Description</th><th style="border:1px solid #000;">Estimated Cost</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;">Personnel</td><td style="border:1px solid #000;">Solo developer effort (30 weeks)</td><td style="border:1px solid #000;">Primary cost (academic project)</td></tr>
+<tr><td style="border:1px solid #000;">Software Licenses</td><td style="border:1px solid #000;">All open-source: React, Flask, scikit-learn, SQLite</td><td style="border:1px solid #000;">$0</td></tr>
+<tr><td style="border:1px solid #000;">Hardware</td><td style="border:1px solid #000;">Existing development workstations</td><td style="border:1px solid #000;">$0 (existing)</td></tr>
+<tr><td style="border:1px solid #000;">Cloud Services</td><td style="border:1px solid #000;">Not required (local deployment)</td><td style="border:1px solid #000;">$0</td></tr>
+<tr><td style="border:1px solid #000;">GitHub API</td><td style="border:1px solid #000;">Free tier (5,000 requests/hour with PAT)</td><td style="border:1px solid #000;">$0</td></tr>
+<tr><td style="border:1px solid #000;"><strong>Total</strong></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"><strong>Developer effort only</strong></td></tr>
+</tbody>
+</table>
+<br/>
+<br/>
+<h3 id="schedule">5.5 Schedule</h3>
+<style>
+        /* === ProjectLibre-style Gantt Chart === */
+        .pl-gantt { width: 100%; border-collapse: collapse; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 0.78em; table-layout: fixed; border: 1px solid #8a8a8a; }
+        .pl-gantt td, .pl-gantt th { border: 1px solid #c0c0c0; padding: 0; margin: 0; }
+        /* Header row - light steel blue like ProjectLibre toolbar */
+        .pl-hdr th { background: #dce6f0; color: #000; text-align: center; padding: 5px 2px; font-weight: 600; font-size: 0.92em; border-bottom: 2px solid #8a8a8a; }
+        .pl-hdr-id { width: 28px; min-width: 28px; text-align: center; }
+        .pl-hdr-name { text-align: left !important; padding-left: 6px !important; width: 175px; min-width: 175px; }
+        .pl-hdr-start, .pl-hdr-end { width: 72px; min-width: 72px; font-size: 0.85em; }
+        /* Summary/group row - bold with black bracket bar */
+        .pl-summary-row td { background: #f0f0f0; font-weight: bold; padding: 0; height: 24px; }
+        .pl-summary-row .pl-id { background: #f0f0f0; text-align: center; font-weight: bold; color: #333; }
+        .pl-summary-row .pl-name { background: #f0f0f0; padding-left: 6px; font-weight: bold; color: #000; }
+        .pl-summary-row .pl-date { background: #f0f0f0; text-align: center; font-size: 0.85em; color: #333; }
+        /* Summary bracket bar */
+        .pl-summary-bar-wrap { position: relative; height: 24px; }
+        .pl-summary-bar { position: absolute; top: 8px; height: 6px; background: #333; min-width: 4px; }
+        .pl-summary-bar::before, .pl-summary-bar::after { content: ''; position: absolute; bottom: -5px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #333; }
+        .pl-summary-bar::before { left: 0; margin-left: -2px; }
+        .pl-summary-bar::after { right: 0; margin-right: -2px; }
+        /* Task rows */
+        .pl-task-row td { height: 22px; padding: 0; }
+        .pl-task-row:nth-child(even) td { background: #f7f9fc; }
+        .pl-task-row:nth-child(odd) td { background: #fff; }
+        .pl-id { text-align: center; color: #555; font-size: 0.9em; padding: 2px; }
+        .pl-name { text-align: left; padding: 2px 4px 2px 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000; }
+        .pl-date { text-align: center; font-size: 0.8em; color: #444; padding: 2px 2px; white-space: nowrap; }
+        /* Chart cells */
+        .pl-chart { position: relative; height: 22px; padding: 0; border-right: 1px solid #e0e0e0; }
+        .pl-summary-row .pl-chart { height: 24px; border-right-color: #e0e0e0; }
+        /* Task bar - solid blue like ProjectLibre */
+        .pl-bar { position: absolute; top: 5px; height: 11px; background: #3174c0; border-radius: 0; min-width: 3px; }
+        /* Milestone - black diamond */
+        .pl-milestone { position: absolute; top: 4px; width: 11px; height: 11px; background: #000; transform: rotate(45deg); margin-left: -5px; }
+        /* Milestone task label */
+        .pl-ms-label { font-style: italic; color: #555; }
+        /* Vertical dashed grid (quarter-month markers) */
+        .pl-chart { background-image: linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px); background-size: 25% 100%; }
+        /* Left panel border */
+        .pl-divider { border-right: 2px solid #8a8a8a !important; }
+        @media print { .pl-gantt { font-size: 0.75em; } }
+    </style>
+<div class="diagram-image-container">
+<div class="diagram-title" style="color: #000; font-size: 1em; margin-bottom: 8px;">Project Schedule (Gantt Chart)</div>
+<div style="width:100%; overflow-x:auto;">
+<table class="pl-gantt" style="border:1px solid #000;border-collapse:collapse;">
+<colgroup>
+<col class="pl-hdr-id"/>
+<col class="pl-hdr-name"/>
+<col class="pl-hdr-start"/>
+<col class="pl-hdr-end"/>
+<col style="width:12.1%;"/><!-- Nov -->
+<col style="width:12.55%;"/><!-- Dec -->
+<col style="width:12.55%;"/><!-- Jan -->
+<col style="width:11.35%;"/><!-- Feb -->
+<col style="width:12.55%;"/><!-- Mar -->
+<col style="width:12.1%;"/><!-- Apr -->
+<col style="width:12.55%;"/><!-- May -->
+<col style="width:1.7%;"/><!-- Jun -->
+</colgroup>
+<thead>
+<tr class="pl-hdr">
+<th style="border:1px solid #000;">#</th>
+<th class="pl-hdr-name" style="border:1px solid #000;">Task Name</th>
+<th style="border:1px solid #000;">Start</th>
+<th class="pl-divider" style="border:1px solid #000;">End</th>
+<th style="border:1px solid #000;">Nov 25</th>
+<th style="border:1px solid #000;">Dec 25</th>
+<th style="border:1px solid #000;">Jan 26</th>
+<th style="border:1px solid #000;">Feb 26</th>
+<th style="border:1px solid #000;">Mar 26</th>
+<th style="border:1px solid #000;">Apr 26</th>
+<th style="border:1px solid #000;">May 26</th>
+<th style="border:1px solid #000;">Jun</th>
+</tr>
+</thead>
+<tbody>
+<!-- ===== 1. PLANNING (Summary) ===== -->
+<tr class="pl-summary-row">
+<td class="pl-id" style="border:1px solid #000;">1</td>
+<td class="pl-name" style="border:1px solid #000;">Planning</td>
+<td class="pl-date" style="border:1px solid #000;">01 Nov</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">10 Nov</td>
+<td class="pl-chart" colspan="8" style="border:1px solid #000;"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:0%;width:4.7%;"></div></div></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">2</td>
+<td class="pl-name" style="border:1px solid #000;">SPMP Creation</td>
+<td class="pl-date" style="border:1px solid #000;">01 Nov</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">10 Nov</td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:0%;width:33%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">3</td>
+<td class="pl-name" style="border:1px solid #000;">Risk Assessment</td>
+<td class="pl-date" style="border:1px solid #000;">01 Nov</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">07 Nov</td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:0%;width:23%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<!-- ===== 4. REQUIREMENTS (Summary) ===== -->
+<tr class="pl-summary-row">
+<td class="pl-id" style="border:1px solid #000;">4</td>
+<td class="pl-name" style="border:1px solid #000;">Requirements</td>
+<td class="pl-date" style="border:1px solid #000;">15 Nov</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">05 Dec</td>
+<td class="pl-chart" colspan="8" style="border:1px solid #000;"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:6.5%;width:10.3%;"></div></div></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">5</td>
+<td class="pl-name" style="border:1px solid #000;">Requirements Elicitation</td>
+<td class="pl-date" style="border:1px solid #000;">15 Nov</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">03 Dec</td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:47%;width:47%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:0%;width:10%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">6</td>
+<td class="pl-name" style="border:1px solid #000;">SRS Document</td>
+<td class="pl-date" style="border:1px solid #000;">20 Nov</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">04 Dec</td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:63%;width:37%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:0%;width:13%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">7</td>
+<td class="pl-name" style="border:1px solid #000;">Use Case Modeling</td>
+<td class="pl-date" style="border:1px solid #000;">20 Nov</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">30 Nov</td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:63%;width:33%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">8</td>
+<td class="pl-name pl-ms-label" style="border:1px solid #000;">SRS Review &amp; Approval</td>
+<td class="pl-date" style="border:1px solid #000;">05 Dec</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">05 Dec</td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-milestone" style="left:16%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<!-- ===== 9. DESIGN (Summary) ===== -->
+<tr class="pl-summary-row">
+<td class="pl-id" style="border:1px solid #000;">9</td>
+<td class="pl-name" style="border:1px solid #000;">Design</td>
+<td class="pl-date" style="border:1px solid #000;">08 Dec</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">14 Feb</td>
+<td class="pl-chart" colspan="8" style="border:1px solid #000;"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:17.4%;width:33.7%;"></div></div></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">10</td>
+<td class="pl-name" style="border:1px solid #000;">Architecture Design</td>
+<td class="pl-date" style="border:1px solid #000;">08 Dec</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">22 Dec</td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:23%;width:45%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">11</td>
+<td class="pl-name" style="border:1px solid #000;">Database Schema Design</td>
+<td class="pl-date" style="border:1px solid #000;">15 Dec</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">25 Dec</td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:45%;width:32%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">12</td>
+<td class="pl-name" style="border:1px solid #000;">API Specification</td>
+<td class="pl-date" style="border:1px solid #000;">15 Dec</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">27 Dec</td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:45%;width:39%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">13</td>
+<td class="pl-name" style="border:1px solid #000;">UI Wireframes</td>
+<td class="pl-date" style="border:1px solid #000;">22 Dec</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">31 Dec</td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:68%;width:32%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">14</td>
+<td class="pl-name" style="border:1px solid #000;">SDD Document</td>
+<td class="pl-date" style="border:1px solid #000;">15 Dec</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">14 Jan</td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:45%;width:55%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:0%;width:45%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">15</td>
+<td class="pl-name" style="border:1px solid #000;">STD Document</td>
+<td class="pl-date" style="border:1px solid #000;">05 Jan</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">26 Jan</td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:13%;width:68%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">16</td>
+<td class="pl-name pl-ms-label" style="border:1px solid #000;">Design Review</td>
+<td class="pl-date" style="border:1px solid #000;">14 Feb</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">14 Feb</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-milestone" style="left:50%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<!-- ===== 17. IMPLEMENTATION (Summary) ===== -->
+<tr class="pl-summary-row">
+<td class="pl-id" style="border:1px solid #000;">17</td>
+<td class="pl-name" style="border:1px solid #000;">Implementation</td>
+<td class="pl-date" style="border:1px solid #000;">16 Feb</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">10 Apr</td>
+<td class="pl-chart" colspan="8" style="border:1px solid #000;"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:50.8%;width:25.8%;"></div></div></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">18</td>
+<td class="pl-name" style="border:1px solid #000;">Frontend Setup</td>
+<td class="pl-date" style="border:1px solid #000;">16 Feb</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">21 Feb</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:54%;width:18%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">19</td>
+<td class="pl-name" style="border:1px solid #000;">Backend Setup</td>
+<td class="pl-date" style="border:1px solid #000;">16 Feb</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">21 Feb</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:54%;width:18%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">20</td>
+<td class="pl-name" style="border:1px solid #000;">Auth System</td>
+<td class="pl-date" style="border:1px solid #000;">23 Feb</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">02 Mar</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:79%;width:21%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:0%;width:3%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">21</td>
+<td class="pl-name" style="border:1px solid #000;">GitHub Integration</td>
+<td class="pl-date" style="border:1px solid #000;">23 Feb</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">04 Mar</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:79%;width:21%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:0%;width:13%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">22</td>
+<td class="pl-name" style="border:1px solid #000;">UI Components</td>
+<td class="pl-date" style="border:1px solid #000;">02 Mar</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">15 Mar</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:3%;width:45%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">23</td>
+<td class="pl-name" style="border:1px solid #000;">REST API Routes</td>
+<td class="pl-date" style="border:1px solid #000;">05 Mar</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">17 Mar</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:13%;width:39%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">24</td>
+<td class="pl-name" style="border:1px solid #000;">Code Analyzer Service</td>
+<td class="pl-date" style="border:1px solid #000;">12 Mar</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">20 Mar</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:35%;width:26%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">25</td>
+<td class="pl-name" style="border:1px solid #000;">ML Feature Engineering</td>
+<td class="pl-date" style="border:1px solid #000;">16 Mar</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">26 Mar</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:48%;width:32%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">26</td>
+<td class="pl-name" style="border:1px solid #000;">ML Model Training</td>
+<td class="pl-date" style="border:1px solid #000;">23 Mar</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">02 Apr</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:71%;width:29%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:0%;width:7%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">27</td>
+<td class="pl-name" style="border:1px solid #000;">Frontend-Backend Integration</td>
+<td class="pl-date" style="border:1px solid #000;">26 Mar</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">05 Apr</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:81%;width:19%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:0%;width:17%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">28</td>
+<td class="pl-name" style="border:1px solid #000;">ML Integration</td>
+<td class="pl-date" style="border:1px solid #000;">03 Apr</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">10 Apr</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:7%;width:23%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">29</td>
+<td class="pl-name pl-ms-label" style="border:1px solid #000;">Implementation Complete</td>
+<td class="pl-date" style="border:1px solid #000;">10 Apr</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">10 Apr</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-milestone" style="left:33%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<!-- ===== 30. TESTING (Summary) ===== -->
+<tr class="pl-summary-row">
+<td class="pl-id" style="border:1px solid #000;">30</td>
+<td class="pl-name" style="border:1px solid #000;">Testing</td>
+<td class="pl-date" style="border:1px solid #000;">30 Mar</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">08 May</td>
+<td class="pl-chart" colspan="8" style="border:1px solid #000;"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:69.5%;width:18.8%;"></div></div></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">31</td>
+<td class="pl-name" style="border:1px solid #000;">Unit Testing</td>
+<td class="pl-date" style="border:1px solid #000;">30 Mar</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">10 Apr</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:94%;width:6%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:0%;width:33%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">32</td>
+<td class="pl-name" style="border:1px solid #000;">Integration Testing</td>
+<td class="pl-date" style="border:1px solid #000;">10 Apr</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">20 Apr</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:33%;width:33%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">33</td>
+<td class="pl-name" style="border:1px solid #000;">System Testing</td>
+<td class="pl-date" style="border:1px solid #000;">21 Apr</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">30 Apr</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:67%;width:33%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">34</td>
+<td class="pl-name" style="border:1px solid #000;">Bug Fixes</td>
+<td class="pl-date" style="border:1px solid #000;">28 Apr</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">08 May</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:90%;width:10%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:0%;width:23%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">35</td>
+<td class="pl-name pl-ms-label" style="border:1px solid #000;">Testing Complete</td>
+<td class="pl-date" style="border:1px solid #000;">08 May</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">08 May</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-milestone" style="left:26%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<!-- ===== 36. DELIVERY (Summary) ===== -->
+<tr class="pl-summary-row">
+<td class="pl-id" style="border:1px solid #000;">36</td>
+<td class="pl-name" style="border:1px solid #000;">Delivery</td>
+<td class="pl-date" style="border:1px solid #000;">10 May</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">01 Jun</td>
+<td class="pl-chart" colspan="8" style="border:1px solid #000;"><div class="pl-summary-bar-wrap"><div class="pl-summary-bar" style="left:89.7%;width:10.3%;"></div></div></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">37</td>
+<td class="pl-name" style="border:1px solid #000;">Final Documentation</td>
+<td class="pl-date" style="border:1px solid #000;">10 May</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">20 May</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:32%;width:32%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">38</td>
+<td class="pl-name" style="border:1px solid #000;">Deployment</td>
+<td class="pl-date" style="border:1px solid #000;">14 May</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">21 May</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:45%;width:23%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">39</td>
+<td class="pl-name" style="border:1px solid #000;">Project Closure</td>
+<td class="pl-date" style="border:1px solid #000;">26 May</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">31 May</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-bar" style="left:81%;width:16%;"></div></td>
+<td class="pl-chart" style="border:1px solid #000;"></td>
+</tr>
+<tr class="pl-task-row">
+<td class="pl-id" style="border:1px solid #000;">40</td>
+<td class="pl-name pl-ms-label" style="border:1px solid #000;">Final Delivery</td>
+<td class="pl-date" style="border:1px solid #000;">01 Jun</td>
+<td class="pl-date pl-divider" style="border:1px solid #000;">01 Jun</td>
+<td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td><td class="pl-chart" style="border:1px solid #000;"></td>
+<td class="pl-chart" style="border:1px solid #000;"><div class="pl-milestone" style="left:50%;"></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Legend -->
+</div>
+<br/>
+<br/>
+<!-- ==================== 6. ADDITIONAL COMPONENTS ==================== -->
+<h2 id="additional">6. Additional Components</h2>
+<h4>6.1 Open Source Project Management Tools</h4>
+<ul>
+<li><strong>ProjectLibre:</strong> Open-source alternative to Microsoft Project for Gantt charts and resource planning (http://www.projectlibre.org/)</li>
+<li><strong>GitHub Issues:</strong> Integrated issue tracking and project boards for task management</li>
+<li><strong>Git:</strong> Version control system for code and documentation management</li>
+</ul>
+<h4>6.2 Standards Compliance</h4>
+<ul>
+<li><strong>IEEE 1058-1998:</strong> Software Project Management Plans (this document)</li>
+<li><strong>IEEE 1540-2001:</strong> Software Life Cycle Processes — Risk Management (Section 3.3)</li>
+<li><strong>IEEE 29148-2018:</strong> Requirements Engineering (SRS document)</li>
+<li><strong>IEEE 1016-2009:</strong> Software Design Descriptions (SDD document)</li>
+<li><strong>IEEE 829-2008:</strong> Software and System Test Documentation (STD document)</li>
+</ul>
+<!-- ==================== DOCUMENT APPROVAL ==================== -->
+<div style="margin-top: 40px;">
+<h2>Document Approval</h2>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Role</th><th style="border:1px solid #000;"> Name</th><th style="border:1px solid #000;">Signature</th><th style="border:1px solid #000;">Date</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;">Developer</td> <td style="border:1px solid #000;">Daniyal Khalil</td><td style="border:1px solid #000;"> </td><td style="border:1px solid #000;"></td></tr>
+<tr><td style="border:1px solid #000;">Academic Supervisor</td><td style="border:1px solid #000;">Dr. Muddassar Azam Sindhu</td><td style="border:1px solid #000;"> </td><td style="border:1px solid #000;"> </td></tr>
+</tbody>
+</table>
+<h3>Revision History</h3>
+<table style="border:1px solid #000;border-collapse:collapse;">
+<thead><tr><th style="border:1px solid #000;">Version</th><th style="border:1px solid #000;">Date</th><th style="border:1px solid #000;">Author</th><th style="border:1px solid #000;">Changes</th></tr></thead>
+<tbody>
+<tr><td style="border:1px solid #000;">1.0</td><td style="border:1px solid #000;">February 4, 2026</td><td style="border:1px solid #000;">Daniyal Khalil</td><td style="border:1px solid #000;">Initial SPMP creation — IEEE 1058-1998 compliant</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Convert Documentation to PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 30px; }
+        .method {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .step {
+            background: #e8f4f8;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .important {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📄 Documentation Format Conversion Guide</h1>
+
+<p><strong>Project:</strong> Code Quality & Fault Prediction System</p>
+<p><strong>Date:</strong> February 4, 2026</p>
+
+<h2>📁 Available Formats</h2>
+
+<p>Your documentation is now available in the following formats:</p>
+<ul>
+    <li><strong>HTML Format (.html)</strong> - Professional, browser-viewable, ready for submission</li>
+    <li><strong>Markdown Format (.md)</strong> - Source files with diagrams</li>
+</ul>
+
+<h2>🎯 Recommended Submission Format: PDF</h2>
+
+<p>For academic submissions, PDF is the most universally accepted format. Here are multiple methods to convert your HTML documentation to PDF:</p>
+
+<div class="method">
+    <h3>Method 1: Using Web Browser (Easiest - Recommended)</h3>
+    
+    <div class="step">
+        <strong>Step 1:</strong> Open the HTML file in your web browser
+        <ul>
+            <li>Right-click on <code>Chapter-1-SPMP.html</code></li>
+            <li>Select "Open with" → Choose your browser (Chrome, Firefox, Edge)</li>
+        </ul>
+    </div>
+    
+    <div class="step">
+        <strong>Step 2:</strong> Print to PDF
+        <ul>
+            <li>Press <code>Ctrl + P</code> (Windows/Linux) or <code>Cmd + P</code> (Mac)</li>
+            <li>In the print dialog, select "Save as PDF" or "Microsoft Print to PDF" as the printer</li>
+            <li>Adjust settings:
+                <ul>
+                    <li>Layout: Portrait</li>
+                    <li>Margins: Default or Normal</li>
+                    <li>Include background graphics: YES (for colored tables)</li>
+                </ul>
+            </li>
+            <li>Click "Save" and choose location</li>
+        </ul>
+    </div>
+    
+    <div class="important">
+        <strong>✅ Chrome (Best Results):</strong><br>
+        • Excellent CSS support<br>
+        • Best table formatting<br>
+        • Preserves colors and styling
+    </div>
+</div>
+
+<div class="method">
+    <h3>Method 2: Using Microsoft Word</h3>
+    
+    <div class="step">
+        <strong>Step 1:</strong> Open HTML in Word
+        <ul>
+            <li>Open Microsoft Word</li>
+            <li>File → Open → Browse</li>
+            <li>Change file type to "All Files (*.*)"</li>
+            <li>Select the .html file</li>
+        </ul>
+    </div>
+    
+    <div class="step">
+        <strong>Step 2:</strong> Save as PDF
+        <ul>
+            <li>File → Save As</li>
+            <li>Choose "PDF (*.pdf)" as file type</li>
+            <li>Click Save</li>
+        </ul>
+    </div>
+    
+    <p><strong>Note:</strong> You can also edit the document in Word before converting if needed.</p>
+</div>
+
+<div class="method">
+    <h3>Method 3: Online Conversion Tools (Free)</h3>
+    
+    <div class="step">
+        <strong>Recommended Sites:</strong>
+        <ul>
+            <li><a href="https://www.ilovepdf.com/html-to-pdf" target="_blank">iLovePDF - HTML to PDF</a></li>
+            <li><a href="https://www.sejda.com/html-to-pdf" target="_blank">Sejda HTML to PDF</a></li>
+            <li><a href="https://cloudconvert.com/html-to-pdf" target="_blank">CloudConvert</a></li>
+        </ul>
+    </div>
+    
+    <div class="step">
+        <strong>Steps:</strong>
+        <ol>
+            <li>Visit one of the above websites</li>
+            <li>Upload your HTML file</li>
+            <li>Click "Convert"</li>
+            <li>Download the generated PDF</li>
+        </ol>
+    </div>
+</div>
+
+<div class="method">
+    <h3>Method 4: Using Command Line (Advanced)</h3>
+    
+    <div class="step">
+        <strong>Using wkhtmltopdf (Windows/Mac/Linux):</strong>
+        <ol>
+            <li>Install wkhtmltopdf from <a href="https://wkhtmltopdf.org/downloads.html" target="_blank">wkhtmltopdf.org</a></li>
+            <li>Open Command Prompt/Terminal</li>
+            <li>Navigate to documentation folder:
+                <pre>cd "c:\Users\Unknown\Documents\project\Mine\Farhan id\latest one\project-documentation"</pre>
+            </li>
+            <li>Convert to PDF:
+                <pre>wkhtmltopdf Chapter-1-SPMP.html Chapter-1-SPMP.pdf</pre>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<h2>📑 Converting All Chapters</h2>
+
+<p>You have the following chapters to convert:</p>
+
+<ol>
+    <li><code>Chapter-1-SPMP.html</code> → <code>Chapter-1-SPMP.pdf</code></li>
+    <li><code>Chapter-2-SRS.html</code> → <code>Chapter-2-SRS.pdf</code></li>
+    <li><code>Chapter-3-SDD.html</code> → <code>Chapter-3-SDD.pdf</code></li>
+    <li><code>Chapter-4-Implementation-Testing.html</code> → <code>Chapter-4-Implementation-Testing.pdf</code></li>
+    <li><code>diagrams/System-Diagrams.html</code> → <code>System-Diagrams.pdf</code></li>
+</ol>
+
+<div class="important">
+    <strong>⚠️ For Batch Conversion (All files at once):</strong><br>
+    If you want to convert all HTML files to PDF at once, I can provide you with a batch script.
+</div>
+
+<h2>🎨 Quality Tips for PDF Conversion</h2>
+
+<ul>
+    <li><strong>Use Chrome browser</strong> for best results</li>
+    <li><strong>Enable background graphics</strong> to preserve colors in tables</li>
+    <li><strong>Set proper margins</strong> (0.5 inches recommended)</li>
+    <li><strong>Use portrait orientation</strong> for standard documents</li>
+    <li><strong>Check page breaks</strong> - ensure tables don't split awkwardly</li>
+    <li><strong>Preview before saving</strong> to verify formatting</li>
+</ul>
+
+<h2>📊 Alternative: Submit HTML Directly</h2>
+
+<p>Many academic institutions now accept HTML submissions because:</p>
+<ul>
+    <li>✅ Viewable in any browser</li>
+    <li>✅ Maintains all formatting and styling</li>
+    <li>✅ Contains interactive elements (if any)</li>
+    <li>✅ Smaller file size than PDF</li>
+    <li>✅ Professional appearance</li>
+</ul>
+
+<div class="important">
+    <strong>💡 Pro Tip:</strong> Check with your instructor which format they prefer. HTML is becoming increasingly accepted for technical documentation.
+</div>
+
+<h2>📧 Need Help?</h2>
+
+<p>If you encounter any issues with conversion:</p>
+<ol>
+    <li>Try a different browser</li>
+    <li>Check your print settings</li>
+    <li>Ensure background graphics are enabled</li>
+    <li>Try an online conversion tool as alternative</li>
+</ol>
+
+<h2>✅ Quick Start Guide</h2>
+
+<div class="step" style="background: #d4edda; border: 2px solid #28a745;">
+    <strong>For Immediate Submission (Fastest Method):</strong>
+    <ol>
+        <li>Open <code>Chapter-1-SPMP.html</code> in <strong>Google Chrome</strong></li>
+        <li>Press <code>Ctrl + P</code></li>
+        <li>Select "Save as PDF"</li>
+        <li>Enable "Background graphics"</li>
+        <li>Click "Save"</li>
+        <li>Repeat for all chapters</li>
+    </ol>
+    <p><strong>Done!</strong> You now have PDF versions ready for submission.</p>
+</div>
+
+<hr style="margin-top: 40px;">
+<p style="text-align: center; color: #666;">
+    <strong>Code Quality & Fault Prediction System</strong><br>
+    Documentation Conversion Guide | Version 1.0 | February 4, 2026
+</p>
+
+</body>
+</html>

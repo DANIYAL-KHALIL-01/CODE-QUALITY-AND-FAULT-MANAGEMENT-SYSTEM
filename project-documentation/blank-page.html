@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blank Pages</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+        .page-break {
+            page-break-after: always;
+            width: 100%;
+            height: 100vh;
+        }
+        @media print {
+            .page-break {
+                display: block;
+                page-break-after: always;
+                height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-break"></div>
+    <div class="page-break"></div>
+    <div class="page-break"></div>
+    <div class="page-break"></div>
+    <div class="page-break"></div>
+</body>
+</html>

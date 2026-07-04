@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chapter 4: Software Test Documentation (STD) - IEEE 829-2008</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose',
+            themeVariables: { primaryColor: '#ffffff', primaryBorderColor: '#000000', primaryTextColor: '#000000', lineColor: '#000000', secondaryColor: '#f0f0f0', tertiaryColor: '#e0e0e0', actorLineColor: '#000000', signalColor: '#000000', signalTextColor: '#000000', noteBkgColor: '#f0f0f0', noteBorderColor: '#000000', actorBorder: '#000000', actorTextColor: '#000000', labelBoxBorderColor: '#000000', labelTextColor: '#000000', loopTextColor: '#000000', activationBorderColor: '#000000' }
+        });
+    </script>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', 'Times New Roman', serif; line-height: 1.8; color: #000000; background: white; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 50px 60px; box-shadow: none; }
+        .cover-page { text-align: center; padding: 80px 0; border-bottom: 3px solid #000000; margin-bottom: 40px; page-break-after: always; }
+        .cover-page h1 { font-size: 2.8em; color: #000000; margin: 20px 0; }
+        .cover-page h2 { font-size: 1.8em; color: #000000; margin: 15px 0; font-weight: normal; }
+        .cover-page .metadata { margin-top: 60px; text-align: left; display: inline-block; }
+        .metadata-row { margin: 12px 0; font-size: 1.05em; }
+        .metadata-label { font-weight: bold; display: inline-block; width: 180px; }
+        h2 { font-size: 1.9em; color: #000000; margin-top: 40px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #000000; page-break-after: avoid; }
+        h3 { font-size: 1.4em; color: #000000; margin-top: 30px; margin-bottom: 15px; page-break-after: avoid; }
+        h4 { font-size: 1.15em; color: #000000; margin-top: 20px; margin-bottom: 10px; }
+        h5 { font-size: 1.05em; color: #000000; margin-top: 15px; margin-bottom: 8px; }
+        p { margin-bottom: 14px; text-align: justify; }
+        ul, ol { margin-left: 30px; margin-bottom: 15px; }
+        li { margin-bottom: 6px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; page-break-inside: avoid; }
+        th { background-color: #1d1d1d; color: white; padding: 12px; text-align: center; font-weight: bold; }
+        td { padding: 10px; border: 1px solid #000000; text-align: center; }
+        tr:nth-child(even) { background-color: #f0f0f0; }
+        .box { background: #f0f0f0; border-left: 4px solid #000000; padding: 15px 20px; margin: 20px 0; page-break-inside: avoid; }
+        .note-box { background: #f0f0f0; border-left: 4px solid #000000; padding: 15px 20px; margin: 20px 0; }
+        .test-case { border-left: 4px solid #000000; background-color: #f0f0f0; padding: 20px; margin: 20px 0; page-break-inside: avoid; }
+        .test-case-header { font-weight: bold; color: #000000; margin-bottom: 10px; font-size: 1.15em; }
+        .test-case table { margin: 10px 0; font-size: 0.92em; width: 75%; }
+        .test-case th, .test-case td { padding: 8px 12px; }
+        .test-case td:last-child { white-space: normal; }
+        .status-planned { color: #000000; font-weight: bold; }
+        .status-pending { color: #000000; font-weight: bold; }
+        .priority-high { color: #000000; font-weight: bold; }
+        .priority-medium { color: #000000; font-weight: bold; }
+        .priority-low { color: #000000; font-weight: bold; }
+        .diagram-box { background: #ffffff; border: none; border-radius: 0px; padding: 20px; margin: 25px 0; page-break-inside: avoid; }
+        .diagram-title { font-size: 1.2em; font-weight: bold; color: #000000; margin-bottom: 10px; text-align: center; }
+        .diagram-description { background: #f0f0f0; border-left: 4px solid #000000; padding: 12px; margin: 12px 0 18px 0; font-style: italic; }
+        .diagram-image-container { text-align: center; padding: 15px; background: white; border: none; border-radius: 0px; margin: 15px 0; }
+        .diagram-label { text-align: center; font-weight: bold; font-size: 1em; color: #000000; padding: 10px; margin: 5px 0 0 0; }
+        .mermaid { background: white; padding: 10px; border-radius: 0px; }
+        .toc { page-break-after: always; margin-bottom: 40px; }
+        .toc h2 { font-size: 1.8em; color: #000000; margin-bottom: 20px; border-bottom: 2px solid #000000; padding-bottom: 10px; }
+        .toc ol { list-style: none; margin-left: 0; }
+        .toc > ol > li { margin: 8px 0; font-weight: bold; }
+        .toc ol ol { margin-left: 25px; }
+        .toc ol ol li { font-weight: normal; margin: 5px 0; font-size: 0.95em; }
+        .toc ol ol ol { margin-left: 25px; }
+        .toc ol ol ol li { font-size: 0.9em; }
+        .toc a { color: #000000; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .page-break { page-break-after: always; }
+        .template-box { background: #f0f0f0; border: 2px dashed #000000; padding: 20px; margin: 20px 0; page-break-inside: avoid; }
+        .template-title { font-weight: bold; color: #000000; margin-bottom: 10px; font-size: 1.1em; }
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; padding: 30px; }
+            h2, h3 { page-break-after: avoid; }
+            table, .box, .diagram-box, .test-case, .template-box { page-break-inside: avoid; }
+            .page-break { page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<!-- COVER PAGE -->
+<div class="cover-page">
+<p style="font-size: 1.2em; color: #333333; letter-spacing: 2px;">IEEE 829-2008 STANDARD</p>
+<h1>Software Test Documentation</h1>
+<h2>(STD)</h2>
+<p style="font-size: 1.4em; color: #000000; margin: 20px 0;">Code Quality &amp; Fault Prediction System</p>
+<div class="metadata">
+<div class="metadata-row"><span class="metadata-label">Document Title:</span> Software Test Documentation (STD)</div>
+<div class="metadata-row"><span class="metadata-label">Project Name:</span> Code Quality &amp; Fault Prediction System</div>
+<div class="metadata-row"><span class="metadata-label">Standard Reference:</span> IEEE 829-2008</div>
+<div class="metadata-row"><span class="metadata-label">Document Version:</span> 1.0</div>
+<div class="metadata-row"><span class="metadata-label">Date:</span> February 4, 2026</div>
+<div class="metadata-row"><span class="metadata-label">Status:</span> Draft</div>
+<div class="metadata-row"><span class="metadata-label">Prepared By:</span> DANIYAL KHALIL</div>
+</div>
+</div>
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#introduction">1. Introduction</a>
+<ol>
+<li><a href="#purpose">1.1 Purpose</a></li>
+<li><a href="#system-overview">1.2 System Overview</a></li>
+<li><a href="#test-objectives">1.3 Test Objectives</a></li>
+<li><a href="#quality-targets">1.4 Quality Metric Targets</a></li>
+<li><a href="#references">1.5 References</a></li>
+</ol>
+</li>
+<li><a href="#test-plan">2. Master Test Plan (MTP)</a>
+<ol>
+<li><a href="#test-approach">2.1 Test Approach and Strategy</a></li>
+<li><a href="#features-tested">2.2 Features to be Tested</a></li>
+<li><a href="#features-not-tested">2.3 Features Not to be Tested</a></li>
+<li><a href="#test-environment">2.4 Test Environment</a></li>
+<li><a href="#test-schedule">2.5 Test Schedule</a></li>
+</ol>
+</li>
+<li><a href="#test-cases">3. Test Case Specifications</a>
+<ol>
+<li><a href="#tc-01">3.1 TC-001: User Registration with Valid Data</a></li>
+<li><a href="#tc-02">3.2 TC-002: User Login with Valid Credentials</a></li>
+<li><a href="#tc-03">3.3 TC-003: Repository Addition via GitHub URL</a></li>
+<li><a href="#tc-04">3.4 TC-004: Code Analysis Execution</a></li>
+<li><a href="#tc-05">3.5 TC-005: Dashboard Visualization</a></li>
+<li><a href="#tc-06">3.6 TC-006: Bug Report Creation</a></li>
+<li><a href="#tc-07">3.7 TC-007: ML Fault Prediction</a></li>
+<li><a href="#tc-08">3.8 TC-008: Authentication Failure Handling</a></li>
+<li><a href="#tc-09">3.9 TC-009: Unauthorized Access Prevention</a></li>
+<li><a href="#tc-10">3.10 TC-010: Performance Under Load</a></li>
+</ol>
+</li>
+<li><a href="#test-templates">4. Test Reporting Templates (IEEE 829)</a>
+<ol>
+<li><a href="#test-log-template">4.1 Test Log Template</a></li>
+</ol>
+</li>
+<li><a href="#additional-material">5. Additional Material</a></li>
+</ol>
+</div>
+<!-- 1. INTRODUCTION -->
+<h2 id="introduction">1. Introduction</h2>
+<h3 id="purpose">1.1 Purpose</h3>
+<p>This Software Test Documentation (STD) specifies the test plan, test design, test case specifications, test procedures, and test reporting templates for the <strong>Code Quality &amp; Fault Prediction System</strong>. It conforms to <strong>IEEE 829-2008</strong> — <em>IEEE Standard for Software and System Test Documentation</em>.</p>
+<p>This document is prepared <em>before the implementation phase</em>. All test cases, procedures, and metrics described herein represent <strong>planned</strong> testing activities. Actual test execution logs and results shall be recorded during the testing phase using the templates provided in Section 6.</p>
+<h3 id="system-overview">1.2 System Overview</h3>
+<ul>
+<li><strong>System Name:</strong> Code Quality &amp; Fault Prediction System</li>
+<li><strong>Purpose:</strong> Automated code quality analysis and ML-based fault prediction</li>
+<li><strong>Target Users:</strong> Software Developers, QA Engineers, Project Managers</li>
+<li><strong>Architecture:</strong> Three-tier (React Frontend → Flask Backend → SQLite Database)</li>
+<li><strong>Primary Functions:</strong> Repository analysis, metric calculation, fault prediction, dashboard visualization, bug tracking, test prioritization</li>
+</ul>
+<h3 id="test-objectives">1.3 Test Objectives</h3>
+<ol>
+<li><strong>Functional Correctness:</strong> Verify all features operate as specified in SRS (Chapter 2)</li>
+<li><strong>Reliability:</strong> Ensure the system operates without crashes or data corruption</li>
+<li><strong>Performance:</strong> Validate response times and resource usage meet NFR targets</li>
+<li><strong>Security:</strong> Confirm authentication, authorization, and data protection mechanisms</li>
+<li><strong>Usability:</strong> Validate user interface intuitiveness and accessibility</li>
+<li><strong>Compatibility:</strong> Verify cross-browser and cross-platform support</li>
+</ol>
+<h3 id="quality-targets">1.4 Quality Metric Targets</h3>
+<table>
+<thead><tr><th>Quality Metric</th><th>Target Value</th><th>Measurement Method</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Backend Code Coverage</td><td>≥ 70%</td><td>pytest --cov</td><td class="status-planned">Planned</td></tr>
+<tr><td>Frontend Code Coverage</td><td>≥ 60%</td><td>vitest --coverage</td><td class="status-planned">Planned</td></tr>
+<tr><td>Bug Density</td><td>&lt; 5 per 1,000 LOC</td><td>Defect tracking</td><td class="status-planned">Planned</td></tr>
+<tr><td>Critical Bugs at Release</td><td>0</td><td>Bug report status</td><td class="status-planned">Planned</td></tr>
+<tr><td>API Response Time (95th %ile)</td><td>≤ 2 seconds</td><td>JMeter load test</td><td class="status-planned">Planned</td></tr>
+<tr><td>Dashboard Load Time</td><td>≤ 3 seconds</td><td>Lighthouse / manual</td><td class="status-planned">Planned</td></tr>
+<tr><td>Analysis Time (&lt; 1,000 files)</td><td>≤ 5 minutes</td><td>Timer measurement</td><td class="status-planned">Planned</td></tr>
+<tr><td>Test Case Pass Rate</td><td>≥ 95%</td><td>Test execution count</td><td class="status-planned">Planned</td></tr>
+</tbody>
+</table>
+<h3 id="references">1.5 References</h3>
+<ul>
+<li><strong>IEEE 829-2008:</strong> IEEE Standard for Software and System Test Documentation</li>
+<li><strong>Chapter 1 — SPMP:</strong> Software Project Management Plan (IEEE 1058-1998)</li>
+<li><strong>Chapter 2 — SRS:</strong> Software Requirements Specification (IEEE 29148-2018)</li>
+<li><strong>Chapter 3 — SDD:</strong> Software Design Description (IEEE 1016-2009)</li>
+</ul>
+<div class="page-break"></div>
+<!-- 2. MASTER TEST PLAN -->
+<h2 id="test-plan">2. Master Test Plan (MTP)</h2>
+<h3 id="test-approach">2.1 Test Approach and Strategy</h3>
+<p>The testing strategy shall follow a comprehensive multi-level pyramid approach, progressing from unit testing through integration testing to system and acceptance testing. This bottom-up approach shall ensure early defect detection while validating end-to-end functionality.</p>
+<div style="height: 120px; border: 1px dashed #888; margin: 20px 0; text-align: center; line-height: 120px; font-style: italic; color: #888;">[Diagram Placeholder: Insert diagram here]</div>
+<h3 id="features-tested">2.2 Features to be Tested</h3>
+<table>
+<thead><tr><th>Feature Area</th><th>Test Items</th><th>SRS Requirement</th><th>Priority</th></tr></thead>
+<tbody>
+<tr><td><strong>User Authentication</strong></td><td>Registration, Login, Logout, Session management, Password hashing</td><td>FR-01 to FR-06</td><td class="priority-high">High</td></tr>
+<tr><td><strong>Repository Management</strong></td><td>Add repo via URL, Delete repo, List repos, Metadata fetch</td><td>FR-07 to FR-10</td><td class="priority-high">High</td></tr>
+<tr><td><strong>Code Analysis</strong></td><td>Clone repo, Calculate CC/MI/Halstead/Churn, Multi-language support</td><td>FR-11 to FR-16</td><td class="priority-high">High</td></tr>
+<tr><td><strong>ML Predictions</strong></td><td>Train model, Predict faults, Risk classification, Confidence scoring</td><td>FR-17 to FR-21</td><td class="priority-high">High</td></tr>
+<tr><td><strong>Dashboard</strong></td><td>Overview cards, Risk chart, Complexity trend, Recent analyses</td><td>FR-22 to FR-25</td><td class="priority-high">High</td></tr>
+<tr><td><strong>Test Prioritization</strong></td><td>Priority ranking, Risk-based recommendations</td><td>FR-26 to FR-28</td><td class="priority-medium">Medium</td></tr>
+<tr><td><strong>Bug Reports</strong></td><td>Create, Update status, Filter by severity/status</td><td>FR-29 to FR-31</td><td class="priority-medium">Medium</td></tr>
+<tr><td><strong>Security</strong></td><td>PBKDF2 hashing, Session auth, CORS, SQL injection prevention</td><td>NFR-12 to NFR-18</td><td class="priority-high">High</td></tr>
+<tr><td><strong>Performance</strong></td><td>API response time, Dashboard load, Analysis completion</td><td>NFR-01 to NFR-05</td><td class="priority-high">High</td></tr>
+</tbody>
+</table>
+<h3 id="features-not-tested">2.3 Features Not to be Tested</h3>
+<ul>
+<li><strong>Third-party Libraries:</strong> scikit-learn, Radon, Lizard, PyGithub internal functionality</li>
+<li><strong>Database Engine:</strong> SQLite core engine (vendor-tested)</li>
+<li><strong>Browser Engines:</strong> Chromium, Firefox, WebKit rendering engines</li>
+<li><strong>External APIs:</strong> GitHub.com service availability (out of scope)</li>
+<li><strong>Network Infrastructure:</strong> Internet routing and connectivity</li>
+<li><strong>Operating System:</strong> Windows/Linux/macOS kernel functionality</li>
+</ul>
+<h3 id="test-environment">2.4 Test Environment</h3>
+<table>
+<thead><tr><th>Component</th><th>Specification</th></tr></thead>
+<tbody>
+<tr><td><strong>Operating System</strong></td><td>Windows 11, Ubuntu 22.04 LTS</td></tr>
+<tr><td><strong>Processor</strong></td><td>Intel Core i7-8700 (6 cores, 3.2 GHz) or equivalent</td></tr>
+<tr><td><strong>RAM</strong></td><td>16 GB DDR4</td></tr>
+<tr><td><strong>Storage</strong></td><td>100 GB SSD with 50GB free space</td></tr>
+<tr><td><strong>Network</strong></td><td>100 Mbps internet connection</td></tr>
+<tr><td><strong>Python</strong></td><td>3.10+ with pytest, scikit-learn, Flask</td></tr>
+<tr><td><strong>Node.js</strong></td><td>18.16+ with Vitest, React Testing Library</td></tr>
+<tr><td><strong>Database</strong></td><td>SQLite 3.40+ (test database instance)</td></tr>
+<tr><td><strong>Browsers</strong></td><td>Chrome 120+, Firefox 121+, Edge 120+, Safari 15+</td></tr>
+</tbody>
+</table>
+<h3 id="test-schedule">2.5 Test Schedule</h3>
+<p>The test schedule aligns with the project timeline defined in the SPMP. Testing runs from 30 March to 08 May 2026 (approximately 6 weeks), overlapping with the final implementation weeks to enable early defect detection.</p>
+<table>
+<thead><tr><th>Phase</th><th>Dates</th><th>Activities</th><th>Deliverables</th></tr></thead>
+<tbody>
+<tr><td><strong>Phase 1</strong></td><td>30 Mar – 10 Apr</td><td>Unit test development and execution</td><td>Unit test reports, code coverage</td></tr>
+<tr><td><strong>Phase 2</strong></td><td>11 Apr – 20 Apr</td><td>Integration testing of API endpoints</td><td>Integration test results, defects</td></tr>
+<tr><td><strong>Phase 3</strong></td><td>21 Apr – 30 Apr</td><td>System testing and performance testing</td><td>System test results, performance reports</td></tr>
+<tr><td><strong>Phase 4</strong></td><td>01 May – 08 May</td><td>UAT, regression testing, and bug fixes</td><td>UAT sign-off, Test Summary Report</td></tr>
+</tbody>
+</table>
+<!-- 3. TEST CASE SPECIFICATIONS -->
+<h2 id="test-cases">3. Test Case Specifications</h2>
+<p>Each test case follows IEEE 829 Test Case Specification format. All cases are in <span class="status-planned">Planned</span> status — actual results shall be recorded during the testing phase.</p>
+<!-- TC-001 -->
+<h3 id="tc-01">3.1 TC-001: User Registration with Valid Data</h3>
+<br/>
+<div class="test-case">
+<div class="test-case-header">TC-001 — User Registration | Priority: <span class="priority-high">High</span> | SRS: FR-01, FR-02, FR-03</div>
+<h4>Purpose:</h4>
+<p>Verify user registration with valid data creates account with hashed password.</p>
+<h4>Preconditions:</h4>
+<ul><li>System running</li><li>No existing user "testuser123"</li></ul>
+<h4>Inputs:</h4>
+<p>Username: testuser123, Email: testuser@example.com, Password: SecurePass123!</p>
+<h4>Expected Results:</h4>
+<ul>
+<li>User account created in database</li>
+<li>Password hashed (PBKDF2)</li>
+<li>HTTP 201 response</li>
+<li>Redirect to login</li>
+</ul>
+<h4>Test Procedure:</h4>
+<ol>
+<li>Navigate to signup page</li>
+<li>Enter details and register</li>
+<li>Verify success and redirect</li>
+<li>Login to confirm</li>
+</ol>
+<p><strong>Status:</strong> <span class="status-planned">Planned</span></p>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<!-- TC-002 -->
+<h3 id="tc-02">3.2 TC-002: User Login with Valid Credentials</h3>
+<br/>
+<div class="test-case">
+<div class="test-case-header">TC-002 — User Login | Priority: <span class="priority-high">High</span> | SRS: FR-04</div>
+<h4>Purpose:</h4>
+<p>Verify that a registered user shall be able to login with correct credentials and access the dashboard.</p>
+<h4>Preconditions:</h4>
+<ul><li>User "testuser123" registered in the system</li></ul>
+<h4>Inputs:</h4>
+<table>
+<thead><tr><th>Field</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Username</td><td>testuser123</td></tr>
+<tr><td>Password</td><td>SecurePass123!</td></tr>
+</tbody>
+</table>
+<h4>Expected Results:</h4>
+<table>
+<thead><tr><th>Expected Behavior</th><th>Pass Criteria</th></tr></thead>
+<tbody>
+<tr><td>Session created</td><td>Session cookie set in browser</td></tr>
+<tr><td>User authenticated</td><td>HTTP 200 OK with user data</td></tr>
+<tr><td>Redirect to dashboard</td><td>Dashboard page loads at /dashboard</td></tr>
+<tr><td>Username displayed in header</td><td>"testuser123" visible in navigation</td></tr>
+</tbody>
+</table>
+<h4>Test Procedure:</h4>
+<ol>
+<li>Navigate to http://localhost:5173/login</li>
+<li>Enter username "testuser123" and password "SecurePass123!"</li>
+<li>Click "Login" button</li>
+<li>Verify redirect to dashboard</li>
+<li>Verify username in header</li>
+<li>Refresh page — verify session persists</li>
+</ol>
+<p><strong>Status:</strong> <span class="status-planned">Planned</span></p>
+</div>
+<!-- TC-003 -->
+<h3 id="tc-03">3.3 TC-003: Repository Addition via GitHub URL</h3>
+<br/>
+<br/>
+<div class="test-case">
+<div class="test-case-header">TC-003 — Repository Addition | Priority: <span class="priority-high">High</span> | SRS: FR-07, FR-08</div>
+<h4>Purpose:</h4>
+<p>Verify that a logged-in user shall be able to add a GitHub repository by providing a valid URL, and that metadata is fetched from the GitHub API.</p>
+<h4>Preconditions:</h4>
+<ul><li>User is authenticated and on the Repository page</li><li>GitHub API is accessible</li></ul>
+<h4>Inputs:</h4>
+<table>
+<thead><tr><th>Field</th><th>Value</th></tr></thead>
+<tbody><tr><td>Repository URL</td><td>https://github.com/octocat/Hello-World</td></tr></tbody>
+</table>
+<h4>Expected Results:</h4>
+<table>
+<thead><tr><th>Expected Behavior</th><th>Pass Criteria</th></tr></thead>
+<tbody>
+<tr><td>Repository metadata fetched</td><td>Name, owner, description, language, stars loaded from GitHub API</td></tr>
+<tr><td>Repository persisted</td><td>Repository record created in database</td></tr>
+<tr><td>Success notification</td><td>"Repository added successfully" message displayed</td></tr>
+<tr><td>Appears in repository list</td><td>Repository visible in user's repositories page</td></tr>
+</tbody>
+</table>
+<h4>Test Procedure:</h4>
+<ol>
+<li>Login and navigate to Repository page</li>
+<li>Click "Add Repository" button</li>
+<li>Enter URL: "https://github.com/octocat/Hello-World"</li>
+<li>Click "Add" button</li>
+<li>Verify success notification</li>
+<li>Verify repository appears in list with correct metadata</li>
+</ol>
+<p><strong>Status:</strong> <span class="status-planned">Planned</span></p>
+</div>
+<!-- TC-004 -->
+<h3 id="tc-04">3.4 TC-004: Code Analysis Execution</h3>
+<br/>
+<br/>
+<div class="test-case">
+<div class="test-case-header">TC-004 — Code Analysis | Priority: <span class="priority-high">High</span> | SRS: FR-11 to FR-16</div>
+<h4>Purpose:</h4>
+<p>Verify that the system shall clone a repository, calculate code metrics (LOC, CC, MI, Halstead, Churn), and persist results in the database.</p>
+<h4>Preconditions:</h4>
+<ul><li>Repository added to user's account</li><li>GitHub API accessible for cloning</li></ul>
+<h4>Expected Results:</h4>
+<table>
+<thead><tr><th>Expected Behavior</th><th>Pass Criteria</th></tr></thead>
+<tbody>
+<tr><td>Repository cloned to server</td><td>No clone errors; files available on disk</td></tr>
+<tr><td>Metrics calculated per file</td><td>CodeMetric records created for .py and .js files</td></tr>
+<tr><td>Metrics stored in database</td><td>CC (0–50+), MI (0–100), LOC (integer) values valid</td></tr>
+<tr><td>Analysis completes in time</td><td>≤ 5 minutes for repository with &lt; 1,000 files</td></tr>
+<tr><td>Completion notification</td><td>"Analysis complete: X files analyzed" message</td></tr>
+</tbody>
+</table>
+<h4>Test Procedure:</h4>
+<ol>
+<li>Navigate to repository details page</li>
+<li>Click "Analyze" button</li>
+<li>Wait for analysis to complete</li>
+<li>Verify success notification with file count</li>
+<li>Navigate to Metrics page — verify metric data displayed</li>
+<li>Verify complexity and maintainability values in expected ranges</li>
+</ol>
+<p><strong>Status:</strong> <span class="status-planned">Planned</span></p>
+</div>
+<!-- TC-005 -->
+<h3 id="tc-05">3.5 TC-005: Dashboard Visualization</h3>
+<br/>
+<br/>
+<div class="test-case">
+<div class="test-case-header">TC-005 — Dashboard | Priority: <span class="priority-high">High</span> | SRS: FR-22 to FR-25</div>
+<h4>Purpose:</h4>
+<p>Verify that the dashboard shall display accurate overview cards, risk distribution chart, complexity trend, and recent analyses.</p>
+<h4>Preconditions:</h4>
+<ul><li>At least one repository with completed analysis exists</li></ul>
+<h4>Expected Results:</h4>
+<table>
+<thead><tr><th>Expected Behavior</th><th>Pass Criteria</th></tr></thead>
+<tbody>
+<tr><td>Overview cards render</td><td>Total Files, High Risk, Avg Complexity, Recent Analysis cards visible</td></tr>
+<tr><td>Risk chart renders</td><td>Pie/donut chart with Low/Medium/High/Critical segments</td></tr>
+<tr><td>Complexity trend renders</td><td>Line chart with date-based axis and CC values</td></tr>
+<tr><td>Recent analyses render</td><td>List of 5 most recent repos with timestamps</td></tr>
+<tr><td>Dashboard loads in time</td><td>Full render ≤ 3 seconds</td></tr>
+</tbody>
+</table>
+<h4>Test Procedure:</h4>
+<ol>
+<li>Login and navigate to Dashboard</li>
+<li>Verify all 4 overview cards are visible with data</li>
+<li>Verify risk distribution chart renders with correct segments</li>
+<li>Verify complexity trend chart renders with data points</li>
+<li>Verify recent analyses list is populated</li>
+<li>Measure page load time (target ≤ 3 seconds)</li>
+</ol>
+<p><strong>Status:</strong> <span class="status-planned">Planned</span></p>
+</div>
+<!-- TC-006 -->
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<h3 id="tc-06">3.6 TC-006: Bug Report Creation</h3>
+<br/>
+<br/>
+<div class="test-case">
+<div class="test-case-header">TC-006 — Bug Report | Priority: <span class="priority-medium">Medium</span> | SRS: FR-29, FR-30</div>
+<h4>Purpose:</h4>
+<p>Verify that a user shall be able to create a bug report with description, severity, and associated file path, with initial status "Open".</p>
+<h4>Preconditions:</h4>
+<ul><li>User is authenticated and on the Bug Reports page</li><li>At least one repository with analyzed files exists</li></ul>
+<h4>Inputs:</h4>
+<table>
+<thead><tr><th>Field</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>File Path</td><td>src/services/analyzer.py</td></tr>
+<tr><td>Severity</td><td>High</td></tr>
+<tr><td>Description</td><td>Cyclomatic complexity calculation returns incorrect value for nested loops</td></tr>
+</tbody>
+</table>
+<h4>Expected Results:</h4>
+<table>
+<thead><tr><th>Expected Behavior</th><th>Pass Criteria</th></tr></thead>
+<tbody>
+<tr><td>Bug report created</td><td>HTTP 201 Created response</td></tr>
+<tr><td>Status set to "Open"</td><td>Bug status = "Open" in database</td></tr>
+<tr><td>Bug appears in list</td><td>Bug visible in BugReports page with correct severity badge</td></tr>
+</tbody>
+</table>
+<h4>Test Procedure:</h4>
+<ol>
+<li>Login and navigate to Bug Reports page</li>
+<li>Click "Create Bug Report" button</li>
+<li>Enter file path: "src/services/analyzer.py"</li>
+<li>Select severity: "High"</li>
+<li>Enter description as specified</li>
+<li>Click "Submit" button</li>
+<li>Verify success notification appears</li>
+<li>Verify bug appears in list with "Open" status and "High" severity badge</li>
+</ol>
+<p><strong>Status:</strong> <span class="status-planned">Planned</span></p>
+</div>
+<!-- TC-007 -->
+<h3 id="tc-07">3.7 TC-007: ML Fault Prediction</h3>
+<br/>
+<br/>
+<div class="test-case">
+<div class="test-case-header">TC-007 — ML Prediction | Priority: <span class="priority-high">High</span> | SRS: FR-17 to FR-20</div>
+<h4>Purpose:</h4>
+<p>Verify that the ML service shall generate fault predictions with probability scores, risk classifications, and confidence levels for analyzed files.</p>
+<h4>Preconditions:</h4>
+<ul><li>Repository analysis completed with code metrics available</li><li>ML model is trained and ready for predictions</li></ul>
+<h4>Expected Results:</h4>
+<table>
+<thead><tr><th>Expected Behavior</th><th>Pass Criteria</th></tr></thead>
+<tbody>
+<tr><td>Prediction generated per file</td><td>Prediction record exists for each analyzed file</td></tr>
+<tr><td>Fault probability in range</td><td>0.0 ≤ fault_probability ≤ 1.0</td></tr>
+<tr><td>Risk level classified</td><td>risk_level ∈ {Low, Medium, High, Critical}</td></tr>
+<tr><td>Confidence score in range</td><td>0.0 ≤ confidence_score ≤ 1.0</td></tr>
+<tr><td>Risk thresholds correct</td><td>Low: 0–0.3, Med: 0.3–0.6, High: 0.6–0.8, Crit: 0.8–1.0</td></tr>
+</tbody>
+</table>
+<h4>Test Procedure:</h4>
+<ol>
+<li>Ensure a repository has been analyzed with code metrics</li>
+<li>Navigate to Metrics page and trigger ML prediction</li>
+<li>Wait for prediction process to complete</li>
+<li>Verify predictions exist for all analyzed files</li>
+<li>Verify fault_probability values are within 0.0–1.0 range</li>
+<li>Verify risk_level matches expected thresholds</li>
+<li>Verify confidence_score values are within 0.0–1.0 range</li>
+</ol>
+<p><strong>Status:</strong> <span class="status-planned">Planned</span></p>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<!-- TC-008 -->
+<h3 id="tc-08">3.8 TC-008: Authentication Failure Handling</h3>
+<div class="test-case">
+<div class="test-case-header">TC-008 — Auth Failure | Priority: <span class="priority-high">High</span> | SRS: FR-04, NFR-14</div>
+<h4>Purpose:</h4>
+<p>Verify that the system shall reject login attempts with invalid credentials and return appropriate HTTP 401 responses without exposing sensitive information.</p>
+<h4>Preconditions:</h4>
+<ul><li>System is running and accessible</li><li>User "testuser123" exists for wrong password test</li></ul>
+<h4>Inputs:</h4>
+<table>
+<thead><tr><th>Scenario</th><th>Username</th><th>Password</th></tr></thead>
+<tbody>
+<tr><td>Wrong password</td><td>testuser123</td><td>WrongPassword!</td></tr>
+<tr><td>Non-existent user</td><td>nonexistent_user</td><td>AnyPass123!</td></tr>
+<tr><td>Empty credentials</td><td>(empty)</td><td>(empty)</td></tr>
+</tbody>
+</table>
+<h4>Expected Results:</h4>
+<table>
+<thead><tr><th>Expected Behavior</th><th>Pass Criteria</th></tr></thead>
+<tbody>
+<tr><td>Login rejected</td><td>HTTP 401 Unauthorized for all scenarios</td></tr>
+<tr><td>Generic error message</td><td>"Invalid credentials" — no username/password hints</td></tr>
+<tr><td>No session created</td><td>No session cookie set</td></tr>
+<tr><td>No redirect to dashboard</td><td>User remains on login page</td></tr>
+</tbody>
+</table>
+<h4>Test Procedure:</h4>
+<ol>
+<li>Navigate to login page</li>
+<li>Enter wrong password for existing user and click Login</li>
+<li>Verify HTTP 401 response and "Invalid credentials" message</li>
+<li>Enter non-existent username with any password and click Login</li>
+<li>Verify HTTP 401 response and generic error message</li>
+<li>Submit empty username and password fields</li>
+<li>Verify HTTP 401 response and no session cookie is set</li>
+<li>Confirm user remains on login page for all scenarios</li>
+</ol>
+<p><strong>Status:</strong> <span class="status-planned">Planned</span></p>
+</div>
+<!-- TC-009 -->
+<h3 id="tc-09">3.9 TC-009: Unauthorized Access Prevention</h3>
+<div class="test-case">
+<div class="test-case-header">TC-009 — Authorization | Priority: <span class="priority-high">High</span> | SRS: NFR-14, NFR-15</div>
+<h4>Purpose:</h4>
+<p>Verify that all protected API endpoints shall reject unauthenticated requests with HTTP 401 and that users shall only access their own data.</p>
+<h4>Preconditions:</h4>
+<ul><li>Multiple user accounts exist with different repositories</li><li>Browser developer tools available for cookie inspection</li></ul>
+<h4>Test Scenarios:</h4>
+<table>
+<thead><tr><th>Scenario</th><th>Action</th><th>Expected Result</th></tr></thead>
+<tbody>
+<tr><td>No session</td><td>GET /api/repositories (no cookie)</td><td>HTTP 401 Unauthorized</td></tr>
+<tr><td>Expired session</td><td>GET /api/dashboard (expired cookie)</td><td>HTTP 401 Unauthorized</td></tr>
+<tr><td>Other user's data</td><td>GET /api/repositories/:other_user_repo_id</td><td>HTTP 403 Forbidden or 404 Not Found</td></tr>
+<tr><td>Tampered cookie</td><td>GET /api/metrics (modified session)</td><td>HTTP 401 Unauthorized</td></tr>
+</tbody>
+</table>
+<h4>Test Procedure:</h4>
+<ol>
+<li>Clear all cookies and attempt to access /api/repositories</li>
+<li>Verify HTTP 401 Unauthorized response</li>
+<li>Set an expired session cookie and access /api/dashboard</li>
+<li>Verify HTTP 401 Unauthorized response</li>
+<li>Login as User A, then attempt to access User B's repository</li>
+<li>Verify HTTP 403 or 404 response</li>
+<li>Modify session cookie value and access /api/metrics</li>
+<li>Verify HTTP 401 Unauthorized response</li>
+</ol>
+<p><strong>Status:</strong> <span class="status-planned">Planned</span></p>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<!-- TC-010 -->
+<h3 id="tc-10">3.10 TC-010: Performance Under Load</h3>
+<div class="test-case">
+<div class="test-case-header">TC-010 — Performance | Priority: <span class="priority-high">High</span> | SRS: NFR-01 to NFR-05</div>
+<h4>Purpose:</h4>
+<p>Verify that the system shall meet performance targets under expected concurrent user load.</p>
+<h4>Preconditions:</h4>
+<ul><li>System deployed in test environment</li><li>JMeter and Lighthouse tools installed</li><li>Test data populated in database</li></ul>
+<h4>Test Scenarios:</h4>
+<table>
+<thead><tr><th>Metric</th><th>Load Condition</th><th>Target</th></tr></thead>
+<tbody>
+<tr><td>API Response Time (95th %ile)</td><td>50 concurrent users</td><td>≤ 2 seconds</td></tr>
+<tr><td>Dashboard Load Time</td><td>Single user with full dataset</td><td>≤ 3 seconds</td></tr>
+<tr><td>Repository Analysis</td><td>Medium repo (500 files)</td><td>≤ 5 minutes</td></tr>
+<tr><td>Database Query Throughput</td><td>Concurrent reads/writes</td><td>≥ 100 queries/second</td></tr>
+</tbody>
+</table>
+<h4>Tools:</h4>
+<ul>
+<li>JMeter for API load testing with 50-user thread group</li>
+<li>Browser DevTools / Lighthouse for frontend performance</li>
+<li>Python concurrent.futures for backend stress testing</li>
+</ul>
+<h4>Test Procedure:</h4>
+<ol>
+<li>Configure JMeter with 50-user thread group</li>
+<li>Run load test against API endpoints for 5 minutes</li>
+<li>Record 95th percentile response times</li>
+<li>Load dashboard with full dataset and measure load time using Lighthouse</li>
+<li>Trigger repository analysis on medium-sized repo (500 files)</li>
+<li>Record analysis completion time</li>
+<li>Run concurrent database read/write operations</li>
+<li>Verify all metrics meet specified targets</li>
+</ol>
+<p><strong>Status:</strong> <span class="status-planned">Planned</span></p>
+</div>
+<!-- 4. TEST REPORTING TEMPLATES (IEEE 829) -->
+<h2 id="test-templates">4. Test Reporting Templates (IEEE 829)</h2>
+<p>The following templates shall be used to record test execution results during the testing phase. These templates conform to IEEE 829-2008 requirements for Test Log documentation.</p>
+<!-- 4.1 Test Log Template -->
+<h3 id="test-log-template">4.1 Test Log Template</h3>
+<div class="template-box">
+<div class="template-title">IEEE 829 — Test Log</div>
+<table>
+<tbody>
+<tr><td><strong>Test Log Identifier:</strong></td><td>TL-FPS-[NNN]</td></tr>
+<tr><td><strong>Test Suite:</strong></td><td>[Unit / Integration / System / Performance / Security]</td></tr>
+<tr><td><strong>Date of Execution:</strong></td><td>[YYYY-MM-DD]</td></tr>
+<tr><td><strong>Tester Name:</strong></td><td>[Name]</td></tr>
+<tr><td><strong>Environment:</strong></td><td>[OS, Browser, Python version, Node version]</td></tr>
+</tbody>
+</table>
+<br/>
+<table>
+<thead><tr><th>Time</th><th>Test Case ID</th><th>Description</th><th>Result</th><th>Incident ID</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>[HH:MM]</td><td>[TC-NNN]</td><td>[Brief description]</td><td>[PASS / FAIL / BLOCKED]</td><td>[TIR-NNN or N/A]</td><td>[Observations]</td></tr>
+<tr><td colspan="6" style="text-align: center; color: #000000;"><em>— rows to be filled during test execution —</em></td></tr>
+</tbody>
+</table>
+</div>
+<!-- 5. ADDITIONAL MATERIAL -->
+<h2 id="additional-material page-break-before: always;">5. Additional Material</h2>
+<h4>Related Documents:</h4>
+<ul>
+<li>Chapter 1 — SPMP: Software Project Management Plan (IEEE 1058-1998)</li>
+<li>Chapter 2 — SRS: Software Requirements Specification (IEEE 29148-2018)</li>
+<li>Chapter 3 — SDD: Software Design Description (IEEE 1016-2009)</li>
+</ul>
+<!-- DOCUMENT APPROVAL -->
+<div style="margin-top: 40px; page-break-before: always;">
+<h2>Document Approval</h2>
+<table>
+<thead><tr><th>Role</th><th>Name</th><th>Signature</th><th>Date</th></tr></thead>
+<tbody>
+<tr><td>Developer</td><td>Daniyal Khalil</td><td> </td><td></td></tr>
+<tr><td>Academic Supervisor</td><td>Dr. Muddassar Azam Sindhu</td><td> </td><td> </td></tr>
+</tbody>
+</table>
+<h3>Revision History</h3>
+<table>
+<thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Changes</th></tr></thead>
+<tbody>
+<tr><td>1.0</td><td>February 4, 2026</td><td>Daniyal Khalil</td><td>Initial STD creation — IEEE 829-2008 compliant</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

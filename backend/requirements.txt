@@ -1,0 +1,25 @@
+# Web Framework
+Flask
+Flask-CORS
+python-dotenv
+
+# Database
+SQLAlchemy
+Flask-SQLAlchemy
+
+# GitHub Integration
+PyGithub
+GitPython
+
+# Code Analysis
+radon
+lizard
+
+# Machine Learning
+scikit-learn
+pandas
+numpy
+joblib
+
+# Utilities
+requests
