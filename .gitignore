@@ -56,6 +56,14 @@ build/
 *.docx
 *.pdf
 
+# Documentation (kept locally, not in repo)
+project-documentation/
+
+# Executable files
+*.exe
+*.bat
+*.msi
+
 # Logs
 *.log
 logs/
