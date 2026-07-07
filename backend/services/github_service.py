@@ -16,14 +16,36 @@ class GitHubService:
     
     def __init__(self, token=None):
         """Initialize GitHub service with optional token"""
-        self.token = token
-        self.github = Github(token) if token else Github()
+        self.token = token.strip() if isinstance(token, str) and token.strip() else None
+        self.github = Github(self.token) if self.token else Github()
+        self.anonymous_github = Github()
         self.temp_dir = tempfile.mkdtemp(prefix='fault_prediction_')
+
+    def _is_auth_error(self, error):
+        """Return True when GitHub rejected credentials."""
+        return getattr(error, 'status', None) in (401, 403)
+
+    def _get_repo(self, owner, name):
+        """Fetch a repository, retrying anonymously if credentials are invalid."""
+        repo_name = f"{owner}/{name}"
+
+        try:
+            return self.github.get_repo(repo_name)
+        except GithubException as auth_error:
+            if not self.token or not self._is_auth_error(auth_error):
+                raise
+
+        try:
+            return self.anonymous_github.get_repo(repo_name)
+        except GithubException:
+            raise Exception(
+                "Failed to fetch repository info: GitHub token is invalid or expired, and the repository could not be accessed anonymously."
+            )
     
     def get_repository_info(self, owner, name):
         """Get repository information from GitHub"""
         try:
-            repo = self.github.get_repo(f"{owner}/{name}")
+            repo = self._get_repo(owner, name)
             
             # Get last commit date
             commits = repo.get_commits()
@@ -58,7 +80,7 @@ class GitHubService:
     def get_commit_history(self, owner, name, file_path=None):
         """Get commit history for repository or specific file"""
         try:
-            repo = self.github.get_repo(f"{owner}/{name}")
+            repo = self._get_repo(owner, name)
             
             if file_path:
                 commits = repo.get_commits(path=file_path)
@@ -90,7 +112,7 @@ class GitHubService:
     def get_bug_fixing_commits(self, owner, name):
         """Identify bug-fixing commits based on commit messages"""
         try:
-            repo = self.github.get_repo(f"{owner}/{name}")
+            repo = self._get_repo(owner, name)
             commits = repo.get_commits()
             
             bug_keywords = ['fix', 'bug', 'issue', 'error', 'patch', 'resolve']
