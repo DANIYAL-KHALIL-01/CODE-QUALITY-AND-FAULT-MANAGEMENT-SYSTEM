@@ -2,10 +2,18 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { RiskBadge } from '../shared/RiskBadge';
 import { Button } from '../ui/button';
-import { Download, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
+import { Download, CheckCircle2, Loader2, AlertCircle, Eye, RotateCcw } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { useRepositoryContext } from '../context/RepositoryContext';
 import { usePredictions, useMetrics } from '../hooks/useApi';
+import { toast } from 'sonner';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '../ui/dialog';
 
 interface Recommendation {
   id: string;
@@ -13,6 +21,7 @@ interface Recommendation {
   description: string;
   priority: 'critical' | 'high' | 'medium' | 'low';
   impact: string;
+  action: string;
   modules: string[];
 }
 
@@ -21,6 +30,45 @@ export default function Recommendations() {
   const { predictions, fetchPredictions, loading: predLoading } = usePredictions(selectedRepository?.id || null);
   const { metrics, fetchMetrics, loading: metricsLoading } = useMetrics(selectedRepository?.id || null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [completedRecommendations, setCompletedRecommendations] = useState<Set<string>>(new Set());
+  const [selectedRecommendation, setSelectedRecommendation] = useState<Recommendation | null>(null);
+
+  const toggleRecommendation = (recommendationId: string) => {
+    setCompletedRecommendations((completed) => {
+      const next = new Set(completed);
+      if (next.has(recommendationId)) {
+        next.delete(recommendationId);
+        toast.info('Recommendation marked as active');
+      } else {
+        next.add(recommendationId);
+        toast.success('Recommendation marked as done');
+      }
+      return next;
+    });
+  };
+
+  const exportReport = () => {
+    if (recommendations.length === 0) {
+      toast.info('There are no recommendations to export');
+      return;
+    }
+
+    const report = {
+      repository: selectedRepository?.name,
+      generatedAt: new Date().toISOString(),
+      recommendations: recommendations.map((recommendation) => ({
+        ...recommendation,
+        status: completedRecommendations.has(recommendation.id) ? 'done' : 'open',
+      })),
+    };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${selectedRepository?.name || 'repository'}-recommendations.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success('Recommendation report exported');
+  };
 
   useEffect(() => {
     if (selectedRepository?.analyzed) {
@@ -43,6 +91,7 @@ export default function Recommendations() {
           description: `${criticalFiles.length} module(s) have critical fault probability. Prioritize refactoring these.`,
           priority: 'critical',
           impact: 'Reduces production defects by up to 40%',
+          action: 'Inspect the listed modules, split complex functions, and add focused regression tests before changing behavior.',
           modules: criticalFiles.slice(0, 5).map((f: any) => f.file_path),
         });
       }
@@ -56,6 +105,7 @@ export default function Recommendations() {
           description: `${highComplexity.length} file(s) have high cyclomatic complexity (>15). Break them into smaller functions.`,
           priority: 'high',
           impact: 'Improves maintainability and reduces bugs by 25%',
+          action: 'Break the highest-complexity functions into smaller units and cover each branch with tests.',
           modules: highComplexity.slice(0, 5).map((m: any) => m.file_path),
         });
       }
@@ -69,6 +119,7 @@ export default function Recommendations() {
           description: `${lowMaintainability.length} file(s) have low maintainability index (<50). Add documentation and refactor.`,
           priority: 'medium',
           impact: 'Improves team productivity by 20%',
+          action: 'Document the module responsibilities, remove duplication, and refactor the least maintainable functions first.',
           modules: lowMaintainability.slice(0, 5).map((m: any) => m.file_path),
         });
       }
@@ -82,6 +133,7 @@ export default function Recommendations() {
           description: `${highRiskFiles.length} file(s) have high fault probability (>0.6). Ensure 90%+ test coverage.`,
           priority: 'high',
           impact: 'Catches 60% more bugs before production',
+          action: 'Add or strengthen automated tests for the listed files, starting with the files with the highest fault probability.',
           modules: highRiskFiles.slice(0, 5).map((f: any) => f.file_path),
         });
       }
@@ -93,6 +145,11 @@ export default function Recommendations() {
   }, [predictions, metrics]);
 
   const loading = predLoading || metricsLoading;
+  const orderedRecommendations = [...recommendations].sort((first, second) => {
+    const firstCompleted = completedRecommendations.has(first.id) ? 1 : 0;
+    const secondCompleted = completedRecommendations.has(second.id) ? 1 : 0;
+    return firstCompleted - secondCompleted;
+  });
 
   if (loading) {
     return (
@@ -133,7 +190,11 @@ export default function Recommendations() {
           <h1 className="text-3xl font-bold text-[#E6EDF3] mb-2">Recommendations</h1>
           <p className="text-[#8B949E]">AI-powered testing and refactoring suggestions based on analysis</p>
         </div>
-        <Button className="bg-[#F97316] hover:bg-[#F97316]/90">
+        <Button
+          className="bg-[#F97316] hover:bg-[#F97316]/90"
+          onClick={exportReport}
+          disabled={recommendations.length === 0}
+        >
           <Download className="h-4 w-4 mr-2" />
           Export Report
         </Button>
@@ -141,9 +202,12 @@ export default function Recommendations() {
 
       {/* Recommendation Cards */}
       <div className="grid gap-6">
-        {recommendations.length > 0 ? (
-          recommendations.map((rec) => (
-            <Card key={rec.id} className="bg-[#161B22] border-[#30363D]">
+        {orderedRecommendations.length > 0 ? (
+          orderedRecommendations.map((rec) => (
+            <Card
+              key={rec.id}
+              className={`bg-[#161B22] border-[#30363D] ${completedRecommendations.has(rec.id) ? 'opacity-60' : ''}`}
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -181,11 +245,22 @@ export default function Recommendations() {
 
                 {/* Actions */}
                 <div className="flex gap-2 pt-2">
-                  <Button className="bg-[#F97316] hover:bg-[#F97316]/90">
-                    <CheckCircle2 className="h-4 w-4 mr-2" />
-                    Mark as Done
+                  <Button
+                    className="bg-[#F97316] hover:bg-[#F97316]/90"
+                    onClick={() => toggleRecommendation(rec.id)}
+                  >
+                    {completedRecommendations.has(rec.id) ? (
+                      <RotateCcw className="h-4 w-4 mr-2" />
+                    ) : (
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
+                    )}
+                    {completedRecommendations.has(rec.id) ? 'Reopen' : 'Mark as Done'}
                   </Button>
-                  <Button className="border-[#30363D] hover:bg-[#0D1117]">
+                  <Button
+                    className="border-[#30363D] text-[#E6EDF3] hover:bg-[#0D1117]"
+                    onClick={() => setSelectedRecommendation(rec)}
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
                     View Details
                   </Button>
                 </div>
@@ -234,6 +309,61 @@ export default function Recommendations() {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog
+        open={selectedRecommendation !== null}
+        onOpenChange={(open) => !open && setSelectedRecommendation(null)}
+      >
+        <DialogContent className="bg-[#161B22] border-[#30363D] text-[#E6EDF3] max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-[#E6EDF3]">{selectedRecommendation?.title}</DialogTitle>
+            <DialogDescription className="text-[#8B949E]">
+              Recommendation generated from the selected repository&apos;s analysis results.
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedRecommendation && (
+            <div className="space-y-5">
+              <div className="flex items-center gap-3">
+                <RiskBadge level={selectedRecommendation.priority} />
+                <Badge className="bg-[#0D1117] border-[#30363D] text-[#8B949E]">
+                  {completedRecommendations.has(selectedRecommendation.id) ? 'Done' : 'Open'}
+                </Badge>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wide text-[#8B949E]">Why this was recommended</p>
+                <p className="mt-2 text-sm leading-6 text-[#E6EDF3]">{selectedRecommendation.description}</p>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wide text-[#8B949E]">What to do</p>
+                <p className="mt-2 rounded-lg border border-[#30363D] bg-[#0D1117] p-4 text-sm leading-6 text-[#E6EDF3]">
+                  {selectedRecommendation.action}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wide text-[#8B949E]">Affected modules</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {selectedRecommendation.modules.map((module) => (
+                    <Badge key={module} className="bg-[#0D1117] border-[#30363D] text-[#8B949E]">
+                      {module}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wide text-[#8B949E]">Expected impact</p>
+                <p className="mt-2 text-sm text-[#E6EDF3]">{selectedRecommendation.impact}</p>
+              </div>
+              <Button
+                className="bg-[#F97316] hover:bg-[#F97316]/90"
+                onClick={() => toggleRecommendation(selectedRecommendation.id)}
+              >
+                {completedRecommendations.has(selectedRecommendation.id) ? 'Reopen Recommendation' : 'Mark as Done'}
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

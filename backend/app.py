@@ -307,6 +307,9 @@ def analyze_repository(repo_id):
         # Analyze code
         analysis_results = code_analyzer.analyze_repository(repo_path)
         
+        # Replace the previous snapshot so re-analysis cannot duplicate module rows.
+        CodeMetric.query.filter_by(repository_id=repo_id).delete()
+
         # Store metrics in database (batch insert for performance)
         metrics_list = []
         for file_path, metrics in analysis_results.items():
@@ -470,9 +473,31 @@ def prioritize_tests():
         repository = Repository.query.filter_by(id=repo_id, user_id=session['user_id']).first()
         if not repository:
             return jsonify({'error': 'Repository not found'}), 404
+
+        if not repository.analyzed:
+            return jsonify({'error': 'Repository must be analyzed before tests can be prioritized'}), 400
+
+        # When the user requests a fresh ranking without supplying a test suite,
+        # create one analysis target per repository module.
+        if not test_cases:
+            metrics = CodeMetric.query.filter_by(repository_id=repo_id).all()
+            test_cases = ml_service.generate_test_cases(metrics)
         
         # Get predictions
         predictions = Prediction.query.filter_by(repository_id=repo_id).all()
+        if not predictions and test_cases:
+            metrics = CodeMetric.query.filter_by(repository_id=repo_id).all()
+            bug_reports = BugReport.query.filter_by(repository_id=repo_id).all()
+            prediction_values = ml_service.predict_faults(metrics, bug_reports)
+            for file_path, fault_probability in prediction_values.items():
+                db.session.add(Prediction(
+                    repository_id=repo_id,
+                    file_path=file_path,
+                    fault_probability=fault_probability,
+                    risk_level=ml_service.get_risk_level(fault_probability),
+                ))
+            db.session.commit()
+            predictions = Prediction.query.filter_by(repository_id=repo_id).all()
         
         # Prioritize tests
         prioritized = ml_service.prioritize_tests(test_cases, predictions)
@@ -488,7 +513,9 @@ def prioritize_tests():
                 name=test['name'],
                 file_path=test['file_path'],
                 priority_score=test['priority_score'],
-                execution_order=idx + 1
+                execution_order=idx + 1,
+                execution_time=test.get('execution_time'),
+                failure_count=test.get('failure_count', 0)
             )
             test_cases_list.append(test_case)
         
@@ -518,6 +545,41 @@ def get_prioritized_tests(repo_id):
             return jsonify({'error': 'Repository not found'}), 404
         
         tests = TestCase.query.filter_by(repository_id=repo_id).order_by(TestCase.execution_order).all()
+
+        # Generate persisted ML-ranked test targets from analyzed modules when no
+        # manually supplied test suite exists for this repository.
+        if not tests and repository.analyzed:
+            metrics = CodeMetric.query.filter_by(repository_id=repo_id).all()
+            predictions = Prediction.query.filter_by(repository_id=repo_id).all()
+            if metrics and not predictions:
+                bug_reports = BugReport.query.filter_by(repository_id=repo_id).all()
+                prediction_values = ml_service.predict_faults(metrics, bug_reports)
+                for file_path, fault_probability in prediction_values.items():
+                    db.session.add(Prediction(
+                        repository_id=repo_id,
+                        file_path=file_path,
+                        fault_probability=fault_probability,
+                        risk_level=ml_service.get_risk_level(fault_probability),
+                    ))
+                db.session.commit()
+                predictions = Prediction.query.filter_by(repository_id=repo_id).all()
+
+            if metrics and predictions:
+                generated_tests = ml_service.generate_test_cases(metrics)
+                prioritized = ml_service.prioritize_tests(generated_tests, predictions)
+                for execution_order, test in enumerate(prioritized, start=1):
+                    db.session.add(TestCase(
+                        repository_id=repo_id,
+                        name=test['name'],
+                        file_path=test['file_path'],
+                        priority_score=test['priority_score'],
+                        execution_order=execution_order,
+                        execution_time=test['execution_time'],
+                        failure_count=test['failure_count'],
+                    ))
+                db.session.commit()
+                tests = TestCase.query.filter_by(repository_id=repo_id).order_by(TestCase.execution_order).all()
+
         return jsonify({
             'tests': [test.to_dict() for test in tests]
         })

@@ -125,6 +125,9 @@ class MLService:
         """Prioritize test cases based on fault predictions"""
         # Create prediction lookup
         pred_dict = {pred.file_path: pred.fault_probability for pred in predictions}
+        max_complexity = max((test.get('complexity', 0) for test in test_cases), default=1) or 1
+        max_churn = max((test.get('churn', 0) for test in test_cases), default=1) or 1
+        max_failures = max((test.get('failure_count', 0) for test in test_cases), default=1) or 1
         
         prioritized = []
         
@@ -135,12 +138,23 @@ class MLService:
             fault_prob = pred_dict.get(file_path, 0.5)
             execution_time = test.get('execution_time', 1.0)
             failure_count = test.get('failure_count', 0)
+            complexity_score = test.get('complexity', 0) / max_complexity
+            churn_score = test.get('churn', 0) / max_churn
+            failure_score = failure_count / max_failures
+            speed_score = 1 / max(execution_time, 0.1)
+            max_speed = max(
+                (1 / max(candidate.get('execution_time', 1.0), 0.1) for candidate in test_cases),
+                default=1,
+            ) or 1
             
-            # Priority formula: weighted combination of factors
+            # Regression priority combines model risk with code-change and
+            # historical-failure signals, while favoring cheaper tests.
             priority_score = (
-                fault_prob * 0.5 +           # 50% weight on fault probability
-                (failure_count / 10) * 0.3 + # 30% weight on historical failures
-                (1 / execution_time) * 0.2   # 20% weight on execution speed
+                fault_prob * 0.40 +
+                complexity_score * 0.20 +
+                churn_score * 0.15 +
+                failure_score * 0.20 +
+                (speed_score / max_speed) * 0.05
             )
             
             prioritized.append({
@@ -155,6 +169,20 @@ class MLService:
         prioritized.sort(key=lambda x: x['priority_score'], reverse=True)
         
         return prioritized
+
+    def generate_test_cases(self, metrics):
+        """Create analysis-backed test targets when no test suite was supplied."""
+        return [
+            {
+                'name': f"Test {metric.file_path}",
+                'file_path': metric.file_path,
+                'execution_time': max(float(metric.lines_of_code or 1) / 1000, 0.1),
+                'failure_count': int(metric.bug_count or 0),
+                'complexity': float(metric.cyclomatic_complexity or 0),
+                'churn': float(metric.code_churn or 0),
+            }
+            for metric in metrics
+        ]
     
     def retrain_model(self, training_data):
         """Retrain model with new data"""

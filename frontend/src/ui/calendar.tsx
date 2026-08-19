@@ -38,6 +38,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         day_hidden: 'invisible',
         ...classNames,
       }}
+      {...props}
 
 //       const components: any = {
 //   IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />

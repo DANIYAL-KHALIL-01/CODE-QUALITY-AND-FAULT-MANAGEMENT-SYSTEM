@@ -83,7 +83,7 @@ export default function Metrics() {
     ? metrics.reduce((sum: number, m: Metric) => sum + (m.maintainability_index || 0), 0) / metrics.length
     : 0;
 
-  const chartData = metrics
+  const chartData = [...metrics]
     .sort((a: Metric, b: Metric) => (b.cyclomatic_complexity || 0) - (a.cyclomatic_complexity || 0))
     .slice(0, 10)
     .map((m: Metric) => ({
