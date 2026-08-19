@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 from services.github_service import GitHubService
 from services.code_analyzer import CodeAnalyzer
 from services.ml_service import MLService
+from services.insight_service import InsightService
 from database.models import db, User, Repository, CodeMetric, Prediction, BugReport, TestCase, Settings
 
 # Load environment variables
@@ -37,6 +38,7 @@ db.init_app(app)
 # Initialize services
 code_analyzer = CodeAnalyzer()
 ml_service = MLService()
+insight_service = InsightService()
 
 # Create tables if they don't exist
 with app.app_context():
@@ -405,6 +407,22 @@ def predict_faults(repo_id):
         # Batch insert all predictions
         if predictions_list:
             db.session.bulk_save_objects(predictions_list)
+
+        # Generate actual bug reports from ML analysis results
+        bug_report_payloads = insight_service.generate_bug_reports(repo_id, metrics, predictions_list)
+        if bug_report_payloads:
+            existing_bug_paths = {
+                bug.file_path for bug in BugReport.query.filter_by(repository_id=repo_id).all()
+            }
+            for bug_payload in bug_report_payloads:
+                if bug_payload['file_path'] not in existing_bug_paths:
+                    db.session.add(BugReport(
+                        repository_id=bug_payload['repository_id'],
+                        file_path=bug_payload['file_path'],
+                        severity=bug_payload['severity'],
+                        description=bug_payload['description'],
+                        status=bug_payload['status']
+                    ))
         
         db.session.commit()
         

@@ -27,11 +27,11 @@ export default function Recommendations() {
       fetchPredictions();
       fetchMetrics();
     }
-  }, [selectedRepository]);
+  }, [selectedRepository, fetchPredictions, fetchMetrics]);
 
   // Generate recommendations based on predictions and metrics
   useEffect(() => {
-    if (predictions.length > 0 && metrics.length > 0) {
+    if (predictions.length > 0 || metrics.length > 0) {
       const recs: Recommendation[] = [];
 
       // Find critical risk files
@@ -86,7 +86,9 @@ export default function Recommendations() {
         });
       }
 
-      setRecommendations(recs.length > 0 ? recs : []);
+      setRecommendations(recs);
+    } else {
+      setRecommendations([]);
     }
   }, [predictions, metrics]);
 
@@ -195,7 +197,7 @@ export default function Recommendations() {
             <CardContent className="flex flex-col items-center justify-center py-12">
               <AlertCircle className="h-16 w-16 text-[#8B949E] mb-4" />
               <p className="text-[#8B949E]">
-                No recommendations at this time. Your code looks good!
+                No recommendations generated for this repository yet.
               </p>
             </CardContent>
           </Card>

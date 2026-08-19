@@ -9,37 +9,41 @@ interface OverviewCardsProps {
 export function OverviewCards({ metrics, predictions }: OverviewCardsProps) {
   const totalModules = metrics?.length || 0;
   const highRiskModules = predictions?.filter((p: any) => p.risk_level === 'high' || p.risk_level === 'critical').length || 0;
-  const analyzedRepos = 1; // Since this is for a single selected repository
-  const totalRepos = 1;
+  const averageComplexity = totalModules > 0
+    ? metrics.reduce((sum: number, metric: any) => sum + (metric.cyclomatic_complexity || 0), 0) / totalModules
+    : 0;
+  const averageMaintainability = totalModules > 0
+    ? metrics.reduce((sum: number, metric: any) => sum + (metric.maintainability_index || 0), 0) / totalModules
+    : 0;
 
   const cards = [
     {
       title: 'Total Modules',
       value: totalModules.toString(),
-      change: '+12%',
+      detail: totalModules > 0 ? 'From the selected repository analysis' : 'No module data available yet',
       icon: Activity,
       color: 'text-blue-500',
     },
     {
       title: 'High Risk Modules',
       value: highRiskModules.toString(),
-      change: '-5%',
+      detail: highRiskModules > 0 ? 'Flagged by current predictions' : 'No high-risk modules detected',
       icon: AlertTriangle,
       color: 'text-red-500',
     },
     {
-      title: 'Analyzed Repositories',
-      value: `${analyzedRepos}/${totalRepos}`,
-      change: '+8%',
-      icon: CheckCircle,
-      color: 'text-green-500',
-    },
-    {
       title: 'Average Complexity',
-      value: totalModules > 0 ? ((highRiskModules / totalModules) * 100).toFixed(1) : '0',
-      change: '+3%',
+      value: averageComplexity > 0 ? averageComplexity.toFixed(1) : '0',
+      detail: totalModules > 0 ? 'Calculated from current metrics' : 'Waiting for analysis data',
       icon: TrendingUp,
       color: 'text-yellow-500',
+    },
+    {
+      title: 'Avg Maintainability',
+      value: averageMaintainability > 0 ? averageMaintainability.toFixed(1) : '0',
+      detail: totalModules > 0 ? 'Calculated from current metrics' : 'Waiting for analysis data',
+      icon: CheckCircle,
+      color: 'text-green-500',
     },
   ];
 
@@ -56,7 +60,7 @@ export function OverviewCards({ metrics, predictions }: OverviewCardsProps) {
           <CardContent>
             <div className="text-2xl font-bold text-[#E6EDF3]">{card.value}</div>
             <p className="text-xs text-[#8B949E] mt-1">
-              <span className="text-green-500">{card.change}</span> from last month
+              {card.detail}
             </p>
           </CardContent>
         </Card>
