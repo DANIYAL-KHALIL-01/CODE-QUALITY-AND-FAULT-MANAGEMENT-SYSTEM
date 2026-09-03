@@ -4,7 +4,7 @@ export default function WelcomePage() {
       <div className="space-y-12 max-w-2xl">
         <div className="space-y-6">
           <h1 className="text-6xl font-bold bg-gradient-to-r from-brand-foreground via-brand-primary to-brand-muted bg-clip-text text-transparent animate-bounce-in">
-            Welcome to FaultPredict
+            Welcome to Code Quality and Fault Prediction System
           </h1>
           <p className="text-xl text-brand-muted animate-slide-in">
             Intelligent test case prioritization for legacy software systems
