@@ -3,8 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
-import { Switch } from '../ui/switch';
-import { Separator } from '../ui/separator';
 import { Loader2, Eye, EyeOff, Trash2 } from 'lucide-react';
 import { useSettings } from '../hooks/useApi';
 import { useAuth } from '../context/AuthContext';
@@ -25,10 +23,6 @@ interface SettingsState {
   githubToken: string;
   gitlabToken: string;
   webhookUrl: string;
-  emailNotifications: boolean;
-  highRiskAlerts: boolean;
-  weeklySummary: boolean;
-  slackWebhook: string;
   complexityThreshold: number;
   churnThreshold: number;
   complexityWeight: number;
@@ -47,10 +41,6 @@ export default function Settings() {
     githubToken: '',
     gitlabToken: '',
     webhookUrl: '',
-    emailNotifications: false,
-    highRiskAlerts: true,
-    weeklySummary: true,
-    slackWebhook: '',
     complexityThreshold: 30,
     churnThreshold: 0.5,
     complexityWeight: 0.4,
@@ -77,10 +67,6 @@ export default function Settings() {
         githubToken: settings.github_token || '',
         gitlabToken: settings.gitlab_token || '',
         webhookUrl: settings.webhook_url || '',
-        emailNotifications: settings.email_notifications || false,
-        highRiskAlerts: settings.high_risk_alerts !== undefined ? settings.high_risk_alerts : true,
-        weeklySummary: settings.weekly_summary !== undefined ? settings.weekly_summary : true,
-        slackWebhook: settings.slack_webhook || '',
         complexityThreshold: settings.complexity_threshold || 30,
         churnThreshold: settings.churn_threshold || 0.5,
         complexityWeight: settings.complexity_weight || 0.4,
@@ -103,24 +89,6 @@ export default function Settings() {
     
     if (result.success) {
       toast.success('Integration settings saved successfully');
-      await fetchSettings();
-    } else {
-      toast.error(result.error || 'Failed to save settings');
-    }
-  };
-
-  const handleSaveNotifications = async () => {
-    setSaving(true);
-    const result = await updateSettings({
-      email_notifications: formData.emailNotifications,
-      high_risk_alerts: formData.highRiskAlerts,
-      weekly_summary: formData.weeklySummary,
-      slack_webhook: formData.slackWebhook,
-    });
-    setSaving(false);
-    
-    if (result.success) {
-      toast.success('Notification settings saved successfully');
       await fetchSettings();
     } else {
       toast.error(result.error || 'Failed to save settings');
@@ -284,71 +252,6 @@ export default function Settings() {
           >
             {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
             Save Integration Settings
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Notification Preferences */}
-      <Card className="bg-[#161B22] border-[#30363D]">
-        <CardHeader>
-          <CardTitle className="text-[#E6EDF3]">Notification Preferences</CardTitle>
-          <CardDescription className="text-[#8B949E]">
-            Choose how you want to be notified
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[#E6EDF3] font-medium">Email Notifications</p>
-              <p className="text-sm text-[#8B949E]">Receive analysis reports via email</p>
-            </div>
-            <Switch 
-              checked={formData.emailNotifications}
-              onCheckedChange={(checked) => setFormData({ ...formData, emailNotifications: checked })}
-            />
-          </div>
-          <Separator className="bg-[#30363D]" />
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[#E6EDF3] font-medium">High-Risk Alerts</p>
-              <p className="text-sm text-[#8B949E]">Get notified when critical issues are detected</p>
-            </div>
-            <Switch 
-              checked={formData.highRiskAlerts}
-              onCheckedChange={(checked) => setFormData({ ...formData, highRiskAlerts: checked })}
-            />
-          </div>
-          <Separator className="bg-[#30363D]" />
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[#E6EDF3] font-medium">Weekly Summary</p>
-              <p className="text-sm text-[#8B949E]">Receive weekly analysis summaries</p>
-            </div>
-            <Switch 
-              checked={formData.weeklySummary}
-              onCheckedChange={(checked) => setFormData({ ...formData, weeklySummary: checked })}
-            />
-          </div>
-          <Separator className="bg-[#30363D]" />
-          <div className="space-y-2">
-            <Label htmlFor="slack-webhook" className="text-[#E6EDF3]">
-              Slack Webhook URL (Optional)
-            </Label>
-            <Input
-              id="slack-webhook"
-              placeholder="https://hooks.slack.com/services/..."
-              className="bg-[#0D1117] border-[#30363D] text-[#E6EDF3]"
-              value={formData.slackWebhook}
-              onChange={(e) => setFormData({ ...formData, slackWebhook: e.target.value })}
-            />
-          </div>
-          <Button 
-            className="bg-[#F97316] hover:bg-[#F97316]/90"
-            onClick={handleSaveNotifications}
-            disabled={saving}
-          >
-            {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-            Save Notification Settings
           </Button>
         </CardContent>
       </Card>

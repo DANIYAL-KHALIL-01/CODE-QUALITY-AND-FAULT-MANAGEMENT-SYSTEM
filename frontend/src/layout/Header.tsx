@@ -1,4 +1,4 @@
-import { Bell, LogOut } from 'lucide-react';
+import { Check, ChevronDown, GitBranch, LogOut } from 'lucide-react';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
@@ -10,10 +10,12 @@ import {
 } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { useAuth } from '../context/AuthContext';
+import { useRepositoryContext } from '../context/RepositoryContext';
 import { useNavigate } from 'react-router-dom';
 
 export function Header() {
   const { user, logout } = useAuth();
+  const { repositories, selectedRepository, setSelectedRepository } = useRepositoryContext();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -40,37 +42,38 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          {/* Notifications */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="relative bg-inherit">
-                <Bell className="h-5 w-5 text-[#8B949E]" />
-                <span className="absolute top-1 right-1 h-2 w-2 bg-[#F97316] rounded-full" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80 bg-[#161B22] border-[#30363D]">
-              <DropdownMenuLabel className="text-[#E6EDF3]">Notifications</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-[#30363D]" />
-              <DropdownMenuItem className="text-[#8B949E] hover:bg-[#0D1117] hover:text-[#E6EDF3]">
-                <div className="flex flex-col gap-1">
-                  <p className="font-medium">High-risk module detected</p>
-                  <p className="text-xs">AuthenticationService needs attention</p>
-                </div>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-[#8B949E] hover:bg-[#0D1117] hover:text-[#E6EDF3]">
-                <div className="flex flex-col gap-1">
-                  <p className="font-medium">Analysis completed</p>
-                  <p className="text-xs">legacy-erp-system analysis finished</p>
-                </div>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-[#8B949E] hover:bg-[#0D1117] hover:text-[#E6EDF3]">
-                <div className="flex flex-col gap-1">
-                  <p className="font-medium">Test case failed</p>
-                  <p className="text-xs">TC003 - User Registration failed</p>
-                </div>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {repositories.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  aria-label={`Switch repository. Current repository: ${selectedRepository?.name || 'none selected'}`}
+                  title="Switch repository"
+                  className="max-w-[280px] gap-2 border-[#30363D] text-[#E6EDF3] hover:bg-[#161B22]"
+                >
+                  <GitBranch className="h-4 w-4 shrink-0 text-[#F97316]" />
+                  <span className="truncate">{selectedRepository?.name || 'Select repository'}</span>
+                  <ChevronDown className="h-4 w-4 shrink-0 text-[#8B949E]" aria-hidden="true" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-72 bg-[#161B22] border-[#30363D]">
+                <DropdownMenuLabel className="text-[#E6EDF3]">Switch Repository</DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-[#30363D]" />
+                {repositories.map((repository) => (
+                  <DropdownMenuItem
+                    key={repository.id}
+                    className="cursor-pointer text-[#8B949E] hover:bg-[#0D1117] hover:text-[#E6EDF3]"
+                    onClick={() => setSelectedRepository(repository)}
+                  >
+                    <GitBranch className="h-4 w-4 mr-2 shrink-0" />
+                    <span className="truncate">{repository.owner}/{repository.name}</span>
+                    {repository.id === selectedRepository?.id && <Check className="ml-auto h-4 w-4 text-[#F97316]" aria-label="Selected" />}
+                    {repository.id !== selectedRepository?.id && repository.analyzed && <span className="ml-auto text-xs text-green-400">Ready</span>}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
           {/* User Menu */}
           <DropdownMenu>

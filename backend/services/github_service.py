@@ -6,6 +6,7 @@ Handles repository connection, cloning, and data extraction
 import os
 import tempfile
 import shutil
+import re
 from datetime import datetime
 from github import Github, GithubException
 from git import Repo
@@ -60,7 +61,7 @@ class GitHubService:
         except GithubException as e:
             raise Exception(f"Failed to fetch repository info: {str(e)}")
     
-    def clone_repository(self, owner, name):
+    def clone_repository(self, owner, name, shallow=False):
         """Clone repository to local temporary directory"""
         try:
             repo_url = f"https://github.com/{owner}/{name}.git"
@@ -70,8 +71,10 @@ class GitHubService:
             if os.path.exists(repo_path):
                 shutil.rmtree(repo_path)
             
-            # Clone repository
-            Repo.clone_from(repo_url, repo_path)
+            # A first analysis does not need history; re-analysis uses full
+            # history so the previous commit can be compared.
+            clone_kwargs = {'depth': 1} if shallow else {}
+            Repo.clone_from(repo_url, repo_path, **clone_kwargs)
             
             return repo_path
         except Exception as e:
@@ -131,6 +134,61 @@ class GitHubService:
             return bug_commits
         except GithubException as e:
             raise Exception(f"Failed to fetch bug-fixing commits: {str(e)}")
+
+    def get_bug_issues(self, owner, name, state='all'):
+        """Return GitHub issues that appear to describe bugs or defects."""
+        try:
+            repo = self._get_repo(owner, name)
+            bug_issues = []
+            for issue in repo.get_issues(state=state):
+                if issue.pull_request is not None:
+                    continue
+
+                title = (issue.title or '').lower()
+                body = (issue.body or '').lower()
+                labels = [label.name.lower() for label in issue.labels]
+                if not (
+                    any(label in labels for label in ('bug', 'defect', 'error'))
+                    or 'bug' in title
+                    or 'fix' in title
+                    or 'fails' in body
+                ):
+                    continue
+
+                files = re.findall(
+                    r'([a-zA-Z0-9_/\\-]+\.(?:py|js|ts|java|cpp|c|cs|jsx|tsx))',
+                    issue.body or '',
+                )
+                bug_issues.append({
+                    'number': issue.number,
+                    'title': issue.title,
+                    'body': issue.body,
+                    'labels': [label.name for label in issue.labels],
+                    'state': issue.state,
+                    'files_mentioned': files,
+                    'url': issue.html_url,
+                    'created_at': issue.created_at,
+                    'severity': (
+                        'critical' if 'critical' in labels
+                        else 'high' if 'high' in labels
+                        else 'medium'
+                    ),
+                })
+            return bug_issues
+        except GithubException as e:
+            raise Exception(f"Failed to fetch GitHub bug issues: {str(e)}")
+
+    def get_issue_bug_count(self, owner, name):
+        """Return the count of GitHub issues carrying the bug label."""
+        return self._get_repo(owner, name).get_issues(state='all', labels=['bug']).totalCount
+
+    def get_issues_with_files(self, owner, name):
+        """Return a file path to bug count mapping from issue descriptions."""
+        file_bug_count = {}
+        for issue in self.get_bug_issues(owner, name):
+            for file_path in issue['files_mentioned']:
+                file_bug_count[file_path] = file_bug_count.get(file_path, 0) + 1
+        return file_bug_count
     
     def cleanup(self):
         """Clean up temporary directory"""

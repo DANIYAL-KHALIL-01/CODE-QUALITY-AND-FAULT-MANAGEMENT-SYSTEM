@@ -9,7 +9,7 @@ This repository has two parts:
 
 - Python 3.10+ recommended
 - Node.js 18+ recommended
-- `pnpm` for the frontend dependencies
+- npm (included with Node.js)
 
 ## Install Dependencies
 
@@ -17,14 +17,24 @@ This repository has two parts:
 
 ```powershell
 cd backend
-pip install -r requirements.txt
+..\venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
+
+If you do not already have a virtual environment, create one from the project root:
+
+```powershell
+python -m venv venv
+cd backend
+..\venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+Copy `backend/.env.example` to `backend/.env` and set a `SECRET_KEY`. Tokens are optional for public repositories, but required for private repositories.
 
 ### Frontend
 
 ```powershell
 cd frontend
-pnpm install
+npm ci
 ```
 
 ## Run the Project
@@ -33,18 +43,19 @@ pnpm install
 
 ```powershell
 cd backend
-python app.py
+..\venv\Scripts\python.exe app.py
 ```
 
 ### Frontend
 
 ```powershell
 cd frontend
-pnpm dev
+npm run dev
 ```
 
 ## Notes
 
-- If you do not have `pnpm` installed, install it first with `npm install -g pnpm`.
+- The backend creates `backend/data/app.db` automatically on first startup.
+- Copy `frontend/.env.example` to `frontend/.env.local` if the API is not running at `http://localhost:5000/api`.
 - The frontend dependencies are defined in [frontend/package.json](frontend/package.json).
 - The backend dependencies are defined in [backend/requirements.txt](backend/requirements.txt).

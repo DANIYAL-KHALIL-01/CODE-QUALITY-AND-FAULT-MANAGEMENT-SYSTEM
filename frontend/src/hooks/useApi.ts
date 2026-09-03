@@ -6,6 +6,11 @@ import { useState, useCallback } from 'react';
 
 import { api } from '../lib/api';
 import type {ApiResponse } from '../lib/api';
+
+export type ApiResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: string };
+
 interface UseApiState<T> {
   data: T | null;
   loading: boolean;
@@ -20,7 +25,7 @@ export function useApi<T = any>() {
   });
 
   const execute = useCallback(
-    async (apiCall: () => Promise<ApiResponse<T>>) => {
+    async (apiCall: () => Promise<ApiResponse<T>>): Promise<ApiResult<T>> => {
       setState({ data: null, loading: true, error: null });
 
       try {
@@ -32,7 +37,7 @@ export function useApi<T = any>() {
         }
 
         setState({ data: response.data || null, loading: false, error: null });
-        return { success: true, data: response.data };
+        return { success: true, data: response.data as T };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         setState({ data: null, loading: false, error: errorMessage });
@@ -148,6 +153,24 @@ export function useTestPrioritization(repoId: number | null) {
   };
 }
 
+export function useTestExecution(repoId: number | null) {
+  const { data, loading, error, execute } = useApi();
+
+  const runTests = useCallback((limit = 10) => {
+    if (!repoId) return Promise.resolve({ success: false, error: 'No repository selected' });
+    return execute(() => api.runPrioritizedTests(repoId, limit));
+  }, [repoId, execute]);
+
+  return {
+    results: data?.results || [],
+    passed: data?.passed || 0,
+    failed: data?.failed || 0,
+    loading,
+    error,
+    runTests,
+  };
+}
+
 export function useBugReports(repoId: number | null) {
   const { data, loading, error, execute } = useApi();
 
@@ -170,6 +193,27 @@ export function useBugReports(repoId: number | null) {
     [execute]
   );
 
+  const deleteBug = useCallback(
+    (bugId: number) => api.deleteBugReport(bugId),
+    []
+  );
+
+  const importGithubIssues = useCallback(
+    () => {
+      if (!repoId) return Promise.resolve({ error: 'No repository selected' });
+      return api.importGithubIssues(repoId);
+    },
+    [repoId]
+  );
+
+  const importGithubCommits = useCallback(
+    () => {
+      if (!repoId) return Promise.resolve({ error: 'No repository selected' });
+      return api.importGithubCommits(repoId);
+    },
+    [repoId]
+  );
+
   return {
     bugs: data?.bugs || [],
     loading,
@@ -177,6 +221,9 @@ export function useBugReports(repoId: number | null) {
     fetchBugs,
     addBug,
     updateBug,
+    deleteBug,
+    importGithubIssues,
+    importGithubCommits,
   };
 }
 
@@ -200,5 +247,39 @@ export function useSettings() {
     error,
     fetchSettings,
     updateSettings,
+  };
+}
+
+export function useChanges(repoId: number | null) {
+  const { data, loading, error, execute } = useApi();
+
+  const fetchChanges = useCallback(() => {
+    if (!repoId) return Promise.resolve({ success: false, error: 'No repository selected' });
+    return execute(() => api.getChanges(repoId));
+  }, [repoId, execute]);
+
+  return {
+    changes: data || null,
+    loading,
+    error,
+    fetchChanges,
+  };
+}
+
+export function useImpactedTests(repoId: number | null) {
+  const { data, loading, error, execute } = useApi();
+
+  const fetchImpactedTests = useCallback(() => {
+    if (!repoId) return Promise.resolve({ success: false, error: 'No repository selected' });
+    return execute(() => api.getImpactedTests(repoId));
+  }, [repoId, execute]);
+
+  return {
+    impactedTests: data?.impacted_tests || [],
+    totalImpacted: data?.total_impacted || 0,
+    totalTests: data?.total_tests || 0,
+    loading,
+    error,
+    fetchImpactedTests,
   };
 }

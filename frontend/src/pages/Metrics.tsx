@@ -28,13 +28,13 @@ interface Metric {
 
 export default function Metrics() {
   const { selectedRepository } = useRepositoryContext();
-  const { metrics, loading, fetchMetrics } = useMetrics(selectedRepository?.id || null);
+  const { metrics, loading, error, fetchMetrics } = useMetrics(selectedRepository?.id || null);
 
   useEffect(() => {
     if (selectedRepository?.analyzed) {
       fetchMetrics();
     }
-  }, [selectedRepository]);
+  }, [selectedRepository, fetchMetrics]);
 
   const getRiskLevel = (complexity: number): 'low' | 'medium' | 'high' | 'critical' => {
     if (complexity >= 30) return 'critical';
@@ -67,6 +67,10 @@ export default function Metrics() {
     );
   }
 
+  if (error) {
+    return <div className="text-center py-12 text-red-400">Unable to load metrics: {error}</div>;
+  }
+
   const avgComplexity = metrics.length > 0
     ? metrics.reduce((sum: number, m: Metric) => sum + (m.cyclomatic_complexity || 0), 0) / metrics.length
     : 0;
@@ -83,14 +87,19 @@ export default function Metrics() {
     ? metrics.reduce((sum: number, m: Metric) => sum + (m.maintainability_index || 0), 0) / metrics.length
     : 0;
 
-  const chartData = [...metrics]
+  const chartMetrics = [...metrics]
     .sort((a: Metric, b: Metric) => (b.cyclomatic_complexity || 0) - (a.cyclomatic_complexity || 0))
     .slice(0, 10)
-    .map((m: Metric) => ({
+  const maxComplexity = Math.max(...chartMetrics.map((metric) => metric.cyclomatic_complexity || 0), 1);
+  const maxLOC = Math.max(...chartMetrics.map((metric) => metric.lines_of_code || 0), 1);
+  const maxChurn = Math.max(...chartMetrics.map((metric) => metric.code_churn || 0), 1);
+  const toOneDecimal = (value: number) => Number(value.toFixed(1));
+
+  const chartData = chartMetrics.map((m: Metric) => ({
       name: m.file_path?.split('/').pop()?.substring(0, 15) || 'Unknown',
-      complexity: m.cyclomatic_complexity || 0,
-      loc: (m.lines_of_code || 0) / 100,
-      churn: (m.code_churn || 0) * 10,
+      complexity: toOneDecimal(((m.cyclomatic_complexity || 0) / maxComplexity) * 100),
+      loc: toOneDecimal(((m.lines_of_code || 0) / maxLOC) * 100),
+      churn: toOneDecimal(((m.code_churn || 0) / maxChurn) * 100),
     }));
 
   return (
@@ -139,7 +148,7 @@ export default function Metrics() {
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#30363D" />
                 <XAxis dataKey="name" stroke="#8B949E" angle={-45} textAnchor="end" height={100} />
-                <YAxis stroke="#8B949E" />
+                <YAxis stroke="#8B949E" domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#161B22',
@@ -149,9 +158,9 @@ export default function Metrics() {
                   }}
                 />
                 <Legend wrapperStyle={{ color: '#E6EDF3' }} />
-                <Bar dataKey="complexity" fill="#F97316" name="Complexity" />
-                <Bar dataKey="loc" fill="#10B981" name="LOC (÷100)" />
-                <Bar dataKey="churn" fill="#F59E0B" name="Churn (×10)" />
+                <Bar dataKey="complexity" fill="#F97316" name="Complexity (relative %)" />
+                <Bar dataKey="loc" fill="#10B981" name="LOC (relative %)" />
+                <Bar dataKey="churn" fill="#F59E0B" name="Churn (relative %)" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

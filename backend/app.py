@@ -9,12 +9,29 @@ from dotenv import load_dotenv
 from functools import wraps
 import os
 from datetime import datetime, timedelta
+from types import SimpleNamespace
+from urllib.parse import urlparse
 
 from services.github_service import GitHubService
+from services.gitlab_service import GitLabService
 from services.code_analyzer import CodeAnalyzer
 from services.ml_service import MLService
 from services.insight_service import InsightService
-from database.models import db, User, Repository, CodeMetric, Prediction, BugReport, TestCase, Settings
+from services.test_discovery import TestDiscovery
+from services.change_detection import ChangeDetection
+from services.test_mapping import TestMapping
+from services.test_runner import TestRunner
+from database.models import (
+    db,
+    User,
+    Repository,
+    CodeMetric,
+    Prediction,
+    BugReport,
+    TestCase,
+    Settings,
+    upgrade_database_schema,
+)
 
 # Load environment variables
 load_dotenv()
@@ -39,10 +56,15 @@ db.init_app(app)
 code_analyzer = CodeAnalyzer()
 ml_service = MLService()
 insight_service = InsightService()
+test_discovery = TestDiscovery()
+change_detection = ChangeDetection()
+test_mapping = TestMapping()
+test_runner = TestRunner()
 
 # Create tables if they don't exist
 with app.app_context():
     db.create_all()
+    upgrade_database_schema()
 
 
 # Authentication decorator
@@ -67,6 +89,37 @@ def get_user_github_token():
     
     # Fallback to environment variable
     return os.getenv('GITHUB_TOKEN')
+
+
+def get_user_gitlab_token():
+    """Get the GitLab token configured for the current user."""
+    if 'user_id' not in session:
+        return None
+    settings = Settings.query.filter_by(user_id=session['user_id']).first()
+    if settings and settings.gitlab_token:
+        return settings.gitlab_token
+    return os.getenv('GITLAB_TOKEN')
+
+
+def parse_repository_url(repo_url):
+    """Parse a GitHub or GitLab URL into provider, owner, and repository name."""
+    parsed = urlparse(repo_url.strip())
+    if parsed.scheme not in {'http', 'https'} or parsed.netloc.lower() not in {'github.com', 'gitlab.com'}:
+        raise ValueError('Only GitHub and GitLab repository URLs are supported')
+    parts = [part for part in parsed.path.strip('/').split('/') if part]
+    if len(parts) < 2:
+        raise ValueError('Repository URL must include an owner and repository name')
+    provider = parsed.netloc.lower().split('.')[0]
+    owner = '/'.join(parts[:-1]) if provider == 'gitlab' else parts[-2]
+    return provider, owner, parts[-1].removesuffix('.git')
+
+
+def get_repository_service(repository):
+    """Return the provider service for a stored repository."""
+    provider, _, _ = parse_repository_url(repository.url)
+    if provider == 'gitlab':
+        return GitLabService(get_user_gitlab_token())
+    return GitHubService(get_user_github_token())
 
 
 @app.route('/api/health', methods=['GET'])
@@ -179,7 +232,7 @@ def logout():
 def get_current_user():
     """Get current logged-in user"""
     try:
-        user = User.Session.get(session['user_id'])
+        user = db.session.get(User, session['user_id'])
         if not user:
             return jsonify({'error': 'User not found'}), 404
         
@@ -201,22 +254,17 @@ def connect_repository():
         if not repo_url:
             return jsonify({'error': 'Repository URL is required'}), 400
         
-        # Extract owner and repo name from URL
-        parts = repo_url.rstrip('/').split('/')
-        owner = parts[-2]
-        name = parts[-1].replace('.git', '')
+        provider, owner, name = parse_repository_url(repo_url)
         
         # Check if repository already exists for this user
         existing = Repository.query.filter_by(owner=owner, name=name, user_id=session['user_id']).first()
         if existing:
             return jsonify({'error': 'Repository already connected'}), 400
         
-        # Get GitHub token from user settings
-        github_token = get_user_github_token()
-        github_service = GitHubService(github_token)
+        repository_service = GitLabService(get_user_gitlab_token()) if provider == 'gitlab' else GitHubService(get_user_github_token())
         
         # Fetch repository info from GitHub
-        repo_info = github_service.get_repository_info(owner, name)
+        repo_info = repository_service.get_repository_info(owner, name)
         
         # Create repository record
         repository = Repository(
@@ -241,6 +289,9 @@ def connect_repository():
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
+    finally:
+        if 'repository_service' in locals() and hasattr(repository_service, 'cleanup'):
+            repository_service.cleanup()
 
 
 @app.route('/api/repositories', methods=['GET'])
@@ -297,12 +348,19 @@ def analyze_repository(repo_id):
         if not repository:
             return jsonify({'error': 'Repository not found'}), 404
         
-        # Get GitHub token from user settings
-        github_token = get_user_github_token()
-        github_service = GitHubService(github_token)
+        repository_service = get_repository_service(repository)
+        previous_commit = repository.last_analyzed_commit
         
         # Clone repository locally
-        repo_path = github_service.clone_repository(repository.owner, repository.name)
+        repo_path = repository_service.clone_repository(
+            repository.owner,
+            repository.name,
+            shallow=previous_commit is None,
+        )
+        
+        # Detect changes from last analysis
+        current_commit = change_detection.get_current_commit(repo_path)
+        changed_files = change_detection.get_changed_modules(repo_path, previous_commit)
         
         # Analyze code
         analysis_results = code_analyzer.analyze_repository(repo_path)
@@ -328,19 +386,57 @@ def analyze_repository(repo_id):
         if metrics_list:
             db.session.bulk_save_objects(metrics_list)
         
+        # Discover real test files
+        real_tests = test_discovery.discover_tests(repo_path)
+        
+        # Map tests to modules they cover
+        test_map = test_mapping.map_tests_to_modules(real_tests)
+        
+        # Find impacted tests based on changes
+        impacted = test_mapping.find_impacted_tests(changed_files, test_map)
+        
+        # Clear previous test cases
+        TestCase.query.filter_by(repository_id=repo_id).delete()
+        
+        # Store real test cases in database
+        test_list = []
+        for test in real_tests:
+            test_case = TestCase(
+                repository_id=repo_id,
+                name=test['name'],
+                file_path=test['path'],
+                priority_score=0,  # Will be set during prioritization
+                execution_order=0,
+                execution_time=test.get('size', 0) / 1000.0,  # Estimate based on file size
+                failure_count=0  # Will be updated with test results
+            )
+            test_list.append(test_case)
+        
+        if test_list:
+            db.session.bulk_save_objects(test_list)
+        
+        # Update repository tracking
         repository.analyzed = True
+        repository.last_analyzed_commit = current_commit
+        repository.last_analysis_at = datetime.utcnow()
         db.session.commit()
         
         return jsonify({
             'message': 'Analysis completed successfully',
-            'files_analyzed': len(analysis_results)
+            'files_analyzed': len(analysis_results),
+            'tests_discovered': len(real_tests),
+            'changed_files': len(changed_files),
+            'impacted_tests': len(impacted['directly_impacted']),
+            'current_commit': current_commit,
+            'previous_commit': previous_commit
         })
         
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
-
-
+    finally:
+        if 'repository_service' in locals():
+            repository_service.cleanup()
 @app.route('/api/metrics/<int:repo_id>', methods=['GET'])
 @login_required
 def get_metrics(repo_id):
@@ -375,12 +471,20 @@ def predict_faults(repo_id):
         # Get code metrics
         metrics = CodeMetric.query.filter_by(repository_id=repo_id).all()
         
-        # Get bug reports for this repository
+        # Combine local reports with GitHub issue and bug-fixing commit evidence.
         bug_reports = BugReport.query.filter_by(repository_id=repo_id).all()
+        repository_service = get_repository_service(repository)
+        bug_commits = repository_service.get_bug_fixing_commits(repository.owner, repository.name)
+        bug_issues = repository_service.get_bug_issues(repository.owner, repository.name)
+        combined_bugs = list(bug_reports)
+        for commit in bug_commits:
+            combined_bugs.extend(SimpleNamespace(file_path=file_path) for file_path in commit.get('files', []))
+        for issue in bug_issues:
+            combined_bugs.extend(SimpleNamespace(file_path=file_path) for file_path in issue.get('files_mentioned', []))
         
         # Update bug counts in metrics based on bug reports
         bug_counts = {}
-        for bug in bug_reports:
+        for bug in combined_bugs:
             if bug.file_path not in bug_counts:
                 bug_counts[bug.file_path] = 0
             bug_counts[bug.file_path] += 1
@@ -391,7 +495,7 @@ def predict_faults(repo_id):
         db.session.commit()
         
         # Make predictions (passing bug reports for accurate prediction)
-        predictions = ml_service.predict_faults(metrics, bug_reports)
+        predictions = ml_service.predict_faults(metrics, combined_bugs)
         
         # Clear existing predictions for this repository
         Prediction.query.filter_by(repository_id=repo_id).delete()
@@ -414,17 +518,24 @@ def predict_faults(repo_id):
         # Generate actual bug reports from ML analysis results
         bug_report_payloads = insight_service.generate_bug_reports(repo_id, metrics, predictions_list)
         if bug_report_payloads:
-            existing_bug_paths = {
-                bug.file_path for bug in BugReport.query.filter_by(repository_id=repo_id).all()
+            existing_bugs = {
+                bug.file_path: bug
+                for bug in BugReport.query.filter_by(repository_id=repo_id).all()
             }
             for bug_payload in bug_report_payloads:
-                if bug_payload['file_path'] not in existing_bug_paths:
+                existing_bug = existing_bugs.get(bug_payload['file_path'])
+                if existing_bug:
+                    existing_bug.severity = bug_payload['severity']
+                    existing_bug.description = bug_payload['description']
+                else:
                     db.session.add(BugReport(
                         repository_id=bug_payload['repository_id'],
                         file_path=bug_payload['file_path'],
+                        title=bug_payload.get('title'),
                         severity=bug_payload['severity'],
                         description=bug_payload['description'],
-                        status=bug_payload['status']
+                        status=bug_payload['status'],
+                        source=bug_payload.get('source', 'ml_generated'),
                     ))
         
         db.session.commit()
@@ -437,6 +548,9 @@ def predict_faults(repo_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
+    finally:
+        if 'repository_service' in locals():
+            repository_service.cleanup()
 
 
 @app.route('/api/predictions/<int:repo_id>', methods=['GET'])
@@ -461,11 +575,10 @@ def get_predictions(repo_id):
 @app.route('/api/tests/prioritize', methods=['POST'])
 @login_required
 def prioritize_tests():
-    """Prioritize test cases based on fault predictions"""
+    """Prioritize test cases based on fault predictions and changes"""
     try:
         data = request.json
         repo_id = data.get('repository_id')
-        test_cases = data.get('test_cases', [])
         
         if not repo_id:
             return jsonify({'error': 'Repository ID is required'}), 400
@@ -477,15 +590,30 @@ def prioritize_tests():
         if not repository.analyzed:
             return jsonify({'error': 'Repository must be analyzed before tests can be prioritized'}), 400
 
-        # When the user requests a fresh ranking without supplying a test suite,
-        # create one analysis target per repository module.
+        # Get real tests from database (discovered during analysis)
+        test_cases = TestCase.query.filter_by(repository_id=repo_id).all()
+        
         if not test_cases:
+            # Fallback: generate synthetic test cases from metrics
             metrics = CodeMetric.query.filter_by(repository_id=repo_id).all()
-            test_cases = ml_service.generate_test_cases(metrics)
+            test_cases_data = ml_service.generate_test_cases(metrics)
+        else:
+            # Convert database records to dict format
+            test_cases_data = [
+                {
+                    'name': tc.name,
+                    'file_path': tc.file_path,
+                    'execution_time': tc.execution_time,
+                    'failure_count': tc.failure_count,
+                    'complexity': 0,  # Would be enriched during analysis
+                    'churn': 0
+                }
+                for tc in test_cases
+            ]
         
         # Get predictions
         predictions = Prediction.query.filter_by(repository_id=repo_id).all()
-        if not predictions and test_cases:
+        if not predictions:
             metrics = CodeMetric.query.filter_by(repository_id=repo_id).all()
             bug_reports = BugReport.query.filter_by(repository_id=repo_id).all()
             prediction_values = ml_service.predict_faults(metrics, bug_reports)
@@ -500,28 +628,17 @@ def prioritize_tests():
             predictions = Prediction.query.filter_by(repository_id=repo_id).all()
         
         # Prioritize tests
-        prioritized = ml_service.prioritize_tests(test_cases, predictions)
+        prioritized = ml_service.prioritize_tests(test_cases_data, predictions)
         
-        # Clear existing test cases for this repository
-        TestCase.query.filter_by(repository_id=repo_id).delete()
-        
-        # Store test cases (batch insert)
-        test_cases_list = []
+        # Update test case priorities in database
         for idx, test in enumerate(prioritized):
-            test_case = TestCase(
+            test_case = TestCase.query.filter_by(
                 repository_id=repo_id,
-                name=test['name'],
-                file_path=test['file_path'],
-                priority_score=test['priority_score'],
-                execution_order=idx + 1,
-                execution_time=test.get('execution_time'),
-                failure_count=test.get('failure_count', 0)
-            )
-            test_cases_list.append(test_case)
-        
-        # Batch insert all test cases
-        if test_cases_list:
-            db.session.bulk_save_objects(test_cases_list)
+                file_path=test['file_path']
+            ).first()
+            if test_case:
+                test_case.priority_score = test['priority_score']
+                test_case.execution_order = idx + 1
         
         db.session.commit()
         
@@ -575,7 +692,7 @@ def get_prioritized_tests(repo_id):
                         priority_score=test['priority_score'],
                         execution_order=execution_order,
                         execution_time=test['execution_time'],
-                        failure_count=test['failure_count'],
+                        failure_count=test.get('failure_count', 0),
                     ))
                 db.session.commit()
                 tests = TestCase.query.filter_by(repository_id=repo_id).order_by(TestCase.execution_order).all()
@@ -585,6 +702,149 @@ def get_prioritized_tests(repo_id):
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+# ==================== Change Monitoring Endpoints ====================
+
+@app.route('/api/changes/<int:repo_id>', methods=['GET'])
+@login_required
+def get_changes(repo_id):
+    """Detect and report changes since last analysis"""
+    try:
+        repository = Repository.query.filter_by(id=repo_id, user_id=session['user_id']).first()
+        if not repository:
+            return jsonify({'error': 'Repository not found'}), 404
+        
+        if not repository.analyzed:
+            return jsonify({'error': 'Repository must be analyzed first'}), 400
+        
+        repository_service = get_repository_service(repository)
+        repo_path = repository_service.clone_repository(repository.owner, repository.name)
+        changed_files = change_detection.get_changed_modules(repo_path, repository.last_analyzed_commit)
+        tests = TestCase.query.filter_by(repository_id=repo_id).all()
+        impacted = []
+        for changed_file in changed_files:
+            for test in tests:
+                if changed_file in (test.file_path or '') or (test.file_path and changed_file in test.file_path):
+                    impacted.append({
+                        'test_name': test.name,
+                        'test_path': test.file_path,
+                        'priority_score': test.priority_score,
+                        'changed_file': changed_file
+                    })
+        return jsonify({
+            'current_commit': change_detection.get_current_commit(repo_path),
+            'last_analyzed_commit': repository.last_analyzed_commit,
+            'changed_files': changed_files,
+            'changed_file_count': len(changed_files),
+            'impacted_tests': impacted,
+            'needs_reanalysis': len(changed_files) > 0
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        if 'repository_service' in locals():
+            repository_service.cleanup()
+
+
+@app.route('/api/tests/impacted/<int:repo_id>', methods=['GET'])
+@login_required
+def get_impacted_tests(repo_id):
+    """Get tests impacted by recent changes"""
+    try:
+        repository = Repository.query.filter_by(id=repo_id, user_id=session['user_id']).first()
+        if not repository:
+            return jsonify({'error': 'Repository not found'}), 404
+        if not repository.analyzed:
+            return jsonify({'error': 'Repository must be analyzed first'}), 400
+
+        repository_service = get_repository_service(repository)
+        repo_path = repository_service.clone_repository(repository.owner, repository.name)
+        changed_files = change_detection.get_changed_modules(repo_path, repository.last_analyzed_commit)
+        predictions = Prediction.query.filter_by(repository_id=repo_id).all()
+        pred_dict = {pred.file_path: pred.fault_probability for pred in predictions}
+
+        impacted_tests = []
+        all_tests = TestCase.query.filter_by(repository_id=repo_id).all()
+        for test in all_tests:
+            covered_modules = []
+            for changed_file in changed_files:
+                if test.file_path and (changed_file in test.file_path or test.file_path in changed_file):
+                    covered_modules.append(changed_file)
+            if covered_modules:
+                avg_fault_prob = sum(pred_dict.get(m, 0.3) for m in covered_modules) / len(covered_modules)
+                impacted_tests.append({
+                    'name': test.name,
+                    'path': test.file_path,
+                    'priority_score': avg_fault_prob,
+                    'execution_time': test.execution_time,
+                    'covered_modules': covered_modules,
+                    'is_impacted': True
+                })
+
+        impacted_tests.sort(key=lambda x: x['priority_score'], reverse=True)
+        return jsonify({
+            'impacted_tests': impacted_tests,
+            'total_impacted': len(impacted_tests),
+            'total_tests': len(all_tests)
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        if 'repository_service' in locals():
+            repository_service.cleanup()
+
+
+@app.route('/api/tests/run/<int:repo_id>', methods=['POST'])
+@login_required
+def run_test_suite(repo_id):
+    """Execute prioritized tests for a repository and persist results."""
+    try:
+        repository = Repository.query.filter_by(id=repo_id, user_id=session['user_id']).first()
+        if not repository:
+            return jsonify({'error': 'Repository not found'}), 404
+        if not repository.analyzed:
+            return jsonify({'error': 'Repository must be analyzed before running tests'}), 400
+
+        data = request.json or {}
+        test_limit = data.get('limit', 10)
+
+        repository_service = get_repository_service(repository)
+        repo_path = repository_service.clone_repository(repository.owner, repository.name)
+
+        tests = TestCase.query.filter_by(repository_id=repo_id).order_by(TestCase.execution_order).limit(test_limit).all()
+        if not tests:
+            return jsonify({'message': 'No tests available to run', 'results': []})
+
+        test_payload = [{
+            'name': test.name,
+            'file_path': test.file_path,
+            'path': test.file_path,
+            'execution_time': test.execution_time,
+        } for test in tests]
+
+        results = test_runner.run_prioritized_tests(repo_path, test_payload)
+
+        for result in results:
+            test_case = TestCase.query.filter_by(repository_id=repo_id, file_path=result['path']).first()
+            if test_case:
+                test_case.last_failure = datetime.utcnow() if result['status'] == 'failed' else None
+                test_case.failure_count = (test_case.failure_count or 0) + (1 if result['status'] == 'failed' else 0)
+                test_case.execution_time = result.get('duration_seconds') or test_case.execution_time
+
+        db.session.commit()
+        return jsonify({
+            'message': 'Test execution completed',
+            'results': results,
+            'passed': sum(1 for result in results if result['passed']),
+            'failed': sum(1 for result in results if not result['passed'])
+        })
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        if 'repository_service' in locals():
+            repository_service.cleanup()
 
 
 # ==================== Bug Report Endpoints ====================
@@ -671,6 +931,79 @@ def update_bug_report(bug_id):
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/bugs/<int:bug_id>', methods=['DELETE'])
+@login_required
+def delete_bug_report(bug_id):
+    """Delete a bug report owned by the current user."""
+    try:
+        bug = BugReport.query.get_or_404(bug_id)
+        repository = Repository.query.filter_by(id=bug.repository_id, user_id=session['user_id']).first()
+        if not repository:
+            return jsonify({'error': 'Unauthorized'}), 403
+        db.session.delete(bug)
+        db.session.commit()
+        return jsonify({'message': 'Bug report deleted successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+def _import_github_bugs(repo_id, source):
+    repository = Repository.query.filter_by(id=repo_id, user_id=session['user_id']).first()
+    if not repository:
+        return jsonify({'error': 'Repository not found'}), 404
+
+    service = GitHubService(get_user_github_token())
+    records = service.get_bug_issues(repository.owner, repository.name) if source == 'github_issue' else service.get_bug_fixing_commits(repository.owner, repository.name)
+    imported = 0
+    for record in records:
+        files = record.get('files_mentioned', []) if source == 'github_issue' else record.get('files', [])
+        for file_path in files or ['unknown']:
+            issue_number = record.get('number') if source == 'github_issue' else None
+            existing = BugReport.query.filter_by(
+                repository_id=repo_id,
+                source=source,
+                github_issue_number=issue_number,
+                file_path=file_path,
+            ).first()
+            if existing:
+                continue
+            db.session.add(BugReport(
+                repository_id=repo_id,
+                file_path=file_path,
+                title=record.get('title') or record.get('message'),
+                description=record.get('body') or record.get('message'),
+                severity=record.get('severity', 'medium'),
+                status='open' if record.get('state', 'open') == 'open' else 'closed',
+                source=source,
+                github_issue_number=issue_number,
+                url=record.get('url'),
+            ))
+            imported += 1
+    db.session.commit()
+    return jsonify({'message': 'Bug data imported successfully', 'imported': imported})
+
+
+@app.route('/api/bugs/import/github-issues/<int:repo_id>', methods=['GET', 'POST'])
+@login_required
+def import_github_issues(repo_id):
+    try:
+        return _import_github_bugs(repo_id, 'github_issue')
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/bugs/import/github-commits/<int:repo_id>', methods=['GET', 'POST'])
+@login_required
+def import_github_commits(repo_id):
+    try:
+        return _import_github_bugs(repo_id, 'github_commit')
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
 # ==================== Settings Endpoints ====================
 
 @app.route('/api/settings', methods=['GET'])
@@ -678,7 +1011,7 @@ def update_bug_report(bug_id):
 def get_settings():
     """Get application settings for current user"""
     try:
-        user = User.session.get(session['user_id'])
+        user = db.session.get(User, session['user_id'])
         settings = Settings.query.filter_by(user_id=session['user_id']).first()
         
         # Create default settings if none exist
@@ -706,7 +1039,7 @@ def update_settings():
     """Update application settings"""
     try:
         data = request.json
-        user = User.session.get(session['user_id'])
+        user = db.session.get(User, session['user_id'])
         settings = Settings.query.filter_by(user_id=session['user_id']).first()
         
         # Create settings if they don't exist
@@ -776,7 +1109,7 @@ def delete_account():
     """Delete user account and all associated data"""
     try:
         user_id = session['user_id']
-        user = User.session.get(user_id)
+        user = db.session.get(User, user_id)
         
         if not user:
             return jsonify({'error': 'User not found'}), 404
@@ -805,8 +1138,8 @@ def delete_account():
 
 
 if __name__ == '__main__':
-    print("🚀 Starting Fault Prediction Backend...")
-    print("📍 Server running at: http://localhost:5000")
-    print("📊 Frontend should connect to: http://localhost:5000/api")
-    print("\n✅ Backend is ready!")
+    print("Starting Fault Prediction Backend...")
+    print("Server running at: http://localhost:5000")
+    print("Frontend should connect to: http://localhost:5000/api")
+    print("\nBackend is ready!")
     app.run(debug=True, port=5000)

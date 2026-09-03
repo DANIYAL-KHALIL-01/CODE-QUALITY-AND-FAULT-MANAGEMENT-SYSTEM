@@ -17,8 +17,8 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { selectedRepository, refreshRepositories } = useRepositoryContext();
   const { analysis } = useAnalysis();
-  const { metrics, fetchMetrics, loading: metricsLoading } = useMetrics(selectedRepository?.id || null);
-  const { predictions, fetchPredictions, loading: predictionsLoading } = usePredictions(selectedRepository?.id || null);
+  const { metrics, fetchMetrics, error: metricsError, loading: metricsLoading } = useMetrics(selectedRepository?.id || null);
+  const { predictions, fetchPredictions, error: predictionsError, loading: predictionsLoading } = usePredictions(selectedRepository?.id || null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -144,7 +144,18 @@ export default function Dashboard() {
         <div className="flex justify-center items-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-[#F97316]" />
         </div>
-      )  : (
+      )  : metricsError || predictionsError ? (
+        <Card className="bg-[#161B22] border-red-500/30">
+          <CardContent className="py-8 text-center">
+            <AlertCircle className="h-10 w-10 text-red-400 mx-auto mb-3" />
+            <p className="text-red-300 font-medium">Unable to load analysis data</p>
+            <p className="text-[#8B949E] text-sm mt-2">{metricsError || predictionsError}</p>
+            <Button className="mt-4 bg-[#F97316] hover:bg-[#F97316]/90" onClick={handleRefresh}>
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
         <>
           <OverviewCards metrics={metrics} predictions={predictions} />
 

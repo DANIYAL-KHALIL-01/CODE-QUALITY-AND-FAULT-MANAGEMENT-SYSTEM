@@ -6,8 +6,42 @@ Using SQLAlchemy ORM with SQLite
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import inspect, text
 
 db = SQLAlchemy()
+
+
+def upgrade_database_schema():
+    """Add columns introduced after the initial SQLite schema was created."""
+    repository_columns = {
+        column['name'] for column in inspect(db.engine).get_columns('repositories')
+    }
+    columns_to_add = {
+        'last_analyzed_commit': 'VARCHAR(40)',
+        'last_analysis_at': 'DATETIME',
+    }
+    bug_report_columns = {
+        'title': 'VARCHAR(500)',
+        'source': 'VARCHAR(30)',
+        'github_issue_number': 'INTEGER',
+        'url': 'VARCHAR(1000)',
+    }
+
+    with db.engine.begin() as connection:
+        for column_name, column_type in columns_to_add.items():
+            if column_name not in repository_columns:
+                connection.execute(
+                    text(f'ALTER TABLE repositories ADD COLUMN {column_name} {column_type}')
+                )
+
+        existing_bug_columns = {
+            column['name'] for column in inspect(db.engine).get_columns('bug_reports')
+        }
+        for column_name, column_type in bug_report_columns.items():
+            if column_name not in existing_bug_columns:
+                connection.execute(
+                    text(f'ALTER TABLE bug_reports ADD COLUMN {column_name} {column_type}')
+                )
 
 
 class User(db.Model):
@@ -59,6 +93,8 @@ class Repository(db.Model):
     stars = db.Column(db.Integer, default=0)
     last_commit = db.Column(db.DateTime)
     analyzed = db.Column(db.Boolean, default=False)
+    last_analyzed_commit = db.Column(db.String(40))  # Git SHA
+    last_analysis_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     
@@ -79,6 +115,8 @@ class Repository(db.Model):
             'stars': self.stars,
             'last_commit': self.last_commit.isoformat() if self.last_commit else None,
             'analyzed': self.analyzed,
+            'last_analyzed_commit': self.last_analyzed_commit,
+            'last_analysis_at': self.last_analysis_at.isoformat() if self.last_analysis_at else None,
             'created_at': self.created_at.isoformat()
         }
 
@@ -144,9 +182,13 @@ class BugReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     repository_id = db.Column(db.Integer, db.ForeignKey('repositories.id'), nullable=False)
     file_path = db.Column(db.String(500), nullable=False)
+    title = db.Column(db.String(500))
     severity = db.Column(db.String(20))  # low, medium, high, critical
     description = db.Column(db.Text)
     status = db.Column(db.String(20), default='open')  # open, in_progress, resolved
+    source = db.Column(db.String(30), default='manual')
+    github_issue_number = db.Column(db.Integer)
+    url = db.Column(db.String(1000))
     reported_at = db.Column(db.DateTime, default=datetime.utcnow)
     resolved_at = db.Column(db.DateTime)
     
@@ -155,9 +197,13 @@ class BugReport(db.Model):
             'id': self.id,
             'repository_id': self.repository_id,
             'file_path': self.file_path,
+            'title': self.title,
             'severity': self.severity,
             'description': self.description,
             'status': self.status,
+            'source': self.source,
+            'github_issue_number': self.github_issue_number,
+            'url': self.url,
             'reported_at': self.reported_at.isoformat(),
             'resolved_at': self.resolved_at.isoformat() if self.resolved_at else None
         }

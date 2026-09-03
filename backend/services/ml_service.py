@@ -27,16 +27,16 @@ class MLService:
             try:
                 self.model = joblib.load(self.model_path)
                 self.scaler = joblib.load(self.scaler_path)
-                print("✅ ML model and scaler loaded successfully")
+                print("ML model and scaler loaded successfully")
             except Exception as e:
-                print(f"⚠️ Failed to load model: {str(e)}")
+                print(f"Failed to load model: {str(e)}")
                 self._train_default_model()
         else:
             self._train_default_model()
     
     def _train_default_model(self):
         """Train a default model with synthetic data"""
-        print("🔄 Training default ML model...")
+        print("Training default ML model...")
         
         # Create synthetic training data
         # Features: [loc, complexity, maintainability, churn, bugs]
@@ -74,7 +74,7 @@ class MLService:
         joblib.dump(self.model, self.model_path)
         joblib.dump(self.scaler, self.scaler_path)
         
-        print("✅ Default ML model and scaler trained and saved")
+        print("Default ML model and scaler trained and saved")
     
     def predict_faults(self, metrics, bug_reports=None):
         """Predict fault probability for code modules"""
@@ -162,7 +162,8 @@ class MLService:
                 'file_path': file_path,
                 'priority_score': float(priority_score),
                 'fault_probability': float(fault_prob),
-                'execution_time': execution_time
+                'execution_time': execution_time,
+                'failure_count': failure_count,
             })
         
         # Sort by priority score (descending)
@@ -200,3 +201,81 @@ class MLService:
         except Exception as e:
             print(f"Failed to retrain model: {str(e)}")
             return False
+    
+    def prioritize_changed_tests(self, real_tests, changed_files, predictions):
+        """
+        Prioritize real test files based on which source files changed.
+        
+        Args:
+            real_tests: List of real test files with their metadata
+            changed_files: List of changed source files
+            predictions: Dict of fault probabilities by file_path
+        
+        Returns: Prioritized list of tests
+        """
+        # Build file-to-test mapping
+        impacted_tests = []
+        unchanged_tests = []
+        
+        for test in real_tests:
+            test_covers = test.get('covered_modules', [])
+            is_impacted = False
+            
+            for module in test_covers:
+                if module in changed_files or self._module_matches_any_changed(module, changed_files):
+                    impacted_tests.append(test)
+                    is_impacted = True
+                    break
+            
+            if not is_impacted:
+                unchanged_tests.append(test)
+        
+        # Score impacted tests by fault probability of covered modules
+        scored_tests = []
+        for test in impacted_tests:
+            avg_fault_prob = 0
+            test_covers = test.get('covered_modules', [])
+            
+            if test_covers:
+                probs = [predictions.get(module, 0.3) for module in test_covers]
+                avg_fault_prob = sum(probs) / len(probs)
+            
+            scored_tests.append({
+                'name': test.get('name'),
+                'path': test.get('path'),
+                'priority_score': avg_fault_prob,
+                'fault_probability': avg_fault_prob,
+                'execution_time': test.get('size', 0) / 1000.0,  # Estimate based on file size
+                'covered_modules': test_covers,
+                'is_impacted': True
+            })
+        
+        # Sort by priority score descending
+        scored_tests.sort(key=lambda x: x['priority_score'], reverse=True)
+        
+        # Add unchanged tests at the end
+        for test in unchanged_tests:
+            scored_tests.append({
+                'name': test.get('name'),
+                'path': test.get('path'),
+                'priority_score': 0.1,
+                'fault_probability': 0.1,
+                'execution_time': test.get('size', 0) / 1000.0,
+                'covered_modules': test.get('covered_modules', []),
+                'is_impacted': False
+            })
+        
+        return scored_tests
+    
+    def _module_matches_any_changed(self, module: str, changed_files: list) -> bool:
+        """Check if a module matches any of the changed files"""
+        module_base = module.replace('.py', '').replace('.js', '').replace('.ts', '')
+        
+        for changed in changed_files:
+            changed_base = changed.replace('.py', '').replace('.js', '').replace('.ts', '')
+            
+            # Exact match or path match
+            if module_base == changed_base or module_base in changed_base or changed_base in module_base:
+                return True
+        
+        return False

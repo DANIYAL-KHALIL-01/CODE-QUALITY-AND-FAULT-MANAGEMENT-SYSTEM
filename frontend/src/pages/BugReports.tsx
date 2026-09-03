@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { MetricCard } from '../shared/MetricCard';
 import { RiskBadge } from '../shared/RiskBadge';
-import { Bug, CheckCircle, Clock, AlertCircle, Loader2, Eye } from 'lucide-react';
+import { Bug, CheckCircle, Clock, AlertCircle, Loader2, Eye, Download, Trash2, Plus } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -13,9 +13,11 @@ import {
 } from '../ui/table';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { format } from 'date-fns';
+import { Input } from '../ui/input';
 import { useRepositoryContext } from '../context/RepositoryContext';
 import { useBugReports } from '../hooks/useApi';
+import { formatPakistanDate, formatPakistanDateTime } from '../lib/dateTime';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -26,14 +28,55 @@ import {
 
 export default function BugReports() {
   const { selectedRepository } = useRepositoryContext();
-  const { bugs, loading, fetchBugs } = useBugReports(selectedRepository?.id || null);
+  const { bugs, loading, fetchBugs, addBug, deleteBug, importGithubIssues, importGithubCommits } = useBugReports(selectedRepository?.id || null);
   const [selectedBug, setSelectedBug] = useState<any | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [newBug, setNewBug] = useState({ file_path: '', title: '', description: '', severity: 'medium' });
 
   useEffect(() => {
     if (selectedRepository) {
       fetchBugs();
     }
   }, [selectedRepository]);
+
+  const handleImport = async (importer: () => Promise<any>, label: string) => {
+    setIsImporting(true);
+    const result = await importer();
+    setIsImporting(false);
+    if (result.error) {
+      toast.error(result.error);
+      return;
+    }
+    await fetchBugs();
+    toast.success(`${label} imported successfully`);
+  };
+
+  const handleAddBug = async () => {
+    if (!newBug.file_path.trim() || !newBug.description.trim()) {
+      toast.error('File path and description are required');
+      return;
+    }
+    const result = await addBug(newBug);
+    if (result.success) {
+      setNewBug({ file_path: '', title: '', description: '', severity: 'medium' });
+      setShowAddForm(false);
+      await fetchBugs();
+      toast.success('Manual bug report added');
+    } else {
+      toast.error(result.error);
+    }
+  };
+
+  const handleDeleteBug = async (bugId: number) => {
+    if (!window.confirm('Delete this bug report?')) return;
+    const result = await deleteBug(bugId);
+    if (result.error) toast.error(result.error);
+    else {
+      await fetchBugs();
+      toast.success('Bug report deleted');
+    }
+  };
 
   if (loading) {
     return (
@@ -55,6 +98,16 @@ export default function BugReports() {
   const resolvedBugs = bugs.filter((b: any) => b.status === 'resolved').length;
   const openBugs = bugs.filter((b: any) => b.status === 'open').length;
   const criticalBugs = bugs.filter((b: any) => b.severity === 'critical').length;
+  const severityOrder: Record<string, number> = {
+    critical: 0,
+    high: 1,
+    medium: 2,
+    low: 3,
+  };
+  const orderedBugs = [...bugs].sort(
+    (first: any, second: any) =>
+      (severityOrder[first.severity] ?? 4) - (severityOrder[second.severity] ?? 4)
+  );
 
   return (
     <div className="space-y-6">
@@ -62,6 +115,33 @@ export default function BugReports() {
         <h1 className="text-3xl font-bold text-[#E6EDF3] mb-2">Bug Reports</h1>
         <p className="text-[#8B949E]">Historical bug analysis and tracking</p>
       </div>
+
+      <div className="flex flex-wrap gap-3">
+        <Button onClick={() => setShowAddForm((visible) => !visible)} className="bg-[#F97316] hover:bg-[#F97316]/90">
+          <Plus className="h-4 w-4 mr-2" /> Manual Bug
+        </Button>
+        <Button variant="outline" disabled={isImporting} onClick={() => handleImport(importGithubIssues, 'GitHub issues')}>
+          <Download className="h-4 w-4 mr-2" /> Import GitHub Issues
+        </Button>
+        <Button variant="outline" disabled={isImporting} onClick={() => handleImport(importGithubCommits, 'GitHub commits')}>
+          <Download className="h-4 w-4 mr-2" /> Import Bug-Fixing Commits
+        </Button>
+      </div>
+
+      {showAddForm && (
+        <Card className="bg-[#161B22] border-[#30363D]">
+          <CardHeader><CardTitle className="text-[#E6EDF3]">Add Manual Bug Report</CardTitle></CardHeader>
+          <CardContent className="grid gap-3 md:grid-cols-2">
+            <Input placeholder="File path, e.g. src/auth.py" value={newBug.file_path} onChange={(e) => setNewBug({ ...newBug, file_path: e.target.value })} />
+            <Input placeholder="Bug title" value={newBug.title} onChange={(e) => setNewBug({ ...newBug, title: e.target.value })} />
+            <select className="rounded-md border border-[#30363D] bg-[#0D1117] p-2 text-[#E6EDF3]" value={newBug.severity} onChange={(e) => setNewBug({ ...newBug, severity: e.target.value })}>
+              <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option>
+            </select>
+            <Input placeholder="Description" value={newBug.description} onChange={(e) => setNewBug({ ...newBug, description: e.target.value })} />
+            <Button onClick={handleAddBug} className="bg-[#F97316] hover:bg-[#F97316]/90 md:col-span-2">Save Bug Report</Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Bug Statistics */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -100,7 +180,7 @@ export default function BugReports() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {bugs.map((bug: any) => (
+                {orderedBugs.map((bug: any) => (
                   <TableRow key={bug.id} className="border-[#30363D] hover:bg-[#0D1117]">
                     <TableCell className="font-mono text-[#E6EDF3]">#{bug.id}</TableCell>
                     <TableCell className="text-[#E6EDF3] max-w-xs truncate">
@@ -127,11 +207,11 @@ export default function BugReports() {
                     </TableCell>
                     <TableCell className="text-[#8B949E]">
                       {bug.reported_at 
-                        ? format(new Date(bug.reported_at), 'MMM dd, yyyy')
+                        ? formatPakistanDate(bug.reported_at)
                         : 'N/A'}
                     </TableCell>
                     <TableCell>
-                      <Button
+                      <div className="flex gap-2"><Button
                         variant="outline"
                         size="sm"
                         className="border-[#30363D] text-[#E6EDF3] hover:bg-[#0D1117]"
@@ -139,7 +219,7 @@ export default function BugReports() {
                       >
                         <Eye className="h-4 w-4 mr-2" />
                         View Details
-                      </Button>
+                      </Button><Button variant="outline" size="sm" className="border-red-500/20 text-red-500" onClick={() => handleDeleteBug(bug.id)}><Trash2 className="h-4 w-4" /></Button></div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -177,7 +257,7 @@ export default function BugReports() {
                   <p className="text-xs uppercase tracking-wide text-[#8B949E]">Reported</p>
                   <p className="mt-1 text-sm text-[#E6EDF3]">
                     {selectedBug.reported_at
-                      ? format(new Date(selectedBug.reported_at), 'MMM dd, yyyy HH:mm')
+                      ? formatPakistanDateTime(selectedBug.reported_at)
                       : 'N/A'}
                   </p>
                 </div>

@@ -10,7 +10,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask import Flask
-from models import db
+from models import db, upgrade_database_schema
 
 def init_database():
     """Initialize the database"""
@@ -24,9 +24,10 @@ def init_database():
     with app.app_context():
         # Create all tables
         db.create_all()
-        print("✅ Database initialized successfully!")
-        print("📁 Database location: backend/data/app.db")
-        print("📊 Tables created: repositories, code_metrics, predictions, bug_reports, test_cases")
+        upgrade_database_schema()
+        print("Database initialized successfully!")
+        print("Database location: backend/data/app.db")
+        print("Tables created: repositories, code_metrics, predictions, bug_reports, test_cases")
 
 if __name__ == '__main__':
     init_database()

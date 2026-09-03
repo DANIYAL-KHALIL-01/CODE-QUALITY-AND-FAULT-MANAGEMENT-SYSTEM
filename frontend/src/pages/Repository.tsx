@@ -6,12 +6,12 @@ import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Github, GitBranch, Upload, Link as LinkIcon, Loader2, Trash2 } from 'lucide-react';
 import { Badge } from '../ui/badge';
-import { format } from 'date-fns';
 import { useRepositoryContext } from '../context/RepositoryContext';
 import { useAnalysis } from '../context/AnalysisContext';
 import { useRepositories } from '../hooks/useApi';
 import { toast } from 'sonner';
 import { api } from '../lib/api';
+import { formatPakistanDateTime } from '../lib/dateTime';
 
 export default function Repository() {
   const [repoUrl, setRepoUrl] = useState('');
@@ -19,9 +19,9 @@ export default function Repository() {
   const [analyzingRepoId, setAnalyzingRepoId] = useState<number | null>(null);
   const [deletingRepoId, setDeletingRepoId] = useState<number | null>(null);
   
-  const { repositories, refreshRepositories } = useRepositoryContext();
+  const { repositories, setSelectedRepository, refreshRepositories } = useRepositoryContext();
   const { connectRepository } = useRepositories();
-  const { startAnalysis, isAnalyzing } = useAnalysis();
+  const { startAnalysis } = useAnalysis();
 
   const handleConnectRepository = async () => {
     if (!repoUrl.trim()) {
@@ -44,9 +44,17 @@ export default function Repository() {
 
   const handleAnalyzeRepository = async (repoId: number, repoName: string) => {
     setAnalyzingRepoId(repoId);
+    const repository = repositories.find((item: any) => item.id === repoId);
+    if (repository) {
+      setSelectedRepository(repository);
+    }
     await startAnalysis(repoId, repoName);
     setAnalyzingRepoId(null);
     await refreshRepositories();
+    const response = await api.getRepository(repoId);
+    if (response.data) {
+      setSelectedRepository(response.data as any);
+    }
   };
 
   const handleDeleteRepository = async (repoId: number) => {
@@ -190,7 +198,7 @@ export default function Repository() {
                       <p className="text-sm text-[#8B949E] truncate">{repo.url}</p>
                       {repo.created_at && (
                         <p className="text-xs text-[#8B949E] mt-1">
-                          Added: {format(new Date(repo.created_at), 'MMM dd, yyyy HH:mm')}
+                          Added: {formatPakistanDateTime(repo.created_at)} PKT
                         </p>
                       )}
                     </div>
@@ -211,9 +219,9 @@ export default function Repository() {
                       size="sm"
                       className="border-[#30363D] hover:bg-[#0D1117]"
                       onClick={() => handleAnalyzeRepository(repo.id, repo.name)}
-                      disabled={analyzingRepoId === repo.id || isAnalyzing}
+                      disabled={analyzingRepoId !== null}
                     >
-                      {analyzingRepoId === repo.id || isAnalyzing ? (
+                      {analyzingRepoId === repo.id ? (
                         <>
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                           Analyzing...

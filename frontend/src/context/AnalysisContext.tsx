@@ -32,17 +32,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     error: null,
   });
 
-  const [abortController, setAbortController] = useState<AbortController | null>(null);
-
   const startAnalysis = useCallback(async (repoId: number, repoName: string) => {
-    // Cancel any previous analysis
-    if (abortController) {
-      abortController.abort();
-    }
-
-    const controller = new AbortController();
-    setAbortController(controller);
-
     setAnalysis({
       repoId,
       repoName,
@@ -76,7 +66,10 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       setAnalysis((prev) => ({ ...prev, progress: 'Generating predictions...' }));
 
       // Generate predictions
-      await api.predictFaults(repoId);
+      const predictionResult = await api.predictFaults(repoId);
+      if (predictionResult.error) {
+        throw new Error(predictionResult.error);
+      }
 
       setAnalysis({
         repoId: null,
@@ -96,12 +89,9 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       }));
       toast.error(errorMsg, { id: `analysis-${repoId}` });
     }
-  }, [abortController]);
+  }, []);
 
   const cancelAnalysis = useCallback(() => {
-    if (abortController) {
-      abortController.abort();
-    }
     setAnalysis({
       repoId: null,
       repoName: null,
@@ -110,7 +100,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       error: null,
     });
     toast.info('Analysis cancelled');
-  }, [abortController]);
+  }, []);
 
   return (
     <AnalysisContext.Provider value={{ analysis, startAnalysis, cancelAnalysis }}>
