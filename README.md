@@ -7,7 +7,7 @@ This repository has two parts:
 
 ## Prerequisites
 
-- Python 3.10+ recommended
+- Python 3.11+ recommended
 - Node.js 18+ recommended
 - npm (included with Node.js)
 
