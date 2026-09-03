@@ -12,7 +12,7 @@ import {
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Search, Download, Loader2, RefreshCw, Radio, AlertCircle } from 'lucide-react';
+import { Search, Download, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 import { useRepositoryContext } from '../context/RepositoryContext';
 import { useTestPrioritization, usePredictions, useChanges, useImpactedTests } from '../hooks/useApi';
 import { toast } from 'sonner';
@@ -25,7 +25,6 @@ export default function TestPrioritization() {
   const { impactedTests, totalImpacted, fetchImpactedTests } = useImpactedTests(selectedRepository?.id || null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isPrioritizing, setIsPrioritizing] = useState(false);
-  const [isMonitoring, setIsMonitoring] = useState(false);
 
   useEffect(() => {
     if (selectedRepository?.analyzed) {
@@ -35,22 +34,6 @@ export default function TestPrioritization() {
       fetchImpactedTests();
     }
   }, [selectedRepository, fetchTests, fetchPredictions, fetchChanges, fetchImpactedTests]);
-
-  useEffect(() => {
-    if (!isMonitoring || !selectedRepository?.analyzed) return;
-
-    const refreshPriority = async () => {
-      await prioritizeTests([]);
-      await fetchTests();
-      await fetchPredictions();
-    };
-
-    const monitorTimer = window.setInterval(() => {
-      refreshPriority();
-    }, 15000);
-
-    return () => window.clearInterval(monitorTimer);
-  }, [isMonitoring, selectedRepository, prioritizeTests, fetchTests, fetchPredictions]);
 
   const handlePrioritize = async () => {
     if (!selectedRepository?.analyzed) return;
@@ -269,16 +252,6 @@ export default function TestPrioritization() {
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${isPrioritizing ? 'animate-spin' : ''}`} />
               {isPrioritizing ? 'Prioritizing...' : 'Prioritize Now'}
-            </Button>
-            <Button
-              variant="outline"
-              className={isMonitoring
-                ? 'border-green-500/40 text-green-400 hover:bg-green-500/10'
-                : 'border-[#30363D] text-[#E6EDF3] hover:bg-[#0D1117]'}
-              onClick={() => setIsMonitoring((monitoring) => !monitoring)}
-            >
-              <Radio className="h-4 w-4 mr-2" />
-              {isMonitoring ? 'Monitoring On' : 'Monitor Tests'}
             </Button>
           </div>
         </CardContent>
