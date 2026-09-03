@@ -19,6 +19,13 @@ interface AnalysisContextType {
   analysis: AnalysisState;
   startAnalysis: (repoId: number, repoName: string) => Promise<void>;
   cancelAnalysis: () => void;
+  bugImport: {
+    repoId: number | null;
+    source: 'issues' | 'commits' | null;
+    isImporting: boolean;
+    error: string | null;
+  };
+  startBugImport: (repoId: number, repoName: string, source: 'issues' | 'commits') => Promise<void>;
 }
 
 const AnalysisContext = createContext<AnalysisContextType | undefined>(undefined);
@@ -29,6 +36,12 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     repoName: null,
     isAnalyzing: false,
     progress: '',
+    error: null,
+  });
+  const [bugImport, setBugImport] = useState<AnalysisContextType['bugImport']>({
+    repoId: null,
+    source: null,
+    isImporting: false,
     error: null,
   });
 
@@ -71,6 +84,8 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
         throw new Error(predictionResult.error);
       }
 
+      window.localStorage.removeItem(`repositoryChanges:${repoId}`);
+
       setAnalysis({
         repoId: null,
         repoName: null,
@@ -102,8 +117,27 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     toast.info('Analysis cancelled');
   }, []);
 
+  const startBugImport = useCallback(async (repoId: number, repoName: string, source: 'issues' | 'commits') => {
+    setBugImport({ repoId, source, isImporting: true, error: null });
+    const label = source === 'issues' ? 'GitHub issues' : 'bug-fixing commits';
+    const importFunction = source === 'issues'
+      ? (repositoryId: number) => api.importGithubIssues(repositoryId)
+      : (repositoryId: number) => api.importGithubCommits(repositoryId);
+
+    try {
+      const result = await importFunction(repoId) as any;
+      if (result.error) throw new Error(result.error);
+      setBugImport({ repoId: null, source: null, isImporting: false, error: null });
+      toast.success(`${label} imported successfully for ${repoName}`);
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : `${label} import failed`;
+      setBugImport((prev) => ({ ...prev, isImporting: false, error: errorMsg }));
+      toast.error(errorMsg);
+    }
+  }, []);
+
   return (
-    <AnalysisContext.Provider value={{ analysis, startAnalysis, cancelAnalysis }}>
+    <AnalysisContext.Provider value={{ analysis, startAnalysis, cancelAnalysis, bugImport, startBugImport }}>
       {children}
     </AnalysisContext.Provider>
   );

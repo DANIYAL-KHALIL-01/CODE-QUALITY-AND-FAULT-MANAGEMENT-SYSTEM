@@ -32,7 +32,7 @@ class CodeAnalyzer:
         print(f"[CodeAnalyzer] Scanning repository: {repo_path}")
         
         # Extract commit churn data once for the entire repo (with limit for speed)
-        print(f"[CodeAnalyzer] Extracting commit churn data (last 1000 commits)...")
+        print(f"[CodeAnalyzer] Extracting commit churn data (last 100 commits)...")
         self.churn_cache = self._extract_churn_data(repo_path)
         
         # First pass: collect all code files to analyze
@@ -91,10 +91,10 @@ class CodeAnalyzer:
         """Extract commit churn data using git log (optimized for performance)"""
         churn_data = {}
         try:
-            # Limit to last 500 commits for performance on large repos
+            # Limit to the most recent commits for performance on large repos
             # This captures recent churn patterns without scanning entire history
             result = subprocess.run(
-                ['git', 'log', '--pretty=', '--numstat', '-500'],
+                ['git', 'log', '--pretty=', '--numstat', '-100'],
                 cwd=repo_path,
                 capture_output=True,
                 text=True,

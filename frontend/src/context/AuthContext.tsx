@@ -3,7 +3,7 @@
  * Manages user authentication state across the application
  */
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 import { api } from '../lib/api';
 import { toast } from 'sonner';
 
@@ -39,7 +39,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const checkAuth = async () => {
     try {
@@ -56,9 +56,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
+  const checkRepositoriesForChanges = async () => {
+    try {
+      const response = await api.listRepositories() as any;
+      const repositories = response.data?.repositories || [];
+
+      await Promise.all(repositories.filter((repository: any) => repository.analyzed).map(async (repository: any) => {
+        const changesResponse = await api.getChanges(repository.id) as any;
+        const storageKey = `repositoryChanges:${repository.id}`;
+
+        if (changesResponse.data?.needs_reanalysis) {
+          window.localStorage.setItem(storageKey, JSON.stringify(changesResponse.data));
+        } else if (!changesResponse.error) {
+          window.localStorage.removeItem(storageKey);
+        }
+      }));
+    } catch (error) {
+      console.warn('Unable to check repository changes after login:', error);
+    }
+  };
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
@@ -71,6 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       if (response.data && (response.data as LoginSignupResponse).user) {
         setUser((response.data as LoginSignupResponse).user);
+        void checkRepositoriesForChanges();
         toast.success('Login successful!');
         return true;
       }

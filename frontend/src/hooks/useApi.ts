@@ -252,14 +252,33 @@ export function useSettings() {
 
 export function useChanges(repoId: number | null) {
   const { data, loading, error, execute } = useApi();
+  const storageKey = repoId ? `repositoryChanges:${repoId}` : null;
+  const [storedChanges] = useState<any | null>(() => {
+    if (!storageKey) return null;
+    try {
+      const saved = window.localStorage.getItem(storageKey);
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
-  const fetchChanges = useCallback(() => {
-    if (!repoId) return Promise.resolve({ success: false, error: 'No repository selected' });
-    return execute(() => api.getChanges(repoId));
-  }, [repoId, execute]);
+  const fetchChanges = useCallback(async () => {
+    if (!repoId) return { success: false, error: 'No repository selected' };
+
+    const result = await execute(() => api.getChanges(repoId));
+    if (result.success && storageKey) {
+      if (result.data?.needs_reanalysis) {
+        window.localStorage.setItem(storageKey, JSON.stringify(result.data));
+      } else {
+        window.localStorage.removeItem(storageKey);
+      }
+    }
+    return result;
+  }, [repoId, execute, storageKey]);
 
   return {
-    changes: data || null,
+    changes: data || storedChanges,
     loading,
     error,
     fetchChanges,

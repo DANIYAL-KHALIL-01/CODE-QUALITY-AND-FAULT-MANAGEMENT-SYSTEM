@@ -1,4 +1,4 @@
-import { Check, ChevronDown, GitBranch, LogOut } from 'lucide-react';
+import { Check, ChevronDown, GitBranch, Loader2, LogOut } from 'lucide-react';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
@@ -12,10 +12,12 @@ import { Avatar, AvatarFallback } from '../ui/avatar';
 import { useAuth } from '../context/AuthContext';
 import { useRepositoryContext } from '../context/RepositoryContext';
 import { useNavigate } from 'react-router-dom';
+import { useAnalysis } from '../context/AnalysisContext';
 
 export function Header() {
   const { user, logout } = useAuth();
   const { repositories, selectedRepository, setSelectedRepository } = useRepositoryContext();
+  const { bugImport } = useAnalysis();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -42,6 +44,12 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4">
+          {bugImport.isImporting && (
+            <div className="flex items-center gap-2 text-sm text-[#F97316]" role="status">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Importing {bugImport.source === 'issues' ? 'GitHub issues' : 'bug-fixing commits'}...
+            </div>
+          )}
           {repositories.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

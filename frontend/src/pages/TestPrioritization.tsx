@@ -13,11 +13,13 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Search, Download, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useRepositoryContext } from '../context/RepositoryContext';
 import { useTestPrioritization, usePredictions, useChanges, useImpactedTests } from '../hooks/useApi';
 import { toast } from 'sonner';
 
 export default function TestPrioritization() {
+  const navigate = useNavigate();
   const { selectedRepository } = useRepositoryContext();
   const { tests, loading, fetchTests, prioritizeTests } = useTestPrioritization(selectedRepository?.id || null);
   const { predictions, fetchPredictions } = usePredictions(selectedRepository?.id || null);
@@ -158,7 +160,8 @@ export default function TestPrioritization() {
                 size="sm"
                 className="bg-amber-600 hover:bg-amber-700 text-white"
                 onClick={() => {
-                  toast.info('Reanalyze repository to detect all changes');
+                  toast.info(`Open the Repository page and click Re-analyze for ${selectedRepository.name}`);
+                  navigate('/repository');
                 }}
               >
                 Re-analyze Repository

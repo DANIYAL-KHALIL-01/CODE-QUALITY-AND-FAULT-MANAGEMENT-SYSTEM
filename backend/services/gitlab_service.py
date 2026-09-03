@@ -2,11 +2,14 @@
 
 import os
 import re
+import stat
 import shutil
 import tempfile
 
 import gitlab
 from git import Repo
+
+COMMIT_HISTORY_LIMIT = 100
 
 
 class GitLabService:
@@ -52,7 +55,7 @@ class GitLabService:
                 'date': commit.committed_date,
                 'files_changed': 0,
             }
-            for commit in project.commits.list(all=True)
+            for commit in project.commits.list(page=1, per_page=COMMIT_HISTORY_LIMIT, all=False)
         ]
 
     def get_bug_fixing_commits(self, owner, name):
@@ -89,4 +92,8 @@ class GitLabService:
 
     def cleanup(self):
         if os.path.exists(self.temp_dir):
-            shutil.rmtree(self.temp_dir)
+            def remove_readonly(func, path, _exc_info):
+                os.chmod(path, stat.S_IWRITE)
+                func(path)
+
+            shutil.rmtree(self.temp_dir, onerror=remove_readonly)

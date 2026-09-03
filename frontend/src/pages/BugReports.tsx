@@ -15,6 +15,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { useRepositoryContext } from '../context/RepositoryContext';
+import { useAnalysis } from '../context/AnalysisContext';
 import { useBugReports } from '../hooks/useApi';
 import { formatPakistanDate, formatPakistanDateTime } from '../lib/dateTime';
 import { toast } from 'sonner';
@@ -28,10 +29,10 @@ import {
 
 export default function BugReports() {
   const { selectedRepository } = useRepositoryContext();
-  const { bugs, loading, fetchBugs, addBug, deleteBug, importGithubIssues, importGithubCommits } = useBugReports(selectedRepository?.id || null);
+  const { bugs, loading, fetchBugs, addBug, deleteBug } = useBugReports(selectedRepository?.id || null);
+  const { bugImport, startBugImport } = useAnalysis();
   const [selectedBug, setSelectedBug] = useState<any | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [isImporting, setIsImporting] = useState(false);
   const [newBug, setNewBug] = useState({ file_path: '', title: '', description: '', severity: 'medium' });
 
   useEffect(() => {
@@ -39,18 +40,6 @@ export default function BugReports() {
       fetchBugs();
     }
   }, [selectedRepository]);
-
-  const handleImport = async (importer: () => Promise<any>, label: string) => {
-    setIsImporting(true);
-    const result = await importer();
-    setIsImporting(false);
-    if (result.error) {
-      toast.error(result.error);
-      return;
-    }
-    await fetchBugs();
-    toast.success(`${label} imported successfully`);
-  };
 
   const handleAddBug = async () => {
     if (!newBug.file_path.trim() || !newBug.description.trim()) {
@@ -120,10 +109,10 @@ export default function BugReports() {
         <Button onClick={() => setShowAddForm((visible) => !visible)} className="bg-[#F97316] hover:bg-[#F97316]/90">
           <Plus className="h-4 w-4 mr-2" /> Manual Bug
         </Button>
-        <Button variant="outline" disabled={isImporting} onClick={() => handleImport(importGithubIssues, 'GitHub issues')}>
+        <Button variant="outline" disabled={bugImport.isImporting} onClick={() => startBugImport(selectedRepository.id, selectedRepository.name, 'issues')}>
           <Download className="h-4 w-4 mr-2" /> Import GitHub Issues
         </Button>
-        <Button variant="outline" disabled={isImporting} onClick={() => handleImport(importGithubCommits, 'GitHub commits')}>
+        <Button variant="outline" disabled={bugImport.isImporting} onClick={() => startBugImport(selectedRepository.id, selectedRepository.name, 'commits')}>
           <Download className="h-4 w-4 mr-2" /> Import Bug-Fixing Commits
         </Button>
       </div>
@@ -203,7 +192,12 @@ export default function BugReports() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-[#8B949E] max-w-sm">
-                      {bug.description || 'N/A'}
+                      <span
+                        className="block max-w-sm truncate"
+                        title={bug.description || 'N/A'}
+                      >
+                        {bug.description || 'N/A'}
+                      </span>
                     </TableCell>
                     <TableCell className="text-[#8B949E]">
                       {bug.reported_at 

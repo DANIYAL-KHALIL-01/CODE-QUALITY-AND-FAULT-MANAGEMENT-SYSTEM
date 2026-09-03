@@ -4,12 +4,16 @@ Handles repository connection, cloning, and data extraction
 """
 
 import os
+import stat
 import tempfile
 import shutil
 import re
+from itertools import islice
 from datetime import datetime
 from github import Github, GithubException
 from git import Repo
+
+COMMIT_HISTORY_LIMIT = 100
 
 
 class GitHubService:
@@ -91,7 +95,7 @@ class GitHubService:
                 commits = repo.get_commits()
             
             history = []
-            for commit in commits:
+            for commit in islice(commits, COMMIT_HISTORY_LIMIT):
                 history.append({
                     'sha': commit.sha,
                     'message': commit.commit.message,
@@ -121,7 +125,7 @@ class GitHubService:
             bug_keywords = ['fix', 'bug', 'issue', 'error', 'patch', 'resolve']
             bug_commits = []
             
-            for commit in commits:
+            for commit in islice(commits, COMMIT_HISTORY_LIMIT):
                 message = commit.commit.message.lower()
                 if any(keyword in message for keyword in bug_keywords):
                     bug_commits.append({
@@ -194,6 +198,10 @@ class GitHubService:
         """Clean up temporary directory"""
         try:
             if os.path.exists(self.temp_dir):
-                shutil.rmtree(self.temp_dir)
+                def remove_readonly(func, path, _exc_info):
+                    os.chmod(path, stat.S_IWRITE)
+                    func(path)
+
+                shutil.rmtree(self.temp_dir, onerror=remove_readonly)
         except Exception as e:
             print(f"Warning: Failed to cleanup temp directory: {str(e)}")
