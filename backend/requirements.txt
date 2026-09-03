@@ -1,26 +1,15 @@
-# Web Framework
-Flask
-Flask-CORS
-python-dotenv
-
-# Database
-SQLAlchemy
-Flask-SQLAlchemy
-
-# GitHub Integration
-PyGithub
-GitPython
-python-gitlab
-
-# Code Analysis
-radon
-lizard
-
-# Machine Learning
-scikit-learn
-pandas
-numpy
-joblib
-
-# Utilities
-requests
+Flask==3.1.2
+Flask-Cors==6.0.2
+Flask-SQLAlchemy==3.1.1
+GitPython==3.1.45
+PyGithub==2.8.1
+SQLAlchemy==2.0.45
+Werkzeug==3.1.4
+joblib==1.5.3
+lizard==1.19.0
+numpy==2.4.0
+pandas==2.3.3
+python-dotenv==1.2.1
+python-gitlab==8.5.0
+radon==6.0.1
+scikit-learn==1.8.0

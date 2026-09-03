@@ -44,6 +44,8 @@ wheels/
 *.sqlite
 *.sqlite3
 instance/
+temp_repos/
+*.pkl
 
 # Environment variables
 .env
